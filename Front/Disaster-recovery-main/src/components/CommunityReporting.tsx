@@ -31,7 +31,7 @@ const CommunityReporting: React.FC = () => {
 
   useEffect(() => {
     // Fetch reports from the backend
-    axios.get('http://localhost:3000/api/reports')
+    axios.get('http://localhost:3000/community-reports')
       .then(response => {
         setReports(response.data);
       })
@@ -51,7 +51,7 @@ const CommunityReporting: React.FC = () => {
     }
 
     try {
-      await axios.post('http://localhost:3000/', formData);
+      await axios.post('http://localhost:3000/community-reports', formData);
       alert('Report submitted successfully!');
       // Clear form fields after submission
       setReportType('');
@@ -59,7 +59,7 @@ const CommunityReporting: React.FC = () => {
       setDescription('');
       setImage(null);
       // Refresh the report list
-      const response = await axios.get('http://localhost:5000/api/reports');
+      const response = await axios.get('http://localhost:3000/community-reports');
       setReports(response.data);
     } catch (error) {
       console.error('Error submitting report:', error);

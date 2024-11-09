@@ -1,96 +1,38 @@
-import React from 'react';
-import { Bell, MapPin, AlertTriangle, Users } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
+  const [reports, setReports] = useState([]);
+  const [alerts, setAlerts] = useState([]);
+  const [weather, setWeather] = useState(null);
+
+  useEffect(() => {
+    // Fetch disaster reports
+    axios.get('/api/reports').then((response) => {
+      setReports(response.data);
+    }).catch((error) => {
+      console.error('Error fetching reports:', error);
+    });
+
+    // Fetch real-time disaster alerts
+    axios.get('/api/alerts').then((response) => {
+      setAlerts(response.data.features);
+    }).catch((error) => {
+      console.error('Error fetching alerts:', error);
+    });
+
+    // Fetch weather data for a specific location
+    axios.get('/api/weather/London').then((response) => {
+      setWeather(response.data);
+    }).catch((error) => {
+      console.error('Error fetching weather:', error);
+    });
+  }, []);
+
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl">
-        <div className="container py-6">
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-6">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Active Alerts
-                </CardTitle>
-                <Bell className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                  <div className="text-2xl font-bold"></div>
-                <p className="text-xs text-muted-foreground">
-                
-                </p> 
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  High-Risk Areas
-                </CardTitle>
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold"></div>
-                <p className="text-xs text-muted-foreground">
-          
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Community Reports
-                </CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold"></div>
-                <p className="text-xs text-muted-foreground">
-                  
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Safe Routes
-                </CardTitle>
-                <MapPin className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold"></div>
-                <p className="text-xs text-muted-foreground">
-                  
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-          <div className="mt-8 bg-gray-200 rounded-lg p-6">
-            <h2 className="text-2xl font-bold mb-4">Recent Alerts</h2>
-            <div className="space-y-4">
-              {[
-                { type: '', location: '', time: '' },
-                { type: '', location: '', time: '' }, // fetch this data from the database
-                { type: '', location: '', time: '' },
-              ].map((alert, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                  <div>
-                    <h3 className="font-semibold">{alert.type}</h3>
-                    <p className="text-sm text-muted-foreground">{alert.location}</p>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-sm text-muted-foreground mr-4">{alert.time}</span>
-                    <Button variant="outline" size="sm">View Details</Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </main>
+    <div>
+      <h1>Disaster Dashboard</h1>
+      {/* Render reports, alerts, and weather data */}
     </div>
   );
 };
