@@ -19,10 +19,10 @@ const Dashboard: React.FC = () => {
                 <Bell className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">3</div>
+                  <div className="text-2xl font-bold"></div>
                 <p className="text-xs text-muted-foreground">
-                  +2 since last hour
-                </p>
+                
+                </p> 
               </CardContent>
             </Card>
             <Card>
@@ -33,9 +33,9 @@ const Dashboard: React.FC = () => {
                 <MapPin className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">7</div>
+                <div className="text-2xl font-bold"></div>
                 <p className="text-xs text-muted-foreground">
-                  2 new areas identified
+          
                 </p>
               </CardContent>
             </Card>
@@ -47,9 +47,9 @@ const Dashboard: React.FC = () => {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">24</div>
+                <div className="text-2xl font-bold"></div>
                 <p className="text-xs text-muted-foreground">
-                  +12 from yesterday
+                  
                 </p>
               </CardContent>
             </Card>
@@ -61,9 +61,9 @@ const Dashboard: React.FC = () => {
                 <MapPin className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">18</div>
+                <div className="text-2xl font-bold"></div>
                 <p className="text-xs text-muted-foreground">
-                  Updated 5 mins ago
+                  
                 </p>
               </CardContent>
             </Card>
@@ -72,9 +72,9 @@ const Dashboard: React.FC = () => {
             <h2 className="text-2xl font-bold mb-4">Recent Alerts</h2>
             <div className="space-y-4">
               {[
-                { type: 'Flood Warning', location: 'Riverside County', time: '10 minutes ago' },
-                { type: 'Earthquake Alert', location: 'San Francisco Bay Area', time: '1 hour ago' },
-                { type: 'Wildfire Risk', location: 'Southern California', time: '3 hours ago' },
+                { type: '', location: '', time: '' },
+                { type: '', location: '', time: '' }, // fetch this data from the database
+                { type: '', location: '', time: '' },
               ].map((alert, index) => (
                 <div key={index} className="flex items-center justify-between p-4 bg-muted rounded-lg">
                   <div>

@@ -1,4 +1,5 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import axios from 'axios';
 import { Camera, MapPin, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -7,35 +8,63 @@ import { Card, CardContent } from "./ui/card";
 import { Select } from "./ui/select";
 
 const hazardTypes = [
-  { value: 'flooding', label: '🌊 Flooding', description: 'Rising water levels, submerged areas' },
-  { value: 'wildfire', label: '🔥 Wildfire', description: 'Smoke, flames, or burning smell' },
-  { value: 'landslide', label: '🏔️ Landslide', description: 'Moving earth, rocks, or debris' },
-  { value: 'earthquake', label: '🌋 Earthquake', description: 'Ground shaking or structural damage' },
-  { value: 'storm-damage', label: '🌪️ Storm Damage', description: 'High winds, heavy rain, or hail' },
-  { value: 'other', label: '❓ Other', description: 'Specify in description' },
-  { value: 'unsure', label: '❗ I\'m not sure', description: 'Provide details in description' },
+  { value: 'Flooding', label: '🌊 Flooding', description: 'Rising water levels, submerged areas' },
+  { value: 'Wildfire', label: '🔥 Wildfire', description: 'Smoke, flames, or burning smell' },
+  { value: 'Landslide', label: '🏔️ Landslide', description: 'Moving earth, rocks, or debris' },
 ];
 
-const mockReports = [
-  { id: 1, type: 'Flooding', location: 'Downtown River Area', timestamp: '2023-06-15T10:30:00Z', status: 'Verified', user: 'John D.' },
-  { id: 2, type: 'Wildfire', location: 'Northern Hills', timestamp: '2023-06-15T09:45:00Z', status: 'Pending', user: 'Sarah M.' },
-  { id: 3, type: 'Landslide', location: 'Mountain Pass Road', timestamp: '2023-06-15T08:15:00Z', status: 'Verified', user: 'Mike R.' },
-];
+interface Report {
+  id: number;
+  type: string;
+  location: string;
+  timestamp: string;
+  status: string;
+  user: string;
+}
 
 const CommunityReporting: React.FC = () => {
   const [reportType, setReportType] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null>(null);
+  const [reports, setReports] = useState<Report[]>([]);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    // Fetch reports from the backend
+    axios.get('http://localhost:3000/api/reports')
+      .then(response => {
+        setReports(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching reports:', error);
+      });
+  }, []);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('Submitting report:', { reportType, location, description, image });
-    // Reset form fields
-    setReportType('');
-    setLocation('');
-    setDescription('');
-    setImage(null);
+    const formData = new FormData();
+    formData.append('reportType', reportType);
+    formData.append('location', location);
+    formData.append('description', description);
+    if (image) {
+      formData.append('image', image);
+    }
+
+    try {
+      await axios.post('http://localhost:3000/', formData);
+      alert('Report submitted successfully!');
+      // Clear form fields after submission
+      setReportType('');
+      setLocation('');
+      setDescription('');
+      setImage(null);
+      // Refresh the report list
+      const response = await axios.get('http://localhost:5000/api/reports');
+      setReports(response.data);
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      alert('Failed to submit the report.');
+    }
   };
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +142,7 @@ const CommunityReporting: React.FC = () => {
           <CardContent className="p-6">
             <h2 className="text-xl font-semibold mb-4">Recent Community Reports</h2>
             <div className="space-y-4">
-              {mockReports.map((report) => (
+              {reports.map((report) => (
                 <Card key={report.id}>
                   <CardContent className="p-4 flex items-start space-x-4">
                     <div className="flex-1">

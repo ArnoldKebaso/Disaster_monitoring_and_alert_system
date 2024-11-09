@@ -3,21 +3,6 @@ import { Search, AlertTriangle, MapPin, Clock } from 'lucide-react';
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent } from "./ui/card";
-import axios from 'axios'; // Import Axios
-const API_URL = process.env.REACT_APP_API_URL;
-
-export const getAlertById = async (alertId:number) => {
-  try {
-    const response = await axios.get(`${API_URL}/alerts/${alertId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching alert:", error);
-  }
-};
-
-
-
-
 
 const alerts = [
   { id: 1, type: 'Flood', severity: 'High', location: 'Riverside County', timestamp: '2023-06-15T13:30:00Z' },
@@ -32,49 +17,16 @@ const ActiveAlerts: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeType, setActiveType] = useState('All Types');
   const [activeSeverity, setActiveSeverity] = useState('All Severities');
-  const [alertDetails, setAlertDetails] = useState(null); // State to store alert details
-  const [error, setError] = useState<string | null>(null); // Updated state to store error
 
   const formatDate = (timestamp: string) => {
     return new Date(timestamp).toLocaleString();
   };
 
-  // Filtered alerts based on search, type, and severity
   const filteredAlerts = alerts.filter(alert => 
     alert.location.toLowerCase().includes(searchQuery.toLowerCase()) &&
     (activeType === 'All Types' || alert.type === activeType) &&
     (activeSeverity === 'All Severities' || alert.severity === activeSeverity)
   );
-
-  // //Fetch alert details from the backend when "View Details" is clicked
-  // const handleViewDetails = async (alertId: number) => {
-  //   try {
-  //     const response = await axios.get(`https://kerberos.co.ke/api/alerts/${alertId}`);
-  //     setAlertDetails(response.data); // Store response in state
-  //     setError(null); // Clear error when successful
-  //   } catch (err) {
-  //     setError('Error fetching alert details'); // Set error message
-  //     console.error(err);
-  //   }
-  // };
-
-
-  const handleViewDetails = async (alertId: number) => {
-  // try {
-    const response = await axios.get(`http://localhost:3000/alerts`, { timeout: 5000 });
-    setAlertDetails(response.data); // Store response in state
-    setError(null); // Clear error when successful
-  // } catch (err: any) {
-  //   if (err.code === 'ERR_NETWORK') {
-  //     setError('Network error, please check your connection or try again later.');
-  //   } else {
-  //     setError('Error fetching alert details');
-  //   }
-  //   console.error(err);
-  // }
-};
-
-  
 
   return (
     <div className="p-6 bg-white rounded-lg shadow">
@@ -142,31 +94,11 @@ const ActiveAlerts: React.FC = () => {
               <p className="flex items-center mb-4">
                 <Clock className="mr-2 h-4 w-4" /> {formatDate(alert.timestamp)}
               </p>
-              <Button 
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={() => handleViewDetails(alert.id)} // Call function on click
-              >
-                View Details
-              </Button>
+              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">View Details</Button>
             </CardContent>
           </Card>
         ))}
       </div>
-
-      {/* Display alert details when available */}
-      {alertDetails && (
-        <div className="mt-6 p-4 border rounded-lg bg-gray-100">
-          <h2 className="text-2xl font-bold mb-4">Alert Details</h2>
-          <pre>{JSON.stringify(alertDetails, null, 2)}</pre>
-        </div>
-      )}
-
-      {/* Display error message if there's an error */}
-      {error && (
-        <div className="mt-6 p-4 text-red-500">
-          {error}
-        </div>
-      )}
     </div>
   );
 };

@@ -33,3 +33,5 @@ const CommunityReport = sequelize.define('CommunityReport', {
 CommunityReport.belongsTo(User, { foreignKey: 'user_id' });
 
 module.exports = CommunityReport;
+
+
