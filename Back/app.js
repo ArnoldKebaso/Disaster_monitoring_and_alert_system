@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 var logger = require('morgan');
-const cors = require('cors');
+//const cors = require('cors');
 var cookieParser = require('cookie-parser');
 const sequelize = require('./config/database');
 const swaggerUi = require('swagger-ui-express');
@@ -16,6 +16,8 @@ const alertRouter = require('./routes/alert');
 const communityController = require('./routes/community');
 const highRiskController = require('./routes/high_risk');
 const safeRoutesRouter = require('./routes/safeRoute');
+const cors = require('cors');
+app.use(cors({ origin: 'http://localhost:3001' }));
 
 app.use(express.json());
 app.use(cookieParser());
