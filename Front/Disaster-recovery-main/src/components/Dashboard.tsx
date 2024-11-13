@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Bell, MapPin, AlertTriangle, Users } from 'lucide-react';
-import { Link } from 'react-router-dom';
+// import { Bell, MapPin, AlertTriangle, Users } from 'lucide-react';
+// import { Link } from 'react-router-dom';
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
