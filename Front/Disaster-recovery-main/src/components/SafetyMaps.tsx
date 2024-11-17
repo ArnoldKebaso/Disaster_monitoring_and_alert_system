@@ -5,9 +5,14 @@ import { Search, MapPin, Home } from 'lucide-react';
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent } from "./ui/card";
-import shelterIconUrl from '../assets/shelter.png'; // Adjust the path if needed
+import shelterIconUrl from '../assets/shelter.png'; // Ensure the path is correct
 
 const center = [-1.286389, 36.817223]; // Nairobi, Kenya
+
+const shelters = [
+  { id: 1, name: 'City Hall Shelter', location: { lat: -1.286389, lng: 36.817223 } },
+  { id: 2, name: 'Community Center', location: { lat: -1.285, lng: 36.820 } },
+];
 
 const SafetyMaps: React.FC = () => {
   const [map, setMap] = useState<L.Map | null>(null);
@@ -25,6 +30,18 @@ const SafetyMaps: React.FC = () => {
 
     const layerGroup = L.layerGroup().addTo(mapInstance);
     setMarkerLayer(layerGroup);
+
+    // Add shelter markers with custom icons
+    shelters.forEach(shelter => {
+      L.marker([shelter.location.lat, shelter.location.lng], {
+        icon: L.icon({
+          iconUrl: shelterIconUrl,
+          iconSize: [30, 30],
+          iconAnchor: [15, 30],
+          popupAnchor: [0, -30]
+        })
+      }).addTo(layerGroup).bindPopup(`<strong>${shelter.name}</strong>`);
+    });
 
     return () => {
       mapInstance.remove();
@@ -46,7 +63,14 @@ const SafetyMaps: React.FC = () => {
 
         // Clear existing markers and add a new one
         markerLayer.clearLayers();
-        L.marker([lat, lon]).addTo(markerLayer);
+        L.marker([lat, lon], {
+          icon: L.icon({
+            iconUrl: shelterIconUrl, // You can replace this with a different icon if needed
+            iconSize: [30, 30],
+            iconAnchor: [15, 30],
+            popupAnchor: [0, -30]
+          })
+        }).addTo(markerLayer).bindPopup(`<strong>Searched Location: ${searchQuery}</strong>`);
       } else {
         console.log('Location not found');
       }
