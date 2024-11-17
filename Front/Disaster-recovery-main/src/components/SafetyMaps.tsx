@@ -61,7 +61,7 @@ const SafetyMaps: React.FC = () => {
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('Searching for:', searchQuery);
+    // console.log('Searching for:', searchQuery);
   };
 
   return (
