@@ -5,50 +5,41 @@ import { Search, MapPin, Home } from 'lucide-react';
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent } from "./ui/card";
-
+import shelterIconUrl from '../assets/shelter.png'; // Replace with actual path
 
 const disasters = [
-  { id: 1, type: 'Flood', location: { lat: 34.052235, lng: -118.243683 }, severity: 'High' },
-  { id: 2, type: 'Wildfire', location: { lat: 34.069444, lng: -118.445278 }, severity: 'Medium' },
+  { id: 1, type: 'Flood', location: { lat: -1.2921, lng: 36.8219 }, severity: 'High' }, // Nairobi coordinates
+  { id: 2, type: 'Wildfire', location: { lat: -1.2921, lng: 36.8172 }, severity: 'Medium' },
 ];
 
 const shelters = [
-  { id: 1, name: 'City Hall Shelter', location: { lat: 34.054208, lng: -118.242766 } },
-  { id: 2, name: 'Community Center', location: { lat: 34.052030, lng: -118.243700 } },
+  { id: 1, name: 'City Hall Shelter', location: { lat: -1.286389, lng: 36.817223 } }, // Nairobi coordinates
+  { id: 2, name: 'Community Center', location: { lat: -1.285, lng: 36.820 } },
 ];
 
-const center = [34.052235, -118.243683];
+const center = [-1.286389, 36.817223]; // Center on Nairobi, Kenya
 
 const SafetyMaps: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDisaster, setSelectedDisaster] = useState<any>(null);
 
   useEffect(() => {
-    const map = L.map('map').setView(center, 13);
+    const map = L.map('map').setView(center, 7); // Adjust zoom level as needed
 
-    // Base layer using OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // OpenWeatherMap temperature overlay
-    const tempLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=YOUR_OPENWEATHER_API_KEY`, {
-      maxZoom: 19,
-      attribution: '© OpenWeatherMap'
-    }).addTo(map);
-
-    // Disaster markers
     disasters.forEach(disaster => {
       const marker = L.marker([disaster.location.lat, disaster.location.lng]).addTo(map);
       marker.on('click', () => setSelectedDisaster(disaster));
     });
 
-    // Shelter markers
     shelters.forEach(shelter => {
       L.marker([shelter.location.lat, shelter.location.lng], {
         icon: L.icon({
-          iconUrl: '/shelter-icon.png', // Replace with your shelter icon URL
+          iconUrl: shelterIconUrl,
           iconSize: [30, 30]
         })
       }).addTo(map);
@@ -61,7 +52,10 @@ const SafetyMaps: React.FC = () => {
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('Searching for:', searchQuery);
+    if (searchQuery) {
+      console.log('Searching for:', searchQuery);
+      // Add logic for searching if needed
+    }
   };
 
   return (
