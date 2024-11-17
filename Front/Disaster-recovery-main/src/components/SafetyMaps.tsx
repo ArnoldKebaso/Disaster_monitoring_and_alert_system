@@ -5,56 +5,53 @@ import { Search, MapPin, Home } from 'lucide-react';
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent } from "./ui/card";
-import shelterIconUrl from '../assets/shelter.png'; // Replace with actual path
+import shelterIconUrl from '../assets/shelter.png'; // Adjust the path if needed
 
-const disasters = [
-  { id: 1, type: 'Flood', location: { lat: -1.2921, lng: 36.8219 }, severity: 'High' }, // Nairobi coordinates
-  { id: 2, type: 'Wildfire', location: { lat: -1.2921, lng: 36.8172 }, severity: 'Medium' },
-];
-
-const shelters = [
-  { id: 1, name: 'City Hall Shelter', location: { lat: -1.286389, lng: 36.817223 } }, // Nairobi coordinates
-  { id: 2, name: 'Community Center', location: { lat: -1.285, lng: 36.820 } },
-];
-
-const center = [-1.286389, 36.817223]; // Center on Nairobi, Kenya
+const center = [-1.286389, 36.817223]; // Nairobi, Kenya
 
 const SafetyMaps: React.FC = () => {
+  const [map, setMap] = useState<L.Map | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDisaster, setSelectedDisaster] = useState<any>(null);
+  const [markerLayer, setMarkerLayer] = useState<L.LayerGroup | null>(null);
 
   useEffect(() => {
-    const map = L.map('map').setView(center, 7); // Adjust zoom level as needed
+    const mapInstance = L.map('map').setView(center, 7);
+    setMap(mapInstance);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+    }).addTo(mapInstance);
 
-    disasters.forEach(disaster => {
-      const marker = L.marker([disaster.location.lat, disaster.location.lng]).addTo(map);
-      marker.on('click', () => setSelectedDisaster(disaster));
-    });
-
-    shelters.forEach(shelter => {
-      L.marker([shelter.location.lat, shelter.location.lng], {
-        icon: L.icon({
-          iconUrl: shelterIconUrl,
-          iconSize: [30, 30]
-        })
-      }).addTo(map);
-    });
+    const layerGroup = L.layerGroup().addTo(mapInstance);
+    setMarkerLayer(layerGroup);
 
     return () => {
-      map.remove();
+      mapInstance.remove();
     };
   }, []);
 
-  const handleSearch = (event: React.FormEvent) => {
+  const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (searchQuery) {
-      console.log('Searching for:', searchQuery);
-      // Add logic for searching if needed
+    if (!map || !markerLayer) return;
+
+    try {
+      // Use OpenStreetMap Nominatim for geocoding
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+      const data = await response.json();
+
+      if (data.length > 0) {
+        const { lat, lon } = data[0];
+        map.setView([lat, lon], 13);
+
+        // Clear existing markers and add a new one
+        markerLayer.clearLayers();
+        L.marker([lat, lon]).addTo(markerLayer);
+      } else {
+        console.log('Location not found');
+      }
+    } catch (error) {
+      console.error('Error fetching geocoding data:', error);
     }
   };
 
@@ -100,13 +97,6 @@ const SafetyMaps: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-
-      {selectedDisaster && (
-        <div className="alert alert-warning mt-4">
-          <h2>{selectedDisaster.type} Alert</h2>
-          <p>Severity: {selectedDisaster.severity}</p>
-        </div>
-      )}
     </div>
   );
 };
