@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Register: React.FC = () => {
@@ -6,9 +7,10 @@ const Register: React.FC = () => {
     username: '',
     email: '',
     password: '',
-    role: 'viewer', // default role, can be changed by the user
+    role: 'viewer', // Default role
   });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -22,8 +24,10 @@ const Register: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3000/register', formData);
+      await axios.post('http://localhost:3000/register', formData);
       setMessage('User registered successfully!');
+      // Redirect to login page after registration
+      setTimeout(() => navigate('/login'), 1000);
     } catch (error: any) {
       setMessage(error.response?.data?.error || 'An error occurred during registration.');
     }
@@ -88,6 +92,9 @@ const Register: React.FC = () => {
           Register
         </button>
       </form>
+      <p className="mt-4 text-center">
+        Already have an account? <a href="/login" className="text-blue-500">Login</a>
+      </p>
     </div>
   );
 };

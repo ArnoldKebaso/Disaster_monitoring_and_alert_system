@@ -6,6 +6,7 @@ import CommunityReporting from './components/CommunityReporting';
 import SafetyMaps from './components/SafetyMaps';
 import DisasterDetails from './components/DisasterDetails';
 import Dashboard from './components/Dashboard';
+import Login from './components/Login';
 import Register from './components/Register';
 
 const App: React.FC = () => {
@@ -15,6 +16,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/alerts" element={<ActiveAlerts />} />
           <Route path="/report" element={<CommunityReporting />} />
           <Route path="/maps" element={<SafetyMaps />} />
