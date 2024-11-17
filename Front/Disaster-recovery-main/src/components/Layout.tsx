@@ -14,6 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/alerts', label: 'Alerts' },
     { path: '/maps', label: 'Safety Map' },
     { path: '/report', label: 'Report' },
+    {path: '/register', label: 'Register' },
   ];
 
   return (

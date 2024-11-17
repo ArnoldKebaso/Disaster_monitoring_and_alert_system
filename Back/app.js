@@ -17,7 +17,10 @@ const communityController = require('./routes/community');
 const highRiskController = require('./routes/high_risk');
 const safeRoutesRouter = require('./routes/safeRoute');
 const cors = require('cors');
-app.use(cors({ origin: 'http://localhost:3001' }));
+app.use(cors({
+  origin: 'http://localhost:3001',
+  credentials: true
+ }));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -47,7 +50,7 @@ sequelize.sync({ force: false }).then(() => {
 // Define routes and controllers here...
 app.use('/users', authMiddleware, userRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-app.use('/auth', authRouter);
+app.use('/register', authRouter);
 app.use('/alerts', alertRouter);
 app.use('/community-reports', communityController);
 app.use('/high-risk-areas', highRiskController);
