@@ -43,7 +43,7 @@ const authMiddleware = require('../middleware/auth');
  *       401:
  *         description: Unauthorized
  */
-router.get('/', authMiddleware, getAllUsers);
+router.get('/user', authMiddleware, getAllUsers);
 
 /**
  * @swagger
@@ -81,7 +81,7 @@ router.get('/', authMiddleware, getAllUsers);
  *       404:
  *         description: User not found
  */
-router.get('/:id', authMiddleware, getUserById);
+router.get('/user:id', authMiddleware, getUserById);
 
 /**
  * @swagger
@@ -120,7 +120,7 @@ router.get('/:id', authMiddleware, getUserById);
  *       400:
  *         description: Bad request
  */
-router.post('/', authMiddleware, createUser);
+router.post('/user', authMiddleware, createUser);
 
 /**
  * @swagger
@@ -158,7 +158,7 @@ router.post('/', authMiddleware, createUser);
  *       404:
  *         description: User not found
  */
-router.put('/:id', authMiddleware, updateUser);
+router.put('/user:id', authMiddleware, updateUser);
 
 /**
  * @swagger
@@ -179,6 +179,6 @@ router.put('/:id', authMiddleware, updateUser);
  *       404:
  *         description: User not found
  */
-router.delete('/:id', authMiddleware, deleteUser);
+router.delete('/user:id', authMiddleware, deleteUser);
 
 module.exports = router;
