@@ -11,6 +11,7 @@ import Location from './components/Location';
 import ResourceComponent from './components/ResourceComponent';
 import Register from './components/Register';
 import DemographicComponent from './components/DemographicComponent';
+import HealthcareComponent from './components/HealthcareComponent';
 
 const App: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ const App: React.FC = () => {
           <Route path="/resources" element={<ResourceComponent />} />
           <Route path="/disaster/:id" element={<DisasterDetails />} />
           <Route path="/demographics" element={<DemographicComponent />} />
+          <Route path="/healthcare" element={<HealthcareComponent />} />
         </Routes>
       </Layout>
     </Router>
