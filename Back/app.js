@@ -19,7 +19,7 @@ const highRiskController = require('./routes/high_risk');
 const safeRoutesRouter = require('./routes/safeRoute');
 
 const locationRouter = require('./routes/location');
-// const resourceRouter = require('./routes/resource');
+const resourceRouter = require('./routes/resource');
 // const infrastructureRouter = require('./routes/infrastructure');
 // const demographicRouter = require('./routes/demographic');
 // const healthcareRouter = require('./routes/healthcare');
@@ -67,7 +67,7 @@ app.use('/high-risk-areas', highRiskController);
 app.use('/safe-routes', safeRoutesRouter);
 
 app.use('/locations', locationRouter);
-// app.use('/resources', resourceRouter);
+app.use('/resources', resourceRouter);
 // app.use('/infrastructure', infrastructureRouter);
 // app.use('/demographics', demographicRouter);
 // app.use('/healthcare', healthcareRouter);

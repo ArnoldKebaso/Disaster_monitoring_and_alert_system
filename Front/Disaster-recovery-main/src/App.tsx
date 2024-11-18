@@ -7,7 +7,8 @@ import SafetyMaps from './components/SafetyMaps';
 import DisasterDetails from './components/DisasterDetails';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
-import  Location  from './components/Location';
+import Location from './components/Location';
+import ResourceComponent from './components/ResourceComponent';
 import Register from './components/Register';
 
 const App: React.FC = () => {
@@ -22,6 +23,7 @@ const App: React.FC = () => {
           <Route path="/report" element={<CommunityReporting />} />
           <Route path="/maps" element={<SafetyMaps />} />
           <Route path="/locations" element={<Location />} />
+          <Route path="/resources" element={<ResourceComponent />} />
           <Route path="/disaster/:id" element={<DisasterDetails />} />
         </Routes>
       </Layout>
