@@ -17,6 +17,14 @@ const alertRouter = require('./routes/alert');
 const communityController = require('./routes/community');
 const highRiskController = require('./routes/high_risk');
 const safeRoutesRouter = require('./routes/safeRoute');
+
+const locationRouter = require('./routes/location');
+// const resourceRouter = require('./routes/resource');
+// const infrastructureRouter = require('./routes/infrastructure');
+// const demographicRouter = require('./routes/demographic');
+// const healthcareRouter = require('./routes/healthcare');
+// const floodRouter = require('./routes/flood');
+
 const cors = require('cors');
 app.use(cors({
   origin: 'http://localhost:3001',
@@ -57,6 +65,14 @@ app.use('/alerts', alertRouter);
 app.use('/community-reports', communityController);
 app.use('/high-risk-areas', highRiskController);
 app.use('/safe-routes', safeRoutesRouter);
+
+app.use('/locations', locationRouter);
+// app.use('/resources', resourceRouter);
+// app.use('/infrastructure', infrastructureRouter);
+// app.use('/demographics', demographicRouter);
+// app.use('/healthcare', healthcareRouter);
+// app.use('/floods', floodRouter);
+
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');

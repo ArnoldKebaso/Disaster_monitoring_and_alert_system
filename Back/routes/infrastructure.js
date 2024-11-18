@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllInfrastructures, getInfrastructureById, createInfrastructure, updateInfrastructure, deleteInfrastructure } = require('../controllers/infrastructureController');
+const infrastructureController = require('../controllers/infrastructureController');
 
 /**
  * @swagger
@@ -38,7 +38,7 @@ const { getAllInfrastructures, getInfrastructureById, createInfrastructure, upda
  *                     type: string
  *                     example: "Nairobi"
  */
-router.get('/', getAllInfrastructures);
+router.get('/', infrastructureController.getAllInfrastructure);
 
 /**
  * @swagger
