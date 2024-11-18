@@ -58,4 +58,10 @@ const deleteDemographics = async (req, res) => {
     }
 };
 
-module.exports = { getAllDemographics, getDemographicsById, createDemographics, updateDemographics, deleteDemographics };
+module.exports = {
+    getAllDemographics,
+    getDemographicsById,
+    createDemographics,
+    updateDemographics,
+    deleteDemographics,
+};

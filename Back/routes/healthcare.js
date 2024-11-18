@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllHealthcareFacilities, getHealthcareFacilityById, createHealthcareFacility, updateHealthcareFacility, deleteHealthcareFacility } = require('../controllers/healthcareController');
+const { getAllHealthcareFacilities, getHealthcareById, createHealthcareFacility, updateHealthcareFacility, deleteHealthcareFacility } = require('../controllers/healthcareController');
 
 /**
  * @swagger
@@ -59,7 +59,7 @@ router.get('/', getAllHealthcareFacilities);
  *       404:
  *         description: Healthcare facility not found
  */
-router.get('/:id', getHealthcareFacilityById);
+router.get('/:id', getHealthcareById);
 
 /**
  * @swagger

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllFloodData, getFloodDataById, createFloodData, updateFloodData, deleteFloodData } = require('../controllers/floodController');
+const { getAllFloods, getFloodById, createFlood, updateFlood, deleteFlood } = require('../controllers/floodController');
 
 /**
  * @swagger
@@ -39,7 +39,7 @@ const { getAllFloodData, getFloodDataById, createFloodData, updateFloodData, del
  *                     format: date
  *                     example: "2024-11-18"
  */
-router.get('/', getAllFloodData);
+router.get('/', getAllFloods);
 
 /**
  * @swagger
@@ -60,7 +60,7 @@ router.get('/', getAllFloodData);
  *       404:
  *         description: Flood data not found
  */
-router.get('/:id', getFloodDataById);
+router.get('/:id', getFloodById);
 
 /**
  * @swagger
@@ -94,7 +94,7 @@ router.get('/:id', getFloodDataById);
  *       400:
  *         description: Bad request
  */
-router.post('/', createFloodData);
+router.post('/', createFlood);
 
 /**
  * @swagger
@@ -132,7 +132,7 @@ router.post('/', createFloodData);
  *       404:
  *         description: Flood data not found
  */
-router.put('/:id', updateFloodData);
+router.put('/:id', updateFlood);
 
 /**
  * @swagger
@@ -153,6 +153,6 @@ router.put('/:id', updateFloodData);
  *       404:
  *         description: Flood data not found
  */
-router.delete('/:id', deleteFloodData);
+router.delete('/:id', deleteFlood);
 
 module.exports = router;

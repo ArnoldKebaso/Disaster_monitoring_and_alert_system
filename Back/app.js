@@ -21,9 +21,9 @@ const safeRoutesRouter = require('./routes/safeRoute');
 const locationRouter = require('./routes/location');
 const resourceRouter = require('./routes/resource');
 // const infrastructureRouter = require('./routes/infrastructure');
-// const demographicRouter = require('./routes/demographic');
-// const healthcareRouter = require('./routes/healthcare');
-// const floodRouter = require('./routes/flood');
+const demographicRouter = require('./routes/demographic');
+const healthcareRouter = require('./routes/healthcare');
+const floodRouter = require('./routes/flood');
 
 const cors = require('cors');
 app.use(cors({
@@ -69,9 +69,9 @@ app.use('/safe-routes', safeRoutesRouter);
 app.use('/locations', locationRouter);
 app.use('/resources', resourceRouter);
 // app.use('/infrastructure', infrastructureRouter);
-// app.use('/demographics', demographicRouter);
-// app.use('/healthcare', healthcareRouter);
-// app.use('/floods', floodRouter);
+app.use('/demographics', demographicRouter);
+app.use('/healthcare', healthcareRouter);
+app.use('/floods', floodRouter);
 
 
 app.listen(3000, () => {

@@ -1,6 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { getAllDemographics, getDemographicById, createDemographic, updateDemographic, deleteDemographic } = require('../controllers/demographicController');
+// const { getAllDemographics, getDemographicById, createDemographic, updateDemographic, deleteDemographic } = require('../controllers/demographicsController');
+const {
+    getAllDemographics,
+    getDemographicsById,
+    createDemographics,
+    updateDemographics,
+    deleteDemographics,
+} = require('../controllers/demographicsController');
 
 /**
  * @swagger
@@ -59,7 +66,7 @@ router.get('/', getAllDemographics);
  *       404:
  *         description: Demographic not found
  */
-router.get('/:id', getDemographicById);
+router.get('/:id', getDemographicsById);
 
 /**
  * @swagger
@@ -92,7 +99,7 @@ router.get('/:id', getDemographicById);
  *       400:
  *         description: Bad request
  */
-router.post('/', createDemographic);
+router.post('/', createDemographics);
 
 /**
  * @swagger
@@ -129,7 +136,7 @@ router.post('/', createDemographic);
  *       404:
  *         description: Demographic not found
  */
-router.put('/:id', updateDemographic);
+router.put('/:id', updateDemographics);
 
 /**
  * @swagger
@@ -150,6 +157,6 @@ router.put('/:id', updateDemographic);
  *       404:
  *         description: Demographic not found
  */
-router.delete('/:id', deleteDemographic);
+router.delete('/:id', deleteDemographics);
 
 module.exports = router;
