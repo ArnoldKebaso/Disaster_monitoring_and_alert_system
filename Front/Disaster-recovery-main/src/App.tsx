@@ -10,6 +10,7 @@ import Login from './components/Login';
 import Location from './components/Location';
 import ResourceComponent from './components/ResourceComponent';
 import Register from './components/Register';
+import DemographicComponent from './components/DemographicComponent';
 
 const App: React.FC = () => {
   return (
@@ -25,6 +26,7 @@ const App: React.FC = () => {
           <Route path="/locations" element={<Location />} />
           <Route path="/resources" element={<ResourceComponent />} />
           <Route path="/disaster/:id" element={<DisasterDetails />} />
+          <Route path="/demographics" element={<DemographicComponent />} />
         </Routes>
       </Layout>
     </Router>
