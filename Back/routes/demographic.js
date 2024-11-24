@@ -138,6 +138,8 @@ router.post('/', createDemographics);
  */
 router.put('/:id', updateDemographics);
 
+
+
 /**
  * @swagger
  * /demographics/{id}:

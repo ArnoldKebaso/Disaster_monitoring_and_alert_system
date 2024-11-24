@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
-import path from 'path';
+//import path from 'path';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -19,7 +19,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/locations', label: 'Locations' },
     { path: '/resources', label: 'Resources' },
     { path: '/demographics', label: 'Demographics' },
-    {path: '/healthcare', label: 'Healthcare' }
+    { path: '/healthcare', label: 'Healthcare' },
+    {path: '/floods', label: 'Floods' }
     
   ];
 
