@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
-//import path from 'path';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,18 +9,43 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
 
-  const navItems = [
-    { path: '/', label: 'Dashboard' },
-    { path: '/alerts', label: 'Alerts' },
-    { path: '/maps', label: 'Safety Map' },
-    { path: '/report', label: 'Report' },
-    { path: '/register', label: 'Register' },
-    { path: '/locations', label: 'Locations' },
-    { path: '/resources', label: 'Resources' },
-    { path: '/demographics', label: 'Demographics' },
-    { path: '/healthcare', label: 'Healthcare' },
-    {path: '/floods', label: 'Floods' }
-    
+  const menuItems = [
+    {
+      label: 'Dashboard',
+      path: '/',
+    },
+    {
+      label: 'Incident Management',
+      submenu: [
+        { label: 'Alerts', path: '/alerts' },
+        { label: 'Report Incident', path: '/report' },
+      ],
+    },
+    {
+      label: 'Geospatial Data',
+      submenu: [
+        { label: 'Safety Map', path: '/maps' },
+        { label: 'Locations', path: '/locations' },
+      ],
+    },
+    {
+      label: 'Resource Management',
+      submenu: [
+        { label: 'Resources', path: '/resources' },
+        { label: 'Healthcare', path: '/healthcare' },
+      ],
+    },
+    {
+      label: 'Analytics',
+      submenu: [
+        { label: 'Demographics', path: '/demographics' },
+        { label: 'Flood Data', path: '/floods' },
+      ],
+    },
+    {
+      label: 'User Management',
+      path: '/register',
+    },
   ];
 
   return (
@@ -34,10 +58,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </Link>
           <nav>
             <ul className="flex space-x-4">
-              {navItems.map((item) => (
-                <li key={item.path}>
+              {menuItems.map((item) => (
+                <li key={item.label} className="relative group">
                   <Link
-                    to={item.path}
+                    to={item.path || '#'}
                     className={`text-sm font-medium ${
                       location.pathname === item.path
                         ? 'text-blue-600'
@@ -46,15 +70,27 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   >
                     {item.label}
                   </Link>
+                  {item.submenu && (
+                    <ul className="absolute hidden group-hover:block bg-white shadow-lg py-2">
+                      {item.submenu.map((subItem) => (
+                        <li key={subItem.label}>
+                          <Link
+                            to={subItem.path}
+                            className="block px-4 py-2 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                          >
+                            {subItem.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>
           </nav>
         </div>
       </header>
-      <main className="container mx-auto px-4 py-8">
-        {children}
-      </main>
+      <main className="container mx-auto px-4 py-8">{children}</main>
     </div>
   );
 };
