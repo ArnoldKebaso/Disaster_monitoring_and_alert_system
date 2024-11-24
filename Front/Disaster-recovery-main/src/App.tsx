@@ -14,7 +14,7 @@ import DemographicComponent from './components/DemographicComponent';
 import HealthcareComponent from './components/HealthcareComponent';
 import FloodComponent from './components/FloodComponent';
 import  DisasterInfo from './components/Infomation';
-
+import Donate from './components/DonateComponent';
 const App: React.FC = () => {
   return (
     <Router>
@@ -33,6 +33,7 @@ const App: React.FC = () => {
           <Route path="/healthcare" element={<HealthcareComponent />} />
           <Route path="/floods" element={<FloodComponent />} />
           <Route path="/disasterinfo" element={<DisasterInfo />} /> 
+          <Route path="/donate" element={<Donate />} /> 
         </Routes>
       </Layout>
     </Router>
