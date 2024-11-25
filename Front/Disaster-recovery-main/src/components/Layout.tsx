@@ -16,7 +16,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       label: 'Incident Management',
       submenu: [
         { label: 'Alerts', path: '/alerts' },
-        { label: 'Report Incident', path: '/report' },
       ],
     },
     {
@@ -48,6 +47,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const userMenuItems = [
     { label: 'Dashboard', path: '/' },
     { label: 'Alerts', path: '/alerts' },
+     { label: 'Agencies', path: '/agencies' },
     { label: 'Report Incident', path: '/report' },
     { label: 'Disaster Information', path: '/disasterinfo' },
     { label: 'Donate', path: '/donate' },
