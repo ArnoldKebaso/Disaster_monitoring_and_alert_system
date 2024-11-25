@@ -31,6 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       submenu: [
         { label: 'Resources', path: '/resources' },
         { label: 'Healthcare', path: '/healthcare' },
+        { label: 'Agencies', path: '/agencies' },
       ],
     },
     {
