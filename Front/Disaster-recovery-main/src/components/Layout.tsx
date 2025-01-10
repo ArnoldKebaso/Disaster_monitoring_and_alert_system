@@ -13,6 +13,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     {label: 'Home', path: '/home'},
     { label: 'Dashboard', path: '/' },
     { label: 'Alerts', path: '/alerts' },
+    {label: 'Community Reporting', path: '/report'},
     { label: 'Safety Map', path: '/maps' },
     { label: 'Locations', path: '/locations' },
     { label: 'Resources', path: '/resources' },
