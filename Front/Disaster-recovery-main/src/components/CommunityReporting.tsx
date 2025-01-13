@@ -39,33 +39,79 @@ const CommunityReporting: React.FC = () => {
         console.error('Error fetching reports:', error);
       });
   }, []);
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData();
-    formData.append('reportType', reportType);
-    formData.append('location', location);
-    formData.append('description', description);
-    if (image) {
-      formData.append('image', image);
+
+    // Validate inputs before submission
+    if (!reportType || !location || !description) {
+      alert('Please fill in all required fields.');
+      return;
     }
 
+    // Prepare the data for a JSON payload
+    const payload = {
+      report_type: reportType,
+      location: location,
+      description: description,
+      image_url: image ? URL.createObjectURL(image) : null, // Temporarily stringify the image URL
+      status: "pending", // Assuming a default status
+    };
+
     try {
-      await axios.post('http://localhost:3000/community-reports', formData);
+      // Send the JSON payload
+      await axios.post('http://localhost:3000/community-reports', payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
       alert('Report submitted successfully!');
-      // Clear form fields after submission
+
+      // Clear form fields after success
       setReportType('');
       setLocation('');
       setDescription('');
       setImage(null);
-      // Refresh the report list
+
+      // Refresh the list of reports
       const response = await axios.get('http://localhost:3000/community-reports');
       setReports(response.data);
     } catch (error) {
       console.error('Error submitting report:', error);
-      alert('Failed to submit the report.');
+      alert(`Failed to submit the report. Error: ${error.response?.data?.message || error.message}`);
     }
   };
+
+
+
+
+  // const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const formData = new FormData();
+  //   formData.append('report_type', reportType);
+  //   formData.append('location', location);
+  //   formData.append('description', description);
+  //   if (image) {
+  //     formData.append('image', image);
+  //   }
+  //
+  //   try {
+  //     await axios.post('http://localhost:3000/community-reports', formData);
+  //     alert('Report submitted successfully!');
+  //     // Clear form fields after submission
+  //
+  //     setReportType('');
+  //     setLocation('');
+  //     setDescription('');
+  //     setImage(null);
+  //     // Refresh the report list
+  //     const response = await axios.get('http://localhost:3000/community-reports');
+  //     setReports(response.data);
+  //   } catch (error) {
+  //     console.error('Error submitting report:', error);
+  //     alert('Failed to submit the report.');
+  //   }
+  // };
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {

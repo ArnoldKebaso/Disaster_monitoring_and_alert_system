@@ -1,162 +1,182 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Home = () => {
+const Home: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Navbar Section */}
-      <nav className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center">
-        <div className="text-2xl font-bold">
-          <h1>Flood Monitoring and Alert System</h1>
-        </div>
-        <ul className="flex gap-6 items-center">
-          <li>
-            <Link to="/" className="hover:text-red-500">
-              Home
-            </Link>
-          </li>
-          <li className="relative group">
-            <span className="hover:text-red-500 cursor-pointer">Who We Are</span>
-            <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 text-sm mt-2 py-2 px-4 shadow-md border-t-2 border-red-500 z-10">
+      <div className="min-h-screen flex flex-col">
+        {/* Navbar Section */}
+        <nav className="bg-blue-900 text-white px-6 py-4 shadow-lg">
+          <div className="flex justify-between items-center">
+            {/* Logo Section */}
+            <div className="text-2xl font-extrabold tracking-wide">
+              Flood Management
+            </div>
+
+            {/* Hamburger Menu for Mobile */}
+            <button
+                className="lg:hidden focus:outline-none text-white"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <svg
+                  className="w-6 h-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+              >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                />
+              </svg>
+            </button>
+
+            {/* Links Section */}
+            <ul
+                className={`lg:flex lg:items-center lg:gap-8 ${
+                    isMenuOpen ? "flex flex-col mt-4 gap-4" : "hidden"
+                }`}
+            >
               <li>
-                <Link to="/about" className="hover:text-red-500">
-                  About Us
+                <Link
+                    to="/"
+                    className="hover:text-yellow-300 transition-all duration-200"
+                >
+                  Home
                 </Link>
               </li>
-              <li>
-                <Link to="/management" className="hover:text-red-500">
-                  Management Team
-                </Link>
+              <li className="relative group">
+              <span className="cursor-pointer hover:text-yellow-300 transition-all duration-200">
+                Who We Are
+              </span>
+                <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 mt-2 py-2 px-4 text-sm shadow-lg border-t-2 border-yellow-300">
+                  <li>
+                    <Link to="/about" className="hover:text-yellow-300">
+                      About Us
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/management" className="hover:text-yellow-300">
+                      Management
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/governance" className="hover:text-yellow-300">
+                      Governance
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+              <li className="relative group">
+              <span className="cursor-pointer hover:text-yellow-300 transition-all duration-200">
+                What We Do
+              </span>
+                <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 mt-2 py-2 px-4 text-sm shadow-lg border-t-2 border-yellow-300">
+                  <li>
+                    <Link to="/disaster-management" className="hover:text-yellow-300">
+                      Disaster Management
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/research" className="hover:text-yellow-300">
+                      Early Warnings
+                    </Link>
+                  </li>
+                </ul>
               </li>
               <li>
-                <Link to="/governance" className="hover:text-red-500">
-                  Governance
+                <Link
+                    to="/contact"
+                    className="hover:text-yellow-300 transition-all duration-200"
+                >
+                  Contact Us
                 </Link>
               </li>
             </ul>
-          </li>
-          <li className="relative group">
-            <span className="hover:text-red-500 cursor-pointer">What We Do</span>
-            <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 text-sm mt-2 py-2 px-4 shadow-md border-t-2 border-red-500 z-10">
-              <li>
-                <Link to="/disaster-management" className="hover:text-red-500">
-                  Disaster Management
-                </Link>
-              </li>
-              <li>
-                <Link to="/tracing" className="hover:text-red-500">
-                  Tracing
-                </Link>
-              </li>
-              <li>
-                <Link to="/refugee-operations" className="hover:text-red-500">
-                  Refugee Operations
-                </Link>
-              </li>
-              <li>
-                <Link to="/livelihoods" className="hover:text-red-500">
-                  Livelihoods
-                </Link>
-              </li>
-              <li>
-                <Link to="/wash" className="hover:text-red-500">
-                  Water, Sanitation & Hygiene
-                </Link>
-              </li>
-              <li>
-                <Link to="/public-health" className="hover:text-red-500">
-                  Public Health Emergencies
-                </Link>
-              </li>
-            </ul>
-          </li>
-          <li className="relative group">
-            <span className="hover:text-red-500 cursor-pointer">Get Involved</span>
-            <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 text-sm mt-2 py-2 px-4 shadow-md border-t-2 border-red-500 z-10">
-              <li>
-                <Link to="/volunteer" className="hover:text-red-500">
-                  Become a Volunteer
-                </Link>
-              </li>
-              <li>
-                <Link to="/member" className="hover:text-red-500">
-                  Become a Member
-                </Link>
-              </li>
-              <li>
-                <Link to="/careers" className="hover:text-red-500">
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link to="/donate" className="hover:text-red-500">
-                  Donate
-                </Link>
-              </li>
-              <li>
-                <Link to="/events" className="hover:text-red-500">
-                  Events
-                </Link>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <Link to="/contact" className="hover:text-red-500">
-              Contact Us
-            </Link>
-          </li>
-        </ul>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="bg-cover bg-center h-[600px] flex flex-col justify-center items-center text-center text-white" style={{ backgroundImage: "url('./src/assets/sigonella-81772_1920.jpg')" }}>
-        <h1 className="text-4xl font-bold mb-4">Welcome to the Flood Monitoring and Alert System</h1>
-        <p className="text-lg mb-6">
-          Ensuring safety through timely disaster management and community support.
-        </p>
-        <Link to="/get-involved" className="bg-red-500 text-white py-2 px-6 rounded hover:bg-red-600">
-          Get Involved
-        </Link>
-      </section>
-
-      {/* Highlights Section */}
-      <section className="py-16 bg-gray-100">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="highlight text-center">
-            <img src="https://via.placeholder.com/300" alt="What We Do" className="mx-auto mb-4 w-24 h-24" />
-            <h2 className="text-xl font-bold text-blue-900 mb-2">What We Do</h2>
-            <p className="text-gray-600">We provide disaster monitoring, tracing, and critical assistance to affected communities.</p>
           </div>
-          <div className="highlight text-center">
-            <img src="https://via.placeholder.com/300" alt="Get Involved" className="mx-auto mb-4 w-24 h-24" />
-            <h2 className="text-xl font-bold text-blue-900 mb-2">Get Involved</h2>
-            <p className="text-gray-600">Become a volunteer or make a difference through donations and support.</p>
-          </div>
-          <div className="highlight text-center">
-            <img src="https://via.placeholder.com/300" alt="Contact Us" className="mx-auto mb-4 w-24 h-24" />
-            <h2 className="text-xl font-bold text-blue-900 mb-2">Contact Us</h2>
-            <p className="text-gray-600">Reach out for information, help, or collaboration opportunities.</p>
-          </div>
-        </div>
-      </section>
+        </nav>
 
-      {/* Footer Section */}
-      <footer className="bg-blue-900 text-white py-4 text-center">
-        <p className="mb-2">&copy; {new Date().getFullYear()} Flood Monitoring and Alert System. All Rights Reserved.</p>
-        <ul className="flex justify-center gap-4">
-          <li>
-            <Link to="/privacy-policy" className="hover:text-red-500">
-              Privacy Policy
+        {/* Hero Section */}
+        <section
+            className="bg-cover bg-center h-[500px] flex flex-col justify-center items-center text-center text-white"
+            style={{
+              backgroundImage:
+                  "url('https://via.placeholder.com/1920x1080/003a8c/ffffff?text=Flood+Management')"
+            }}
+        >
+          <div className="bg-black bg-opacity-50 p-8 rounded-md">
+            <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-4">
+              Be Prepared, Stay Safe
+            </h1>
+            <p className="text-lg lg:text-xl mb-6">
+              Comprehensive Flood Monitoring and Disaster Management Solutions.
+            </p>
+            <Link
+                to="/get-involved"
+                className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
+            >
+              Get Involved
             </Link>
-          </li>
-          <li>
-            <Link to="/terms" className="hover:text-red-500">
-              Terms of Service
-            </Link>
-          </li>
-        </ul>
-      </footer>
-    </div>
+          </div>
+        </section>
+
+        {/* Information Sections */}
+        <section className="py-16 bg-gray-100">
+          <div className="container mx-auto grid md:grid-cols-3 gap-8 px-4">
+            {/* Section Block */}
+            <div className="text-center p-8 bg-white shadow-md hover:shadow-xl transition-all duration-200 rounded-lg border-t-4 border-yellow-400">
+              <img
+                  src="https://via.placeholder.com/64"
+                  alt="What We Do"
+                  className="mx-auto mb-6 w-16 h-16"
+              />
+              <h2 className="text-xl font-bold text-blue-900 mb-2">What We Do</h2>
+              <p className="text-gray-600">
+                We provide innovative disaster preparedness and flood monitoring services.
+              </p>
+            </div>
+
+            {/* Section Block */}
+            <div className="text-center p-8 bg-white shadow-md hover:shadow-xl transition-all duration-200 rounded-lg border-t-4 border-yellow-400">
+              <img
+                  src="https://via.placeholder.com/64"
+                  alt="Who We Are"
+                  className="mx-auto mb-6 w-16 h-16"
+              />
+              <h2 className="text-xl font-bold text-blue-900 mb-2">Who We Are</h2>
+              <p className="text-gray-600">
+                Our team is dedicated to early warning systems, disaster response, and community safety.
+              </p>
+            </div>
+
+            {/* Section Block */}
+            <div className="text-center p-8 bg-white shadow-md hover:shadow-xl transition-all duration-200 rounded-lg border-t-4 border-yellow-400">
+              <img
+                  src="https://via.placeholder.com/64"
+                  alt="Get Involved"
+                  className="mx-auto mb-6 w-16 h-16"
+              />
+              <h2 className="text-xl font-bold text-blue-900 mb-2">Get Involved</h2>
+              <p className="text-gray-600">
+                Join us as a volunteer or support us through donations to make a difference.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-blue-900 text-white py-6 text-sm text-center">
+          <p>
+            &copy; {new Date().getFullYear()} Flood Management System. All rights
+            reserved. | <Link to="/privacy" className="hover:text-yellow-300">Privacy Policy</Link> |
+            <Link to="/terms" className="hover:text-yellow-300"> Terms of Service</Link>
+          </p>
+        </footer>
+      </div>
   );
 };
 
