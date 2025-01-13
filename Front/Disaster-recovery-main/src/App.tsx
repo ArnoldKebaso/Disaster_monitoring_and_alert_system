@@ -15,6 +15,7 @@ import HealthcareComponent from './components/HealthcareComponent';
 import FloodComponent from './components/FloodComponent';
 import  DisasterInfo from './components/Infomation';
 import Donate from './components/DonateComponent';
+import ContactUS from './components/ContactUS';
 //import AgenciesPage from './components/CommunityReporting';
 import AgenciesPage from './components/Agencies';
 import Home from './components/Home';
@@ -36,7 +37,8 @@ const App: React.FC = () => {
           <Route path="/healthcare" element={<HealthcareComponent />} />
           <Route path="/floods" element={<FloodComponent />} />
           <Route path="/disasterinfo" element={<DisasterInfo />} /> 
-          <Route path="/donate" element={<Donate />} />  
+          <Route path="/donate" element={<Donate />} />
+          <Route path="/contact" element={<ContactUS />} />
   
           <Route path='/home' element={<Home />} />
         </Routes>

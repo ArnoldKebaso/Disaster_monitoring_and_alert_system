@@ -111,3 +111,5 @@ const ContactUS: React.FC = () => {
         </div>
     );
 };
+
+export default ContactUS;
