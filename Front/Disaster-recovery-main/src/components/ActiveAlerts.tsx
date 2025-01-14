@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Search, AlertTriangle, MapPin, Clock } from 'lucide-react';
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Card, CardContent } from "./ui/card";
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Card, CardContent } from './ui/card';
 
 const AlertTypes = ['All Types', 'Flood', 'Earthquake', 'Wildfire', 'Tsunami', 'Tornado'];
 const Severities = ['All Severities', 'Low', 'Medium', 'High'];
@@ -37,198 +37,115 @@ const ActiveAlerts: React.FC = () => {
     return new Date(timestamp).toLocaleString();
   };
 
-  const filteredAlerts = alerts.filter(alert =>
-    alert.location.toLowerCase().includes(searchQuery.toLowerCase()) &&
-    (activeType === 'All Types' || alert.alert_type === activeType) &&
-    (activeSeverity === 'All Severities' || alert.severity === activeSeverity)
+  const filteredAlerts = alerts.filter(
+      (alert) =>
+          alert.location.toLowerCase().includes(searchQuery.toLowerCase()) &&
+          (activeType === 'All Types' || alert.alert_type === activeType) &&
+          (activeSeverity === 'All Severities' || alert.severity === activeSeverity)
   );
 
   if (loading) {
-    return <div>Loading alerts...</div>;
+    return <div className="text-center text-gray-500">Loading alerts...</div>;
   }
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow">
-      <h1 className="text-3xl font-bold mb-6">Active Alerts</h1>
-      
-      <div className="mb-6">
-        <div className="flex items-center mb-4">
-          <div className="relative flex-grow mr-2">
-            <Input
-              type="text"
-              placeholder="Search by location"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 w-full"
-            />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-          </div>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-            Search
-          </Button>
-        </div>
-        
-        <div className="flex flex-wrap gap-2 mb-2">
-          {AlertTypes.map(type => (
-            <Button 
-              key={type}
-              onClick={() => setActiveType(type)}
-              variant={activeType === type ? "default" : "outline"}
-              className={`px-4 py-2 text-sm ${activeType === type ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
-            >
-              {type}
-            </Button>
-          ))}
-        </div>
-        
-        <div className="flex flex-wrap gap-2">
-          {Severities.map(severity => (
-            <Button 
-              key={severity}
-              onClick={() => setActiveSeverity(severity)}
-              variant={activeSeverity === severity ? "default" : "outline"}
-              className={`px-4 py-2 text-sm ${activeSeverity === severity ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
-            >
-              {severity}
-            </Button>
-          ))}
-        </div>
-      </div>
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl font-bold my-6 text-gray-800 tracking-tight">Active Alerts</h1>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredAlerts.map(alert => (
-          <Card key={alert.alert_id} className="border rounded-lg overflow-hidden">
-            <CardContent className="p-4">
-              <div className="flex items-center mb-2">
-                <AlertTriangle className={`mr-2 h-5 w-5 ${
-                  alert.severity === 'High' ? 'text-red-500' : 
-                  alert.severity === 'Medium' ? 'text-yellow-500' : 'text-green-500'
-                }`} />
-                <h3 className="text-xl font-semibold">{alert.alert_type} Alert</h3>
+          {/* Search and Filters */}
+          <div className="mb-8">
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="relative flex flex-grow">
+                <Input
+                    type="text"
+                    placeholder="Search by location..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 rounded-lg border-gray-300 text-sm focus:ring focus:ring-blue-300"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               </div>
-              <p className="font-semibold mb-2">{alert.severity} Severity</p>
-              <p className="flex items-center mb-1">
-                <MapPin className="mr-2 h-4 w-4" /> {alert.location}
-              </p>
-              <p className="flex items-center mb-4">
-                <Clock className="mr-2 h-4 w-4" /> {formatDate(alert.createdAt)}
-              </p>
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">View Details</Button>
-            </CardContent>
-          </Card>
-        ))}
+              <Button className="bg-blue-600 rounded-lg hover:bg-blue-700 text-white px-5 py-3 text-sm">
+                Search
+              </Button>
+            </div>
+
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap gap-2 mb-4">
+              {AlertTypes.map((type) => (
+                  <Button
+                      key={type}
+                      onClick={() => setActiveType(type)}
+                      className={`px-4 py-2 rounded border text-sm ${
+                          activeType === type
+                              ? 'bg-blue-600 text-white border-blue-600 shadow'
+                              : 'border-gray-300 text-gray-600 hover:bg-gray-100'
+                      }`}
+                  >
+                    {type}
+                  </Button>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {Severities.map((severity) => (
+                  <Button
+                      key={severity}
+                      onClick={() => setActiveSeverity(severity)}
+                      className={`px-4 py-2 rounded border text-sm ${
+                          activeSeverity === severity
+                              ? 'bg-blue-600 text-white border-blue-600 shadow'
+                              : 'border-gray-300 text-gray-600 hover:bg-gray-100'
+                      }`}
+                  >
+                    {severity}
+                  </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* Alerts Grid */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredAlerts.map((alert) => (
+                <Card
+                    key={alert.alert_id}
+                    className="bg-white border rounded-lg shadow-md transition-transform transform hover:scale-105"
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center mb-4">
+                      <AlertTriangle
+                          className={`mr-2 h-6 w-6 ${
+                              alert.severity === 'High'
+                                  ? 'text-red-500'
+                                  : alert.severity === 'Medium'
+                                      ? 'text-yellow-500'
+                                      : 'text-green-500'
+                          }`}
+                      />
+                      <h3 className="text-lg font-bold text-gray-800">{alert.alert_type} Alert</h3>
+                    </div>
+
+                    <p className="text-sm font-medium text-gray-600 mb-2">
+                      Severity: <span className="font-bold">{alert.severity}</span>
+                    </p>
+                    <p className="flex items-center text-sm text-gray-600 mb-1">
+                      <MapPin className="mr-2 h-4 w-4 text-gray-400" />
+                      {alert.location}
+                    </p>
+                    <p className="flex items-center text-sm text-gray-600 mb-4">
+                      <Clock className="mr-2 h-4 w-4 text-gray-400" />
+                      {formatDate(alert.createdAt)}
+                    </p>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">
+                      View Details
+                    </Button>
+                  </CardContent>
+                </Card>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
   );
 };
 
 export default ActiveAlerts;
-
-
-
-// import React, { useState } from 'react';
-// import { Search, AlertTriangle, MapPin, Clock } from 'lucide-react';
-// import { Button } from "./ui/button";
-// import { Input } from "./ui/input";
-// import { Card, CardContent } from "./ui/card";
-
-// const alerts = [
-//   { id: 1, type: 'Flood', severity: 'High', location: 'Riverside County', timestamp: '2023-06-15T13:30:00Z' },
-//   { id: 2, type: 'Earthquake', severity: 'Medium', location: 'San Francisco Bay Area', timestamp: '2023-06-15T12:45:00Z' },
-//   { id: 3, type: 'Wildfire', severity: 'High', location: 'Southern California', timestamp: '2023-06-15T11:15:00Z' },
-// ];
-
-// const AlertTypes = ['All Types', 'Flood', 'Earthquake', 'Wildfire', 'Tsunami', 'Tornado'];
-// const Severities = ['All Severities', 'Low', 'Medium', 'High'];
-
-// const ActiveAlerts: React.FC = () => {
-//   const [searchQuery, setSearchQuery] = useState('');
-//   const [activeType, setActiveType] = useState('All Types');
-//   const [activeSeverity, setActiveSeverity] = useState('All Severities');
-
-//   const formatDate = (timestamp: string) => {
-//     return new Date(timestamp).toLocaleString();
-//   };
-
-//   const filteredAlerts = alerts.filter(alert => 
-//     alert.location.toLowerCase().includes(searchQuery.toLowerCase()) &&
-//     (activeType === 'All Types' || alert.type === activeType) &&
-//     (activeSeverity === 'All Severities' || alert.severity === activeSeverity)
-//   );
-
-//   return (
-//     <div className="p-6 bg-white rounded-lg shadow">
-//       <h1 className="text-3xl font-bold mb-6">Active Alerts</h1>
-      
-//       <div className="mb-6">
-//         <div className="flex items-center mb-4">
-//           <div className="relative flex-grow mr-2">
-//             <Input
-//               type="text"
-//               placeholder="Search by location"
-//               value={searchQuery}
-//               onChange={(e) => setSearchQuery(e.target.value)}
-//               className="pl-10 pr-4 py-2 w-full"
-//             />
-//             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-//           </div>
-//           <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-//             Search
-//           </Button>
-//         </div>
-        
-//         <div className="flex flex-wrap gap-2 mb-2">
-//           {AlertTypes.map(type => (
-//             <Button 
-//               key={type}
-//               onClick={() => setActiveType(type)}
-//               variant={activeType === type ? "default" : "outline"}
-//               className={`px-4 py-2 text-sm ${activeType === type ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
-//             >
-//               {type}
-//             </Button>
-//           ))}
-//         </div>
-        
-//         <div className="flex flex-wrap gap-2">
-//           {Severities.map(severity => (
-//             <Button 
-//               key={severity}
-//               onClick={() => setActiveSeverity(severity)}
-//               variant={activeSeverity === severity ? "default" : "outline"}
-//               className={`px-4 py-2 text-sm ${activeSeverity === severity ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'}`}
-//             >
-//               {severity}
-//             </Button>
-//           ))}
-//         </div>
-//       </div>
-
-//       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-//         {filteredAlerts.map(alert => (
-//           <Card key={alert.id} className="border rounded-lg overflow-hidden">
-//             <CardContent className="p-4">
-//               <div className="flex items-center mb-2">
-//                 <AlertTriangle className={`mr-2 h-5 w-5 ${
-//                   alert.severity === 'High' ? 'text-red-500' : 
-//                   alert.severity === 'Medium' ? 'text-yellow-500' : 'text-green-500'
-//                 }`} />
-//                 <h3 className="text-xl font-semibold">{alert.type} Alert</h3>
-//               </div>
-//               <p className="font-semibold mb-2">{alert.severity} Severity</p>
-//               <p className="flex items-center mb-1">
-//                 <MapPin className="mr-2 h-4 w-4" /> {alert.location}
-//               </p>
-//               <p className="flex items-center mb-4">
-//                 <Clock className="mr-2 h-4 w-4" /> {formatDate(alert.timestamp)}
-//               </p>
-//               <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">View Details</Button>
-//             </CardContent>
-//           </Card>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ActiveAlerts;
