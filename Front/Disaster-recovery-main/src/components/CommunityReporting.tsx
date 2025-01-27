@@ -68,6 +68,7 @@ const CommunityReporting: React.FC = () => {
 
       const response = await axios.get('http://localhost:3000/community-reports');
       setReports(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Error submitting report:', error);
       alert(`Failed to submit the report. Error: ${error.message}`);
@@ -80,7 +81,10 @@ const CommunityReporting: React.FC = () => {
     }
   };
 
-  const formatDate = (timestamp: string) => new Date(timestamp).toLocaleString();
+  const formatDate = (timestamp: string) => {
+  const date = new Date(timestamp);
+  return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleString();
+};
 
   return (
       <div className="p-6 bg-gray-50 min-h-screen">

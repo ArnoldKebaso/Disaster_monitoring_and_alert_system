@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent } from './ui/card';
 
-const AlertTypes = ['All Types', 'Flood', 'Earthquake', 'Wildfire', 'Tsunami', 'Tornado'];
+const AlertTypes = ['All Types', 'FlashFlood', 'RiverFlood', 'CoastalFlood', 'UrbanFlood', 'ElNinoFlooding'];
 const Severities = ['All Severities', 'Low', 'Medium', 'High'];
 
 const ActiveAlerts: React.FC = () => {
