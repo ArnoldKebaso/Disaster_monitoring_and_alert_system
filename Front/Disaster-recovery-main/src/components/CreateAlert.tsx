@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -13,19 +13,16 @@ const alertTypes = [
   { value: 'ElNinoFlooding', label: '🌧️ El Niño Flooding' },
 ];
 
-const severities = [
-  { value: 'Low', label: 'Low' },
-  { value: 'Medium', label: 'Medium' },
-  { value: 'High', label: 'High' },
-];
+const severities = ['Low', 'Medium', 'High'];
 
 const CreateAlert: React.FC = () => {
   const [alertType, setAlertType] = useState('');
   const [severity, setSeverity] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!alertType || !severity || !location) {
@@ -38,11 +35,13 @@ const CreateAlert: React.FC = () => {
       severity,
       location,
       description,
-      status: 'active', // Default status
+      status: 'active',
     };
 
+    setLoading(true);
+
     try {
-      const response = await axios.post('http://localhost:3000/alerts', payload, {
+      await axios.post('http://localhost:3000/alerts', payload, {
         headers: { 'Content-Type': 'application/json' },
       });
       alert('Alert created successfully!');
@@ -52,15 +51,17 @@ const CreateAlert: React.FC = () => {
       setDescription('');
     } catch (error) {
       console.error('Error creating alert:', error);
-      alert('Failed to create the alert. Please try again.');
+      alert('Failed to create the alert.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto bg-white shadow-lg p-6 rounded-lg">
-        <h1 className="text-2xl font-bold mb-4 text-gray-800">Create a New Alert</h1>
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 className="text-2xl font-bold mb-6">Create a New Alert</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="alert-type" className="block text-sm font-medium text-gray-700">
               Alert Type
@@ -87,11 +88,11 @@ const CreateAlert: React.FC = () => {
               id="severity"
               value={severity}
               onValueChange={setSeverity}
-              placeholder="Select severity"
+              placeholder="Select severity level"
             >
               {severities.map((level) => (
-                <Select.Option key={level.value} value={level.value}>
-                  {level.label}
+                <Select.Option key={level} value={level}>
+                  {level}
                 </Select.Option>
               ))}
             </Select>
@@ -106,24 +107,29 @@ const CreateAlert: React.FC = () => {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Enter the location"
+              required
             />
           </div>
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-              Description
+              Description (optional)
             </label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Add an optional description"
+              placeholder="Provide additional details about the alert"
               rows={4}
             />
           </div>
 
-          <Button type="submit" className="w-full bg-blue-600 text-white hover:bg-blue-700 py-3 rounded-lg">
-            Create Alert
+          <Button
+            type="submit"
+            className={`w-full py-3 rounded-lg ${loading ? 'bg-gray-400' : 'bg-blue-600'} text-white`}
+            disabled={loading}
+          >
+            {loading ? 'Creating Alert...' : 'Create Alert'}
           </Button>
         </form>
       </div>
