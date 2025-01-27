@@ -8,10 +8,13 @@ import { Card, CardContent } from './ui/card';
 import { Select } from './ui/select';
 
 const hazardTypes = [
-  { value: 'Flooding', label: '🌊 Flooding', description: 'Rising water levels, submerged areas' },
-  { value: 'Wildfire', label: '🔥 Wildfire', description: 'Smoke, flames, or burning smell' },
-  { value: 'Landslide', label: '🏔️ Landslide', description: 'Moving earth, rocks, or debris' },
+  { value: 'FlashFlood', label: '⚡ Flash Flood', description: 'Sudden, intense flooding.' },
+  { value: 'RiverFlood', label: '🌊 River Flood', description: 'Overflowing rivers and streams.' },
+  { value: 'CoastalFlood', label: '🌴 Coastal Flood', description: 'Flooding along coastlines.' },
+  { value: 'UrbanFlood', label: '🏙️ Urban Flood', description: 'Flooding in cities and towns.' },
+  { value: 'ElNinoFlooding', label: '🌧️ El Niño Flooding', description: 'Flooding due to El Niño effects.' },
 ];
+
 
 interface Report {
   id: number;

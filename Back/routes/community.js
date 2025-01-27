@@ -33,10 +33,10 @@ const { getAllReports, getReportById, createReport, updateReport, deleteReport }
  *                     example: "Flooding"
  *                   location:
  *                     type: string
- *                     example: "Nairobi"
+ *                     example: "Njoro"
  *                   description:
  *                     type: string
- *                     example: "Flooding near the river."
+ *                     example: "Flooding near the river Njoro."
  *                   status:
  *                     type: string
  *                     example: "pending"
@@ -85,7 +85,7 @@ router.get('/:id', getReportById);
  *             properties:
  *               report_type:
  *                 type: string
- *                 enum: [Flooding, Wildfire, Landslide]
+ *                 enum: ['FlashFlood', 'RiverFlood', 'CoastalFlood', 'UrbanFlood', 'ElNinoFlooding']
  *                 example: "Flooding"
  *               location:
  *                 type: string
@@ -133,10 +133,10 @@ router.post('/', createReport);
  *             properties:
  *               report_type:
  *                 type: string
- *                 enum: [Flooding, Wildfire, Landslide]
+ *                 enum: ['FlashFlood', 'RiverFlood', 'CoastalFlood', 'UrbanFlood', 'ElNinoFlooding']
  *                 example: "Flooding"
  *               location:
- *                 type: string
+ *                 type: stringy
  *                 example: "Nairobi"
  *               description:
  *                 type: string
