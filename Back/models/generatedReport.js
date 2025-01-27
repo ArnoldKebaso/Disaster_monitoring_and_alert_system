@@ -22,6 +22,6 @@ const GeneratedReport = sequelize.define('GeneratedReport', {
 });
 
 // Define relationships
-GeneratedReport.belongsTo(Alert, { foreignKey: 'alert_id' });
+// GeneratedReport.belongsTo(Alert, { foreignKey: 'alert_id' });
 
 module.exports = GeneratedReport;
