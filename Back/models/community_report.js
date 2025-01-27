@@ -10,7 +10,7 @@ const CommunityReport = sequelize.define('CommunityReport', {
     autoIncrement: true,
   },
   report_type: {
-    type: DataTypes.ENUM('Flooding', 'Wildfire', 'Landslide'),
+    type: DataTypes.ENUM('FlashFlood', 'RiverFlood', 'CoastalFlood', 'UrbanFlood', 'ElNinoFlooding'),
     allowNull: false,
   },
   location: {
