@@ -15,6 +15,7 @@ const hazardTypes = [
   { value: 'ElNinoFlooding', label: '🌧️ El Niño Flooding', description: 'Flooding due to El Niño effects.' },
 ];
 
+
 interface Report {
   id: number;
   type: string;
