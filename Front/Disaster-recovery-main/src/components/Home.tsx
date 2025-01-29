@@ -234,7 +234,7 @@ const Home: React.FC = () => {
         <div className="bg-black bg-opacity-50 p-8 rounded-md">
           <h2 className="text-3xl font-bold mb-4">Report Flood Incidents</h2>
           <Link
-            to="/community-report"
+            to="/report"
             className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
           >
             Report Now
