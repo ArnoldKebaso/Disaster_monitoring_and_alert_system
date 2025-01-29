@@ -8,7 +8,7 @@ import DisasterDetails from './components/DisasterDetails';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import Location from './components/Location';
-import ResourceComponent from './components/ResourceComponent';
+import ResourceComponent from './components/ResourceComponent'; 
 import Register from './components/Register';
 import DemographicComponent from './components/DemographicComponent';
 import HealthcareComponent from './components/HealthcareComponent';
