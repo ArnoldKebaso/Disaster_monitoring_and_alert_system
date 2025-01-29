@@ -1,0 +1,30 @@
+{
+  "navbar": {
+    "home": "Nyumbani",
+    "about": "Kuhusu Sisi",
+    "getInvolved": "Jihusishe",
+    "resources": "Rasilimali",
+    "agencies": "Mashirika",
+    "contact": "Wasiliana Nasi"
+  },
+  "hero": {
+    "title": "Jitayarishe, Uwe Salama",
+    "description": "Ufuatiliaji wa Mafuriko na Suluhisho za Usimamizi wa Maafa.",
+    "donate": "Changia Kusaidia",
+    "viewAlerts": "Tazama Tahadhari"
+  },
+  "subscribe": {
+    "title": "Jisajili Kupokea Arifa kwa Barua Pepe",
+    "method": "Chagua Njia ya Arifa",
+    "email": "Barua Pepe",
+    "sms": "SMS",
+    "placeholder": "Ingiza barua pepe au nambari ya simu",
+    "subscribeButton": "Jisajili"
+  },
+  "footer": {
+    "contactUs": "Wasiliana Nasi",
+    "phone": "Simu: +254-712-345-678",
+    "email": "Barua pepe: info@fmas.co.ke",
+    "address": "Sanduku la Posta 536 - 20115, Egerton-Njoro, Kenya"
+  }
+}

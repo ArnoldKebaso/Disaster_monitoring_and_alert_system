@@ -1,0 +1,30 @@
+{
+  "navbar": {
+    "home": "Home",
+    "about": "About Us",
+    "getInvolved": "Get Involved",
+    "resources": "Resources",
+    "agencies": "Agencies",
+    "contact": "Contact Us"
+  },
+  "hero": {
+    "title": "Be Prepared, Stay Safe",
+    "description": "Comprehensive Flood Monitoring and Disaster Management Solutions.",
+    "donate": "Donate to Support",
+    "viewAlerts": "View Alerts"
+  },
+  "subscribe": {
+    "title": "Subscribe for Email Notifications",
+    "method": "Choose Notification Method",
+    "email": "Email",
+    "sms": "SMS",
+    "placeholder": "Enter your email or phone number",
+    "subscribeButton": "Subscribe"
+  },
+  "footer": {
+    "contactUs": "Contact Us",
+    "phone": "Phone: +254-712-345-678",
+    "email": "Email: info@fmas.co.ke",
+    "address": "P.O. Box 536 - 20115, Egerton-Njoro, Kenya"
+  }
+}
