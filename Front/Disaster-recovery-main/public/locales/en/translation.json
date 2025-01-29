@@ -1,0 +1,63 @@
+{
+  "languageToggle": "Switch to Swahili",
+  "navbar": {
+    "title": "Flood Management",
+    "home": "Home",
+    "about": "About Us",
+    "getInvolved": "Get Involved",
+    "donate": "Donate",
+    "resources": "Resources",
+    "impactStories": "Impact Stories",
+    "annualReports": "Annual Reports",
+    "agencies": "Agencies",
+    "contact": "Contact Us",
+    "alerts": "View Alerts"
+  },
+  "hero": {
+    "title": "Be Prepared, Stay Safe",
+    "description": "Comprehensive Flood Monitoring and Disaster Management Solutions."
+  },
+  "subscribe": {
+    "title": "Subscribe for Email Notifications",
+    "method": "Choose Notification Method",
+    "selectMethod": "Select a method",
+    "email": "Email",
+    "sms": "SMS",
+    "placeholder": "Enter your email or phone number",
+    "subscribeButton": "Subscribe"
+  },
+  "whatWeDo": {
+    "title": "What We Do",
+    "floodMonitoring": "Flood Monitoring",
+    "floodAlert": "Flood Alert",
+    "resourceAllocation": "Resource Allocation",
+    "floodResponse": "Flood Response",
+    "description": "Learn more about our efforts."
+  },
+  "analytics": {
+    "title": "Our Impact",
+    "countyBranches": "County Branches",
+    "regionalOffices": "Regional Offices",
+    "membersVolunteers": "Members & Volunteers",
+    "beneficiariesSupported": "Beneficiaries Supported"
+  },
+  "reportFlood": {
+    "title": "Report Flood Incidents",
+    "button": "Report Now"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "adminPortal": "Admin Portal",
+    "responderPortal": "Responder Portal",
+    "userDashboard": "User Dashboard",
+    "publications": "Publications",
+    "impactStories": "Impact Stories",
+    "donate": "Donate",
+    "aboutUs": "About Us",
+    "contactUs": "Contact Us",
+    "contactTitle": "Contact Us",
+    "phone": "Phone: +254-712-345-678",
+    "email": "Email: info@fmas.co.ke",
+    "address": "P.O. Box 536 - 20115, Egerton-Njoro, Kenya"
+  }
+}

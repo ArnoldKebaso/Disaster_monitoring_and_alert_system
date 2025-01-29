@@ -9,7 +9,7 @@ const Alert = sequelize.define('Alert', {
     autoIncrement: true,
   },
   alert_type: {
-    type: DataTypes.ENUM('Flood', 'Earthquake', 'Wildfire', 'Tsunami', 'Tornado'),
+    type: DataTypes.ENUM('FlashFlood', 'RiverFlood', 'CoastalFlood', 'UrbanFlood', 'ElNinoFlooding'),
     allowNull: false,
   },
   severity: {

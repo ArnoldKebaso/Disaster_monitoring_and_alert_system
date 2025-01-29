@@ -8,15 +8,18 @@ import DisasterDetails from './components/DisasterDetails';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import Location from './components/Location';
-import ResourceComponent from './components/ResourceComponent';
+import ResourceComponent from './components/ResourceComponent'; 
 import Register from './components/Register';
 import DemographicComponent from './components/DemographicComponent';
 import HealthcareComponent from './components/HealthcareComponent';
 import FloodComponent from './components/FloodComponent';
 import  DisasterInfo from './components/Infomation';
 import Donate from './components/DonateComponent';
-import AgenciesPage from './components/CommunityReporting';
+import ContactUS from './components/ContactUS';
+//import AgenciesPage from './components/Agencies';
+import AboutUs from './components/AboutUs';
 import Home from './components/Home';
+import CreateAlert from './components/CreateAlert';
 const App: React.FC = () => {
   return (
     <Router>
@@ -35,9 +38,11 @@ const App: React.FC = () => {
           <Route path="/healthcare" element={<HealthcareComponent />} />
           <Route path="/floods" element={<FloodComponent />} />
           <Route path="/disasterinfo" element={<DisasterInfo />} /> 
-          <Route path="/donate" element={<Donate />} />  
-          <Route path='/agencies' element={<AgenciesPage />} />
+          <Route path="/donate" element={<Donate />} />
+          <Route path="/contact" element={<ContactUS />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path='/home' element={<Home />} />
+          <Route path='/createAlert' element={<CreateAlert />} />
         </Routes>
       </Layout>
     </Router>

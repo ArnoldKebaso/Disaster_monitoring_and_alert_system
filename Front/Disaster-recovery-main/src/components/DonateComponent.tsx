@@ -40,7 +40,7 @@ const Donate: React.FC = () => {
         <h2 className="text-2xl font-semibold mb-4">Other Forms of Assistance</h2>
         <p className="text-gray-600 mb-2">If you wish to assist in other ways (e.g., volunteering, logistical support), please reach out to us at:</p>
         <div className="bg-gray-100 p-4 rounded-md text-center">
-          <p className="text-lg font-bold">Email: support@disasterrelief.org</p>
+          <p className="text-lg font-bold">Email: fmas@disaster.org</p>
           <p className="text-gray-600">Phone: +254 700 456 789</p>
         </div>
       </div>
