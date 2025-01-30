@@ -8,7 +8,7 @@ import DisasterDetails from './components/DisasterDetails';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import Location from './components/Location';
-import ResourceComponent from './components/ResourceComponent';
+import ResourceComponent from './components/ResourceComponent'; 
 import Register from './components/Register';
 import DemographicComponent from './components/DemographicComponent';
 import HealthcareComponent from './components/HealthcareComponent';
@@ -16,7 +16,7 @@ import FloodComponent from './components/FloodComponent';
 import  DisasterInfo from './components/Infomation';
 import Donate from './components/DonateComponent';
 import ContactUS from './components/ContactUS';
-//import AgenciesPage from './components/Agencies';
+import Agencies from './components/Agencies';
 import AboutUs from './components/AboutUs';
 import Home from './components/Home';
 import CreateAlert from './components/CreateAlert';
@@ -43,6 +43,7 @@ const App: React.FC = () => {
           <Route path="/about" element={<AboutUs />} />
           <Route path='/home' element={<Home />} />
           <Route path='/createAlert' element={<CreateAlert />} />
+          <Route path='/agencies' element={<Agencies />} />
         </Routes>
       </Layout>
     </Router>

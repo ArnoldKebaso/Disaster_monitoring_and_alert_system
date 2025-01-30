@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 
 const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t, i18n} = useTranslation() as any;
 
+const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language === "en" ? "sw" : "en");
+  };
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
@@ -11,8 +17,14 @@ const Home: React.FC = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="text-2xl font-extrabold tracking-wide">
-            Flood Management
+            {t("navbar.title")}
           </div>
+           <button
+            onClick={toggleLanguage}
+            className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-4 rounded-md transition"
+          >
+            {t("languageToggle")}
+          </button>
 
           {/* Hamburger Menu for Mobile */}
           <button
@@ -50,7 +62,7 @@ const Home: React.FC = () => {
                 to="/"
                 className="hover:text-yellow-300 transition-all duration-200"
               >
-                Home
+                {t("navbar.home")}
               </Link>
             </li>
             <li>
@@ -58,34 +70,34 @@ const Home: React.FC = () => {
                 to="/about"
                 className="hover:text-yellow-300 transition-all duration-200"
               >
-                About Us
+                {t("navbar.about")}
               </Link>
             </li>
             <li className="relative group">
               <span className="cursor-pointer hover:text-yellow-300 transition-all duration-200">
-                Get Involved
+                {t("navbar.getInvolved")}
               </span>
               <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 mt-2 py-2 px-4 text-sm shadow-lg border-t-2 border-yellow-300">
                 <li>
                   <Link to="/donate" className="hover:text-yellow-300">
-                    Donate
+                    {t("navbar.donate")}
                   </Link>
                 </li>
               </ul>
             </li>
             <li className="relative group">
               <span className="cursor-pointer hover:text-yellow-300 transition-all duration-200">
-                Resources
+                {t("navbar.resources")}
               </span>
               <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 mt-2 py-2 px-4 text-sm shadow-lg border-t-2 border-yellow-300">
                 <li>
                   <Link to="/impact-stories" className="hover:text-yellow-300">
-                    Impact Stories
+                    {t("navbar.impactStories")}
                   </Link>
                 </li>
                 <li>
                   <Link to="/annual-reports" className="hover:text-yellow-300">
-                    Annual Reports
+                   {t("navbar.annualReports")}
                   </Link>
                 </li>
               </ul>
@@ -95,7 +107,7 @@ const Home: React.FC = () => {
                 to="/agencies"
                 className="hover:text-yellow-300 transition-all duration-200"
               >
-                Agencies
+                {t("navbar.agencies")}
               </Link>
             </li>
             <li>
@@ -103,7 +115,7 @@ const Home: React.FC = () => {
                 to="/contact"
                 className="hover:text-yellow-300 transition-all duration-200"
               >
-                Contact Us
+                {t("navbar.contact")}
               </Link>
             </li>
           </ul>
@@ -120,23 +132,23 @@ const Home: React.FC = () => {
       >
         <div className="bg-black bg-opacity-50 p-8 rounded-md">
           <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-4">
-            Be Prepared, Stay Safe
+            {t("hero.title")}
           </h1>
           <p className="text-lg lg:text-xl mb-6">
-            Comprehensive Flood Monitoring and Disaster Management Solutions.
+           {t("hero.description")}
           </p>
           <div className="flex gap-4">
             <Link
               to="/donate"
               className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
             >
-              Donate to Support
+              {t("navbar.donate")}
             </Link>
             <Link
               to="/alerts"
               className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
             >
-              View Alerts
+              {t("navbar.alerts")}
             </Link>
           </div>
         </div>
@@ -145,22 +157,22 @@ const Home: React.FC = () => {
       {/* Subscribe Section */}
       <section className="py-16 bg-gray-100 text-center">
         <h2 className="text-3xl font-bold text-blue-900 mb-4">
-          Subscribe for Email Notifications
+          {t("subscribe.title")}
         </h2>
         <form className="max-w-lg mx-auto">
           <div className="mb-4">
             <label className="block text-left text-gray-700 font-medium mb-2">
-              Choose Notification Method
+               {t("subscribe.method")}
             </label>
             <select
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
               defaultValue=""
             >
               <option value="" disabled>
-                Select a method
+               {t("subscribe.selectMethod")}
               </option>
-              <option value="email">Email</option>
-              <option value="sms">SMS</option>
+              <option value="email">{t("subscribe.email")}</option>
+              <option value="sms">{t("subscribe.sms")}</option>
             </select>
           </div>
           <div className="mb-4">
@@ -174,7 +186,7 @@ const Home: React.FC = () => {
             type="submit"
             className="bg-blue-900 text-white py-2 px-6 rounded-md hover:bg-blue-700"
           >
-            Subscribe
+            {t("subscribe.subscribeButton")}
           </button>
         </form>
       </section>
@@ -204,7 +216,7 @@ const Home: React.FC = () => {
 
       {/* Analytics Section */}
       <section className="py-16 bg-blue-900 text-white text-center">
-        <h2 className="text-3xl font-bold mb-4">Our Impact</h2>
+        <h2 className="text-3xl font-bold mb-4">{t("analytics.title")}</h2>
         <div className="container mx-auto grid md:grid-cols-4 gap-8 px-4">
           {[
             { label: "County Branches", value: "12" },
@@ -265,10 +277,10 @@ const Home: React.FC = () => {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-bold">Contact Us</h3>
-            <p>Phone: +254-712-345-678</p>
-            <p>Email: info@fmas.co.ke</p>
-            <p>P.O. Box 536 - 20115, Egerton-Njoro, Kenya</p>
+            <h3 className="text-lg font-bold">{t("footer.contactTitle")}</h3>
+            <p>{t("footer.phone")}</p>
+            <p>{t("footer.email")}</p>
+            <p>{t("footer.address")}</p>
           </div>
         </div>
       </footer>
