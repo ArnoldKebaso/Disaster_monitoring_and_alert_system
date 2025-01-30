@@ -32,7 +32,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
             <AlertTriangle className="h-6 w-6 text-red-500" />
-            <span className="text-xl font-bold">Admin Panel</span>
+            <span className="text-xl font-bold">Dashboard</span>
           </Link>
           <nav>
             <ul className="flex space-x-4">

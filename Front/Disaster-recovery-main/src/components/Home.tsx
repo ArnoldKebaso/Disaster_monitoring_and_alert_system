@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 
 const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { t, i18n} = useTranslation() as any;//
-  //  ✅ Correct way to use `t()`
+  const { t, i18n} = useTranslation() as any;
+
 const toggleLanguage = () => {
     i18n.changeLanguage(i18n.language === "en" ? "sw" : "en");
   };
