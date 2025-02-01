@@ -1,11 +1,47 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
+import axios from 'axios';
 
 const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t, i18n} = useTranslation() as any;
+  const [subscriptionMethod, setSubscriptionMethod] = useState(""); 
+  const [contact, setContact] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
+
+const locations = [
+  "Bumadeya", "Budalangi Central", "Budubusi", "Mundere", "Musoma", "Sibuka",
+  "Sio Port", "Rukala", "Mukhweya", "Sigulu Island", "Siyaya", "Nambuku",
+  "West Bunyala", "East Bunyala", "South Bunyala", "Makunda", "Runyu",
+  "Ruwe", "Bulemia", "Mabinju", "Muluwa", "Maduwa", "Budiera", "Mukhobola",
+  "Khajula", "Lunyofu", "Nangina", "Nyandenge", "Sango", "Namala",
+  "Rugunga", "Bukoma", "Nyandenga"
+];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!subscriptionMethod || !contact || !selectedLocation) {
+      setStatusMessage("All fields are required!");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3000/api/subscriptions", {
+        method: subscriptionMethod,
+        contact: contact,
+        location: selectedLocation,
+      });
+
+      setStatusMessage(response.data.message);
+      setSubscriptionMethod("");
+      setContact("");
+      setSelectedLocation("");
+    } catch (error) {
+      setStatusMessage("Subscription failed. Try again.");
+    }
+  };
 
 const toggleLanguage = () => {
     i18n.changeLanguage(i18n.language === "en" ? "sw" : "en");
@@ -19,13 +55,13 @@ const toggleLanguage = () => {
           <div className="text-2xl font-extrabold tracking-wide">
             {t("navbar.title")}
           </div>
-           <button
+          <button
             onClick={toggleLanguage}
             className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-4 rounded-md transition"
           >
             {t("languageToggle")}
           </button>
-
+        
           {/* Hamburger Menu for Mobile */}
           <button
             className="lg:hidden focus:outline-none text-white"
@@ -156,40 +192,63 @@ const toggleLanguage = () => {
 
       {/* Subscribe Section */}
       <section className="py-16 bg-gray-100 text-center">
-        <h2 className="text-3xl font-bold text-blue-900 mb-4">
-          {t("subscribe.title")}
-        </h2>
-        <form className="max-w-lg mx-auto">
-          <div className="mb-4">
-            <label className="block text-left text-gray-700 font-medium mb-2">
-               {t("subscribe.method")}
-            </label>
-            <select
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-              defaultValue=""
-            >
-              <option value="" disabled>
-               {t("subscribe.selectMethod")}
-              </option>
-              <option value="email">{t("subscribe.email")}</option>
-              <option value="sms">{t("subscribe.sms")}</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Enter your email or phone number"
-              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-blue-900 text-white py-2 px-6 rounded-md hover:bg-blue-700"
+      <h2 className="text-3xl font-bold text-blue-900 mb-4">{t("subscribe.title")}</h2>
+      <form className="max-w-lg mx-auto" onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-left text-gray-700 font-medium mb-2">
+            {t("subscribe.method")}
+          </label>
+          <select
+            className="w-full p-2 border border-gray-300 rounded-md"
+            value={subscriptionMethod}
+            onChange={(e) => setSubscriptionMethod(e.target.value)}
           >
-            {t("subscribe.subscribeButton")}
-          </button>
-        </form>
-      </section>
+            <option value="">{t("subscribe.selectMethod")}</option>
+            <option value="email">{t("subscribe.email")}</option>
+            <option value="sms">{t("subscribe.sms")}</option>
+          </select>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-left text-gray-700 font-medium mb-2">
+            {subscriptionMethod === "email"
+              ? t("subscribe.emailPlaceholder")
+              : t("subscribe.phonePlaceholder")}
+          </label>
+          <input
+            type="text"
+            placeholder={subscriptionMethod === "email" ? "Enter your email" : "Enter your phone number"}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-left text-gray-700 font-medium mb-2">
+            {t("subscribe.location")}
+          </label>
+          <select
+            className="w-full p-2 border border-gray-300 rounded-md"
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
+          >
+            <option value="">{t("subscribe.selectLocation")}</option>
+            {locations.map((loc, index) => (
+              <option key={index} value={loc}>
+                {loc}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button type="submit" className="bg-blue-900 text-white py-2 px-6 rounded-md hover:bg-blue-700">
+          {t("subscribe.subscribeButton")}
+        </button>
+
+        <p className="mt-4 text-red-500">{statusMessage}</p>
+      </form>
+    </section>
 
       {/* What We Do Section */}
       <section className="py-16 bg-white text-center">
