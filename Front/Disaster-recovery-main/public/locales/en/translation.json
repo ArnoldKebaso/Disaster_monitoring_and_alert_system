@@ -23,7 +23,9 @@
     "selectMethod": "Select a method",
     "email": "Email",
     "sms": "SMS",
-    "placeholder": "Enter your email or phone number",
+    "phonePlaceholder": "Enter your phone number",
+    "emailPlaceholder": "Enter your email ",
+    "selectLocation": "Which location(s) would you like to receive alerts for",
     "subscribeButton": "Subscribe"
   },
   "whatWeDo": {
