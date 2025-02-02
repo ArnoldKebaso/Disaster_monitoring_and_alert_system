@@ -2,46 +2,72 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
+import Select, { MultiValue } from "react-select";
 
 const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t, i18n} = useTranslation() as any;
-  const [subscriptionMethod, setSubscriptionMethod] = useState(""); 
+const [subscriptionMethod, setSubscriptionMethod] = useState("");
   const [contact, setContact] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedLocations, setSelectedLocations] = useState<{ value: string; label: string }[]>([]);
   const [statusMessage, setStatusMessage] = useState("");
 
-const locations = [
-  "Bumadeya", "Budalangi Central", "Budubusi", "Mundere", "Musoma", "Sibuka",
-  "Sio Port", "Rukala", "Mukhweya", "Sigulu Island", "Siyaya", "Nambuku",
-  "West Bunyala", "East Bunyala", "South Bunyala", "Makunda", "Runyu",
-  "Ruwe", "Bulemia", "Mabinju", "Muluwa", "Maduwa", "Budiera", "Mukhobola",
-  "Khajula", "Lunyofu", "Nangina", "Nyandenge", "Sango", "Namala",
-  "Rugunga", "Bukoma", "Nyandenga"
+const locationOptions = [
+  { value: "Bumadeya", label: "Bumadeya" },
+  { value: "Budalangi Central", label: "Budalangi Central" },
+  { value: "Budubusi", label: "Budubusi" },
+  { value: "Mundere", label: "Mundere" },
+  { value: "Musoma", label: "Musoma" },
+  { value: "Sibuka", label: "Sibuka" },
+  { value: "Sio Port", label: "Sio Port" },
+  { value: "Rukala", label: "Rukala" },
+  { value: "Mukhweya", label: "Mukhweya" },
+  { value: "Sigulu Island", label: "Sigulu Island" },
+  { value: "Siyaya", label: "Siyaya" },
+  { value: "Nambuku", label: "Nambuku" },
+  { value: "West Bunyala", label: "West Bunyala" },
+  { value: "East Bunyala", label: "East Bunyala" },
+  { value: "South Bunyala", label: "South Bunyala" },
+  { value: "Makunda", label: "Makunda" },
+  { value: "Runyu", label: "Runyu" },
+  { value: "Khajula", label: "Khajula" },
+  { value: "Lunyofu", label: "Lunyofu" },
+  { value: "Nangina", label: "Nangina" },
+  { value: "Nyandenge", label: "Nyandenge" },
+  { value: "Sango", label: "Sango" },
+  { value: "Namala", label: "Namala" },
+  { value: "Rugunga", label: "Rugunga" },
+  { value: "Bukoma", label: "Bukoma" },
+  { value: "Nyandenga", label: "Nyandenga" },
 ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!subscriptionMethod || !contact || !selectedLocation) {
+    if (!subscriptionMethod || !contact || selectedLocations.length === 0) {
       setStatusMessage("All fields are required!");
       return;
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/api/subscriptions", {
+      const response = await axios.post("http://localhost:3000/subscriptions", {
         method: subscriptionMethod,
         contact: contact,
-        location: selectedLocation,
+        locations: selectedLocations.map((loc) => loc.value), // Extract values
       });
 
       setStatusMessage(response.data.message);
       setSubscriptionMethod("");
       setContact("");
-      setSelectedLocation("");
+      setSelectedLocations([]); // Reset selection
     } catch (error) {
       setStatusMessage("Subscription failed. Try again.");
     }
   };
+
+  // Handle multiple selections
+const handleLocationChange = (selectedOptions: MultiValue<{ value: string; label: string }>) => {
+  setSelectedLocations(selectedOptions as { value: string; label: string }[]);
+};
 
 const toggleLanguage = () => {
     i18n.changeLanguage(i18n.language === "en" ? "sw" : "en");
@@ -133,7 +159,7 @@ const toggleLanguage = () => {
                 </li>
                 <li>
                   <Link to="/annual-reports" className="hover:text-yellow-300">
-                   {t("navbar.annualReports")}
+                    {t("navbar.annualReports")}
                   </Link>
                 </li>
               </ul>
@@ -171,7 +197,7 @@ const toggleLanguage = () => {
             {t("hero.title")}
           </h1>
           <p className="text-lg lg:text-xl mb-6">
-           {t("hero.description")}
+          {t("hero.description")}
           </p>
           <div className="flex gap-4">
             <Link
@@ -192,63 +218,59 @@ const toggleLanguage = () => {
 
       {/* Subscribe Section */}
       <section className="py-16 bg-gray-100 text-center">
-      <h2 className="text-3xl font-bold text-blue-900 mb-4">{t("subscribe.title")}</h2>
-      <form className="max-w-lg mx-auto" onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-left text-gray-700 font-medium mb-2">
-            {t("subscribe.method")}
-          </label>
-          <select
-            className="w-full p-2 border border-gray-300 rounded-md"
-            value={subscriptionMethod}
-            onChange={(e) => setSubscriptionMethod(e.target.value)}
-          >
-            <option value="">{t("subscribe.selectMethod")}</option>
-            <option value="email">{t("subscribe.email")}</option>
-            <option value="sms">{t("subscribe.sms")}</option>
-          </select>
-        </div>
+        <h2 className="text-3xl font-bold text-blue-900 mb-4">{t("subscribe.title")}</h2>
+        <form className="max-w-lg mx-auto" onSubmit={handleSubmit}>
+          {/* Subscription Method */}
+          <div className="mb-4">
+            <label className="block text-left text-gray-700 font-medium mb-2">{t("subscribe.method")}</label>
+            <select
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={subscriptionMethod}
+              onChange={(e) => setSubscriptionMethod(e.target.value)}
+            >
+              <option value="">{t("subscribe.selectMethod")}</option>
+              <option value="email">{t("subscribe.email")}</option>
+              <option value="sms">{t("subscribe.sms")}</option>
+            </select>
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-left text-gray-700 font-medium mb-2">
-            {subscriptionMethod === "email"
-              ? t("subscribe.emailPlaceholder")
-              : t("subscribe.phonePlaceholder")}
-          </label>
-          <input
-            type="text"
-            placeholder={subscriptionMethod === "email" ? "Enter your email" : "Enter your phone number"}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-          />
-        </div>
+          {/* Contact Input */}
+          <div className="mb-4">
+            <label className="block text-left text-gray-700 font-medium mb-2">
+              {subscriptionMethod === "email" ? t("subscribe.emailPlaceholder") : t("subscribe.phonePlaceholder")}
+            </label>
+            <input
+              type="text"
+              placeholder={subscriptionMethod === "email" ? "Enter your email" : "Enter your phone number"}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+            />
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-left text-gray-700 font-medium mb-2">
-            {t("subscribe.location")}
-          </label>
-          <select
-            className="w-full p-2 border border-gray-300 rounded-md"
-            value={selectedLocation}
-            onChange={(e) => setSelectedLocation(e.target.value)}
-          >
-            <option value="">{t("subscribe.selectLocation")}</option>
-            {locations.map((loc, index) => (
-              <option key={index} value={loc}>
-                {loc}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Location Selection (Multi-select Dropdown with Checkboxes) */}
+          <div className="mb-4">
+            <label className="block text-left text-gray-700 font-medium mb-2">{t("subscribe.selectLocation")}</label>
+            <Select
+              isMulti
+              options={locationOptions}
+              value={selectedLocations}
+              onChange={handleLocationChange}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder="Select locations..."
+            />
+          </div>
 
-        <button type="submit" className="bg-blue-900 text-white py-2 px-6 rounded-md hover:bg-blue-700">
-          {t("subscribe.subscribeButton")}
-        </button>
+          {/* Submit Button */}
+          <button type="submit" className="bg-blue-900 text-white py-2 px-6 rounded-md hover:bg-blue-700">
+            {t("subscribe.subscribeButton")}
+          </button>
 
-        <p className="mt-4 text-red-500">{statusMessage}</p>
-      </form>
-    </section>
+          {/* Status Message */}
+          <p className="mt-4 text-red-500">{statusMessage}</p>
+        </form>
+      </section>
 
       {/* What We Do Section */}
       <section className="py-16 bg-white text-center">
@@ -315,7 +337,7 @@ const toggleLanguage = () => {
 
       {/* Footer */}
       <footer className="bg-blue-900 text-white py-6 text-sm text-center">
-        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
+        <div className="container mx-auto flex flex-col md:flex-row justify-around items-center">
           <div className="mb-4 md:mb-0">
             <h3 className="text-lg font-bold">Quick Links</h3>
             <ul className="text-gray-300">
