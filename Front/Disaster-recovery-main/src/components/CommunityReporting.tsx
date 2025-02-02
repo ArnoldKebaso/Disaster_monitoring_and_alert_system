@@ -44,10 +44,11 @@ interface Report {
 
 const CommunityReporting: React.FC = () => {
   const [reportType, setReportType] = useState("");
-  const [selectedLocations, setSelectedLocations] = useState<{ value: string; label: string }[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<{ value: string; label: string } | null>(null); // Updated to store a single location
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
+  
 
   useEffect(() => {
     axios
@@ -59,14 +60,14 @@ const CommunityReporting: React.FC = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!reportType || selectedLocations.length === 0 || !description) {
+    if (!reportType || !selectedLocation || !description) {
       alert('Please fill in all required fields.');
       return;
     }
 
     const payload = {
       report_type: reportType,
-      locations: selectedLocations.map((loc) => loc.value),
+      location: selectedLocation.value, // Use the selected location's value
       description,
       image_url: image ? URL.createObjectURL(image) : null,
       status: "pending",
@@ -79,7 +80,7 @@ const CommunityReporting: React.FC = () => {
 
       alert("Report submitted successfully!");
       setReportType("");
-      setSelectedLocations([]);
+      setSelectedLocation(null); // Reset selected location
       setDescription("");
       setImage(null);
 
@@ -115,28 +116,29 @@ const CommunityReporting: React.FC = () => {
               <h2 className="text-xl font-semibold mb-4">Submit a Report</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="hazard-type" className="block text-sm font-medium text-gray-700">
-                    Type of Hazard
-                  </label>
-                  <Select
-                    id="hazard-type"
-                    value={hazardTypes.find((hazard) => hazard.value === reportType)}
-                    onChange={(selectedOption) => setReportType(selectedOption?.value || "")}
-                    options={hazardTypes}
-                    placeholder="Select a hazard type"
-                  />
-                </div>
+                <label htmlFor="hazard-type" className="block text-sm font-medium text-gray-700">
+                  Type of Hazard
+                </label>
+              <Select
+                      id="hazard-type"
+                      value={hazardTypes.find((hazard) => hazard.value === reportType)}
+                      onChange={(selectedOption) => setReportType(selectedOption?.value || "")}
+                      options={hazardTypes}
+                      getOptionLabel={(option) => `${option.label} - ${option.description}`} 
+                      getOptionValue={(option) => option.value}
+                      placeholder="Select a hazard type"
+                    />
+              </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Location</label>
                   <Select
-                    isMulti
                     options={locationOptions}
-                    value={selectedLocations}
-                    onChange={(selectedOptions) => setSelectedLocations(selectedOptions as { value: string; label: string }[])}
-                    className="basic-multi-select"
+                    value={selectedLocation}
+                    onChange={(selectedOption) => setSelectedLocation(selectedOption)} // Handle single selection
+                    className="basic-single-select"
                     classNamePrefix="select"
-                    placeholder="Select locations..."
+                    placeholder="Select a location..."
                   />
                 </div>
 
