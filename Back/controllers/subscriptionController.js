@@ -1,7 +1,7 @@
-const Subscription = require("../models/Subscription");
+const express = require('express');
+const Subscription = require("../models/subscription.js");
 
-// Create a new subscription
-exports.createSubscription = async (req, res) => {
+const subscribeUser = async (req, res) => {
     try {
         const { method, contact, locations } = req.body;
 
@@ -9,45 +9,33 @@ exports.createSubscription = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        const subscription = await Subscription.create({ method, contact, locations });
-        res.status(201).json({ message: "Subscription created successfully", subscription });
+        const newSubscription = await Subscription.create({
+            method,
+            contact,
+            locations, // Store array of locations
+        });
+
+        res.status(201).json({ message: "Subscription successful!", subscription: newSubscription });
     } catch (error) {
-        console.error("Error creating subscription:", error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Error subscribing user", error });
     }
 };
 
-// Get all subscriptions
-exports.getAllSubscriptions = async (req, res) => {
+const getAllSubscriptions = async (req, res) => {
     try {
         const subscriptions = await Subscription.findAll();
         res.status(200).json(subscriptions);
     } catch (error) {
-        console.error("Error fetching subscriptions:", error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Error fetching subscriptions", error });
     }
 };
 
-// Get subscription by ID
-exports.getSubscriptionById = async (req, res) => {
+const updateSubscription = async (req, res) => {
     try {
-        const subscription = await Subscription.findByPk(req.params.id);
-        if (!subscription) {
-            return res.status(404).json({ message: "Subscription not found" });
-        }
-        res.status(200).json(subscription);
-    } catch (error) {
-        console.error("Error fetching subscription:", error);
-        res.status(500).json({ message: "Server error" });
-    }
-};
-
-// Update a subscription
-exports.updateSubscription = async (req, res) => {
-    try {
+        const { id } = req.params;
         const { method, contact, locations } = req.body;
-        const subscription = await Subscription.findByPk(req.params.id);
 
+        const subscription = await Subscription.findByPk(id);
         if (!subscription) {
             return res.status(404).json({ message: "Subscription not found" });
         }
@@ -59,15 +47,15 @@ exports.updateSubscription = async (req, res) => {
         await subscription.save();
         res.status(200).json({ message: "Subscription updated successfully", subscription });
     } catch (error) {
-        console.error("Error updating subscription:", error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Error updating subscription", error });
     }
 };
 
-// Delete a subscription
-exports.deleteSubscription = async (req, res) => {
+const deleteSubscription = async (req, res) => {
     try {
-        const subscription = await Subscription.findByPk(req.params.id);
+        const { id } = req.params;
+
+        const subscription = await Subscription.findByPk(id);
         if (!subscription) {
             return res.status(404).json({ message: "Subscription not found" });
         }
@@ -75,7 +63,8 @@ exports.deleteSubscription = async (req, res) => {
         await subscription.destroy();
         res.status(200).json({ message: "Subscription deleted successfully" });
     } catch (error) {
-        console.error("Error deleting subscription:", error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Error deleting subscription", error });
     }
 };
+
+module.exports = { subscribeUser, getAllSubscriptions, updateSubscription, deleteSubscription };

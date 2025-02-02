@@ -17,6 +17,7 @@ const alertRouter = require('./routes/alert');
 const communityController = require('./routes/community');
 const highRiskController = require('./routes/high_risk');
 const safeRoutesRouter = require('./routes/safeRoute');
+const subscriptionRouter = require('./routes/subscription');
 
 const locationRouter = require('./routes/location');
 const resourceRouter = require('./routes/resource');
@@ -72,6 +73,7 @@ app.use('/resources', resourceRouter);
 app.use('/demographics', demographicRouter);
 app.use('/healthcare', healthcareRouter);
 app.use('/floods', floodRouter);
+app.use('/subscriptions', subscriptionRouter);
 
 
 app.listen(3000, () => {
