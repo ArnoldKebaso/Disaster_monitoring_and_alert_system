@@ -1,5 +1,5 @@
 const express = require('express');
-const { subscribeUser, getAllSubscriptions, updateSubscription, deleteSubscription } = require("../controllers/subscriptionController.js");
+const { subscribeUser, getAllSubscriptions, updateSubscription, deleteSubscription, getSubscriptionsByLocation } = require("../controllers/subscriptionController.js");
 
 const router = express.Router();
 
@@ -123,6 +123,8 @@ router.get("/subscriptions", getAllSubscriptions);
  *         description: Internal server error
  */
 router.put("/subscriptions/:id", updateSubscription);
+
+router.get('/by-location', getSubscriptionsByLocation);
 
 /**
  * @swagger

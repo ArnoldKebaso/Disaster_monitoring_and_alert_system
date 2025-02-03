@@ -25,6 +25,7 @@ const resourceRouter = require('./routes/resource');
 const demographicRouter = require('./routes/demographic');
 const healthcareRouter = require('./routes/healthcare');
 const floodRouter = require('./routes/flood');
+const emailRouter = require('./routes/emailRoutes');
 
 const cors = require('cors');
 app.use(cors({
@@ -74,7 +75,7 @@ app.use('/demographics', demographicRouter);
 app.use('/healthcare', healthcareRouter);
 app.use('/floods', floodRouter);
 app.use('/subscriptions', subscriptionRouter);
-
+app.use('/send', emailRouter);
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
