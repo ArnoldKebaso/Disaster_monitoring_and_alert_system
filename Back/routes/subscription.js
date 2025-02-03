@@ -1,124 +1,150 @@
-const express = require("express");
+const express = require('express');
+const { subscribeUser, getAllSubscriptions, updateSubscription, deleteSubscription } = require("../controllers/subscriptionController.js");
+
 const router = express.Router();
-const subscriptionController = require("../controllers/subscriptionController");
+
+/**
+ * @swagger
+ * tags:
+ *   name: Subscriptions
+ *   description: Subscription management
+ */
 
 /**
  * @swagger
  * /subscriptions:
  *   post:
- *     summary: Create a new subscription
- *     description: Subscribes a user to alerts with email/SMS and selected locations.
- *     parameters:
- *       - in: body
- *         name: subscription
- *         description: Subscription details
- *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             method:
- *               type: string
- *               example: "email"
- *             contact:
- *               type: string
- *               example: "user@example.com"
- *             locations:
- *               type: array
- *               items:
+ *     summary: Subscribe a user
+ *     tags: [Subscriptions]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - method
+ *               - contact
+ *               - locations
+ *             properties:
+ *               method:
  *                 type: string
- *               example: ["Budalangi Central", "Sio Port"]
+ *                 example: "email"
+ *               contact:
+ *                 type: string
+ *                 example: "user@example.com"
+ *               locations:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["location1", "location2"]
  *     responses:
  *       201:
- *         description: Subscription created successfully
+ *         description: Subscription successful
  *       400:
- *         description: Bad request, missing fields
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
-router.post("/", subscriptionController.createSubscription);
+router.post("/subscriptions", subscribeUser);
 
 /**
  * @swagger
  * /subscriptions:
  *   get:
  *     summary: Get all subscriptions
+ *     tags: [Subscriptions]
  *     responses:
  *       200:
- *         description: List of all subscriptions
+ *         description: A list of subscriptions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   method:
+ *                     type: string
+ *                     example: "email"
+ *                   contact:
+ *                     type: string
+ *                     example: "user@example.com"
+ *                   locations:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     example: ["location1", "location2"]
+ *       500:
+ *         description: Internal server error
  */
-router.get("/", subscriptionController.getAllSubscriptions);
-
-/**
- * @swagger
- * /subscriptions/{id}:
- *   get:
- *     summary: Get a subscription by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: Subscription ID
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Subscription details
- *       404:
- *         description: Subscription not found
- */
-router.get("/:id", subscriptionController.getSubscriptionById);
+router.get("/subscriptions", getAllSubscriptions);
 
 /**
  * @swagger
  * /subscriptions/{id}:
  *   put:
- *     summary: Update a subscription
+ *     summary: Update a subscription by ID
+ *     tags: [Subscriptions]
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
- *         description: Subscription ID
  *         schema:
  *           type: integer
- *       - in: body
- *         name: subscription
- *         description: Updated subscription details
  *         required: true
- *         schema:
- *           type: object
- *           properties:
- *             method:
- *               type: string
- *             contact:
- *               type: string
- *             locations:
- *               type: array
- *               items:
+ *         description: The subscription ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               method:
  *                 type: string
+ *                 example: "sms"
+ *               contact:
+ *                 type: string
+ *                 example: "user@example.com"
+ *               locations:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["location1", "location2"]
  *     responses:
  *       200:
  *         description: Subscription updated successfully
  *       404:
  *         description: Subscription not found
+ *       500:
+ *         description: Internal server error
  */
-router.put("/:id", subscriptionController.updateSubscription);
+router.put("/subscriptions/:id", updateSubscription);
 
 /**
  * @swagger
  * /subscriptions/{id}:
  *   delete:
- *     summary: Delete a subscription
+ *     summary: Delete a subscription by ID
+ *     tags: [Subscriptions]
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
- *         description: Subscription ID
  *         schema:
  *           type: integer
+ *         required: true
+ *         description: The subscription ID
  *     responses:
  *       200:
  *         description: Subscription deleted successfully
  *       404:
  *         description: Subscription not found
+ *       500:
+ *         description: Internal server error
  */
-router.delete("/:id", subscriptionController.deleteSubscription);
+router.delete("/subscriptions/:id", deleteSubscription);
 
 module.exports = router;

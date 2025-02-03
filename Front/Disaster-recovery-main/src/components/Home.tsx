@@ -159,7 +159,7 @@ const toggleLanguage = () => {
                 </li>
                 <li>
                   <Link to="/annual-reports" className="hover:text-yellow-300">
-                   {t("navbar.annualReports")}
+                    {t("navbar.annualReports")}
                   </Link>
                 </li>
               </ul>
@@ -337,7 +337,7 @@ const toggleLanguage = () => {
 
       {/* Footer */}
       <footer className="bg-blue-900 text-white py-6 text-sm text-center">
-        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
+        <div className="container mx-auto flex flex-col md:flex-row justify-around items-center">
           <div className="mb-4 md:mb-0">
             <h3 className="text-lg font-bold">Quick Links</h3>
             <ul className="text-gray-300">
