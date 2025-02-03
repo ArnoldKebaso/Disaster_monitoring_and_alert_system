@@ -1,5 +1,12 @@
 const express = require('express');
-const { subscribeUser, getAllSubscriptions, updateSubscription, deleteSubscription, getSubscriptionsByLocation } = require("../controllers/subscriptionController.js");
+const {
+    subscribeUser,
+    getAllSubscriptions,
+    updateSubscription,
+    deleteSubscription,
+    getSubscriptionsByLocation,
+    sendEmailAlert,
+} = require("../controllers/subscriptionController.js");
 
 const router = express.Router();
 
@@ -46,7 +53,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post("/subscriptions", subscribeUser);
+router.post("/", subscribeUser); // Fixed: Removed "/subscriptions"
 
 /**
  * @swagger
@@ -81,7 +88,7 @@ router.post("/subscriptions", subscribeUser);
  *       500:
  *         description: Internal server error
  */
-router.get("/subscriptions", getAllSubscriptions);
+router.get("/", getAllSubscriptions); // Fixed: Removed "/subscriptions"
 
 /**
  * @swagger
@@ -122,9 +129,21 @@ router.get("/subscriptions", getAllSubscriptions);
  *       500:
  *         description: Internal server error
  */
-router.put("/subscriptions/:id", updateSubscription);
+router.put("/:id", updateSubscription); // Fixed: Removed "/subscriptions"
 
-router.get('/by-location', getSubscriptionsByLocation);
+/**
+ * @swagger
+ * /subscriptions/by-location:
+ *   get:
+ *     summary: Get subscriptions grouped by location
+ *     tags: [Subscriptions]
+ *     responses:
+ *       200:
+ *         description: Subscriptions grouped by location
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/by-location', getSubscriptionsByLocation); // Fixed: No change needed
 
 /**
  * @swagger
@@ -147,6 +166,7 @@ router.get('/by-location', getSubscriptionsByLocation);
  *       500:
  *         description: Internal server error
  */
-router.delete("/subscriptions/:id", deleteSubscription);
+router.delete("/:id", deleteSubscription); 
+router.post('/send-email', sendEmailAlert);
 
 module.exports = router;

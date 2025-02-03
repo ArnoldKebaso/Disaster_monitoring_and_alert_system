@@ -45,7 +45,7 @@ const App: React.FC = () => {
           <Route path='/home' element={<Home />} />
           <Route path='/createAlert' element={<CreateAlert />} />
           <Route path='/agencies' element={<Agencies />} />
-           <Route path='/email' element={<EmailForm />} />
+          <Route path='/email' element={<EmailForm />} />
         </Routes>
       </Layout>
     </Router>

@@ -1,7 +1,6 @@
-const express = require('express');
 const Subscription = require("../models/subscription.js");
-
-
+const { sendEmail } = require('../config/mail.js');
+// Subscribe a user
 const subscribeUser = async (req, res) => {
     try {
         const { method, contact, locations } = req.body;
@@ -22,7 +21,17 @@ const subscribeUser = async (req, res) => {
     }
 };
 
-// Group subscriptions by location
+// Get all subscriptions
+const getAllSubscriptions = async (req, res) => {
+    try {
+        const subscriptions = await Subscription.findAll();
+        res.status(200).json(subscriptions);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching subscriptions", error });
+    }
+};
+
+// Get subscriptions grouped by location
 const getSubscriptionsByLocation = async (req, res) => {
     try {
         const subscriptions = await Subscription.findAll();
@@ -48,18 +57,7 @@ const getSubscriptionsByLocation = async (req, res) => {
     }
 };
 
-
-
-
-const getAllSubscriptions = async (req, res) => {
-    try {
-        const subscriptions = await Subscription.findAll();
-        res.status(200).json(subscriptions);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching subscriptions", error });
-    }
-};
-
+// Update a subscription
 const updateSubscription = async (req, res) => {
     try {
         const { id } = req.params;
@@ -81,6 +79,7 @@ const updateSubscription = async (req, res) => {
     }
 };
 
+// Delete a subscription
 const deleteSubscription = async (req, res) => {
     try {
         const { id } = req.params;
@@ -97,4 +96,19 @@ const deleteSubscription = async (req, res) => {
     }
 };
 
-module.exports = { subscribeUser, getAllSubscriptions, updateSubscription, deleteSubscription, getSubscriptionsByLocation };
+
+// Send email alert
+const sendEmailAlert = async (req, res) => {
+    const { to, subject, text } = req.body;
+
+    try {
+        await sendEmail(to, subject, text);
+        res.status(200).json({ message: 'Email sent successfully!' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to send email' });
+    }
+};
+
+
+
+module.exports = { subscribeUser, getAllSubscriptions, updateSubscription, deleteSubscription, getSubscriptionsByLocation, sendEmailAlert };
