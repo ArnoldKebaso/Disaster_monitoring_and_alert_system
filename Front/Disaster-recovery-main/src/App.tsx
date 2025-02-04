@@ -20,6 +20,8 @@ import Agencies from './components/Agencies';
 import AboutUs from './components/AboutUs';
 import Home from './components/Home';
 import CreateAlert from './components/CreateAlert';
+import EmailForm from './components/EmailForm';
+import SubscriptionList from './components/SubscriptionList';
 const App: React.FC = () => {
   return (
     <Router>
@@ -44,6 +46,8 @@ const App: React.FC = () => {
           <Route path='/home' element={<Home />} />
           <Route path='/createAlert' element={<CreateAlert />} />
           <Route path='/agencies' element={<Agencies />} />
+          <Route path='/email' element={<EmailForm />} />
+          <Route path='/subscriptions' element={<SubscriptionList />} />
         </Routes>
       </Layout>
     </Router>

@@ -51,8 +51,7 @@
 
 @layer base {
   * {
-    /* Remove the non-existent class */
-    /* @apply border-border; */
+    @apply border-border;
   }
   body {
     @apply font-sans antialiased bg-background text-foreground;

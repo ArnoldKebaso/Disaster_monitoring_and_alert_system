@@ -1,39 +1,58 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
-import { Select } from './ui/select';
+import Select from 'react-select'; // Ensure you import the correct Select component
 
+// Hazard types with labels and descriptions
 const alertTypes = [
-  { value: 'FlashFlood', label: '⚡ Flash Flood' },
-  { value: 'RiverFlood', label: '🌊 River Flood' },
-  { value: 'CoastalFlood', label: '🌴 Coastal Flood' },
-  { value: 'UrbanFlood', label: '🏙️ Urban Flood' },
-  { value: 'ElNinoFlooding', label: '🌧️ El Niño Flooding' },
+  { value: 'FlashFlood', label: '⚡ Flash Flood', description: 'Sudden, intense flooding.' },
+  { value: 'RiverFlood', label: '🌊 River Flood', description: 'Overflowing rivers and streams.' },
+  { value: 'CoastalFlood', label: '🌴 Coastal Flood', description: 'Flooding along coastlines.' },
+  { value: 'UrbanFlood', label: '🏙️ Urban Flood', description: 'Flooding in cities and towns.' },
+  { value: 'ElNinoFlooding', label: '🌧️ El Niño Flooding', description: 'Flooding due to El Niño effects.' },
+];
+
+// Location dropdown options
+const locationOptions = [
+  { value: 'Bumadeya', label: 'Bumadeya' },
+  { value: 'Budalangi Central', label: 'Budalangi Central' },
+  { value: 'Budubusi', label: 'Budubusi' },
+  { value: 'Mundere', label: 'Mundere' },
+  { value: 'Musoma', label: 'Musoma' },
+  { value: 'Sibuka', label: 'Sibuka' },
+  { value: 'Sio Port', label: 'Sio Port' },
+  { value: 'Rukala', label: 'Rukala' },
+  { value: 'Mukhweya', label: 'Mukhweya' },
+  { value: 'Sigulu Island', label: 'Sigulu Island' },
+  { value: 'Siyaya', label: 'Siyaya' },
+  { value: 'Nambuku', label: 'Nambuku' },
+  { value: 'West Bunyala', label: 'West Bunyala' },
+  { value: 'East Bunyala', label: 'East Bunyala' },
+  { value: 'South Bunyala', label: 'South Bunyala' },
 ];
 
 const severities = ['Low', 'Medium', 'High'];
 
 const CreateAlert: React.FC = () => {
-  const [alertType, setAlertType] = useState('');
+  const [alertType, setAlertType] = useState<{ value: string; label: string } | null>(null);
   const [severity, setSeverity] = useState('');
-  const [location, setLocation] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState<{ value: string; label: string } | null>(null);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!alertType || !severity || !location) {
+    if (!alertType || !severity || !selectedLocation) {
       alert('Please fill in all required fields.');
       return;
     }
 
     const payload = {
-      alert_type: alertType,
+      alert_type: alertType.value,
       severity,
-      location,
+      location: selectedLocation.value, // Store only one location
       description,
       status: 'active',
     };
@@ -45,9 +64,9 @@ const CreateAlert: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
       });
       alert('Alert created successfully!');
-      setAlertType('');
+      setAlertType(null);
       setSeverity('');
-      setLocation('');
+      setSelectedLocation(null);
       setDescription('');
     } catch (error) {
       console.error('Error creating alert:', error);
@@ -67,17 +86,16 @@ const CreateAlert: React.FC = () => {
               Alert Type
             </label>
             <Select
-              id="alert-type"
-              value={alertType}
-              onValueChange={setAlertType}
-              placeholder="Select an alert type"
-            >
-              {alertTypes.map((type) => (
-                <Select.Option key={type.value} value={type.value}>
-                  {type.label}
-                </Select.Option>
-              ))}
-            </Select>
+                  id="alert-type"
+                  options={alertTypes}
+                  value={alertType}
+                  onChange={(selectedOption) => setAlertType(selectedOption)}
+                  getOptionLabel={(option) => `${option.label} - ${(option as { value: string; label: string; description: string }).description}`} // Explicit type assertion
+                  getOptionValue={(option) => option.value}
+                  placeholder="Select an alert type"
+                  className="basic-single-select"
+                  classNamePrefix="select"
+                />
           </div>
 
           <div>
@@ -86,28 +104,27 @@ const CreateAlert: React.FC = () => {
             </label>
             <Select
               id="severity"
-              value={severity}
-              onValueChange={setSeverity}
+              options={severities.map((level) => ({ value: level, label: level }))}
+              value={severities.find((level) => level === severity) ? { value: severity, label: severity } : null}
+              onChange={(selectedOption) => setSeverity(selectedOption?.value || '')}
               placeholder="Select severity level"
-            >
-              {severities.map((level) => (
-                <Select.Option key={level} value={level}>
-                  {level}
-                </Select.Option>
-              ))}
-            </Select>
+              className="basic-single-select"
+              classNamePrefix="select"
+            />
           </div>
 
           <div>
             <label htmlFor="location" className="block text-sm font-medium text-gray-700">
               Location
             </label>
-            <Input
+            <Select
               id="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Enter the location"
-              required
+              options={locationOptions}
+              value={selectedLocation}
+              onChange={(selectedOption) => setSelectedLocation(selectedOption)}
+              placeholder="Select a location"
+              className="basic-single-select"
+              classNamePrefix="select"
             />
           </div>
 
