@@ -44,7 +44,7 @@ const Home: React.FC = () => {
         contact: contact,
         locations: selectedLocations.map((loc) => loc.value),
       });
-
+      alert("Report submitted successfully!");
       setStatusMessage(response.data.message);
       setSubscriptionMethod("");
       setContact("");
@@ -326,7 +326,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Footer */}
+
       <footer className="bg-blue-900 text-white py-6 text-sm text-center">
         <div className="container mx-auto flex flex-col md:flex-row justify-around items-center">
           <div className="mb-4 md:mb-0">
