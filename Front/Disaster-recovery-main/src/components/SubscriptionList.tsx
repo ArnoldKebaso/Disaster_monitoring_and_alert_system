@@ -8,6 +8,17 @@ interface Subscription {
   contact: string;
 }
 
+interface Alert {
+  alert_id: number;
+  alert_type: string;
+  severity: string;
+  location: string;
+  description: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const SubscriptionList: React.FC = () => {
   const [subscriptionsByLocation, setSubscriptionsByLocation] = useState<{ [key: string]: Subscription[] }>({});
 
@@ -24,9 +35,35 @@ const SubscriptionList: React.FC = () => {
     }
   };
 
+  const fetchAlertData = async (location: string): Promise<Alert | null> => {
+    try {
+      const response = await axios.get(`http://localhost:3000/alerts?location=${location}`);
+      if (response.data.length > 0) {
+        return response.data[0]; // Return the first alert for the location
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching alert data:', error);
+      return null;
+    }
+  };
+
   const handleSendEmailAlert = async (location: string) => {
+    const alertData = await fetchAlertData(location);
+    if (!alertData) {
+      alert(`No active alert found for ${location}.`);
+      return;
+    }
+
     const subject = `Flood Alert for ${location}`;
-    const text = `This is a flood alert for ${location}. Please take necessary precautions.`;
+    const text = `
+      Alert Type: ${alertData.alert_type}
+      Severity: ${alertData.severity}
+      Location: ${alertData.location}
+      Description: ${alertData.description}
+      Status: ${alertData.status}
+      Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
+    `;
 
     try {
       const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'email');
@@ -45,7 +82,20 @@ const SubscriptionList: React.FC = () => {
   };
 
   const handleSendSmsAlert = async (location: string) => {
-    const message = `This is a flood alert for ${location}. Please take necessary precautions.`;
+    const alertData = await fetchAlertData(location);
+    if (!alertData) {
+      alert(`No active alert found for ${location}.`);
+      return;
+    }
+
+    const message = `
+      Flood Alert for ${location}:
+      Type: ${alertData.alert_type}
+      Severity: ${alertData.severity}
+      Description: ${alertData.description}
+      Status: ${alertData.status}
+      Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
+    `;
 
     try {
       const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'sms');

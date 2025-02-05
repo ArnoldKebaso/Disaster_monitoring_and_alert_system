@@ -109,6 +109,62 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+       {/* Subscribe Section */}
+      <section className="py-16 bg-gray-100 text-center">
+        <h2 className="text-3xl font-bold text-blue-900 mb-4">{t("subscribe.title")}</h2>
+        <form className="max-w-lg mx-auto" onSubmit={handleSubmit}>
+          {/* Subscription Method */}
+          <div className="mb-4">
+            <label className="block text-left text-gray-700 font-medium mb-2">{t("subscribe.method")}</label>
+            <select
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={subscriptionMethod}
+              onChange={(e) => setSubscriptionMethod(e.target.value)}
+            >
+              <option value="">{t("subscribe.selectMethod")}</option>
+              <option value="email">{t("subscribe.email")}</option>
+              <option value="sms">{t("subscribe.sms")}</option>
+            </select>
+          </div>
+
+          {/* Contact Input */}
+          <div className="mb-4">
+            <label className="block text-left text-gray-700 font-medium mb-2">
+              {subscriptionMethod === "email" ? t("subscribe.emailPlaceholder") : t("subscribe.phonePlaceholder")}
+            </label>
+            <input
+              type="text"
+              placeholder={subscriptionMethod === "email" ? "Enter your email" : "Enter your phone number"}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+            />
+          </div>
+
+          {/* Location Selection (Multi-select Dropdown with Checkboxes) */}
+          <div className="mb-4">
+            <label className="block text-left text-gray-700 font-medium mb-2">{t("subscribe.selectLocation")}</label>
+            <Select
+              isMulti
+              options={locationOptions}
+              value={selectedLocations}
+              onChange={handleLocationChange}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder="Select locations..."
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button type="submit" className="bg-blue-900 text-white py-2 px-6 rounded-md hover:bg-blue-700">
+            {t("subscribe.subscribeButton")}
+          </button>
+
+          {/* Status Message */}
+          <p className="mt-4 text-red-500">{statusMessage}</p>
+        </form>
+      </section>
+
 
       {/* What We Do Section */}
       <section className="py-16 bg-white text-center">
@@ -189,3 +245,219 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React from "react";
+// import { Link } from "react-router-dom";
+// import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+
+// const Home: React.FC = () => {
+//   return (
+//     <div className="min-h-screen flex flex-col">
+//       {/* Navbar */}
+//       <nav className="bg-red-600 text-white px-6 py-4 shadow-lg">
+//         <div className="container mx-auto flex justify-between items-center">
+//           <div className="text-2xl font-extrabold tracking-wide">
+//             Kenya Red Cross
+//           </div>
+//           <div className="hidden lg:flex gap-8">
+//             <Link to="/" className="hover:text-yellow-300 transition-all duration-200">
+//               Home
+//             </Link>
+//             <Link to="/about" className="hover:text-yellow-300 transition-all duration-200">
+//               About Us
+//             </Link>
+//             <Link to="/programs" className="hover:text-yellow-300 transition-all duration-200">
+//               Programs
+//             </Link>
+//             <Link to="/contact" className="hover:text-yellow-300 transition-all duration-200">
+//               Contact Us
+//             </Link>
+//           </div>
+//         </div>
+//       </nav>
+
+//       {/* Hero Section */}
+//       <section
+//         className="bg-cover bg-center h-[500px] flex flex-col justify-center items-center text-center text-white"
+//         style={{
+//           backgroundImage: "url('https://via.placeholder.com/1920x1080/003a8c/ffffff?text=Hero+Section')",
+//         }}
+//       >
+//         <div className="bg-black bg-opacity-50 p-8 rounded-md">
+//           <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-4">
+//             Saving Lives, Changing Lives
+//           </h1>
+//           <p className="text-lg lg:text-xl mb-6">
+//             Join us in our mission to provide humanitarian aid and support to those in need.
+//           </p>
+//           <Link
+//             to="/donate"
+//             className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
+//           >
+//             Donate Now
+//           </Link>
+//         </div>
+//       </section>
+
+//       {/* Mission Section */}
+//       <section className="py-16 bg-white text-center">
+//         <div className="container mx-auto px-4">
+//           <h2 className="text-3xl font-bold text-red-600 mb-4">Our Mission</h2>
+//           <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+//             The Kenya Red Cross is committed to providing timely, effective, and efficient humanitarian services to those in need. We strive to alleviate human suffering and promote dignity, peace, and sustainable development.
+//           </p>
+//         </div>
+//       </section>
+
+//       {/* Programs Section */}
+//       <section className="py-16 bg-gray-100 text-center">
+//         <div className="container mx-auto px-4">
+//           <h2 className="text-3xl font-bold text-red-600 mb-8">Our Programs</h2>
+//           <div className="grid md:grid-cols-3 gap-8">
+//             {[
+//               {
+//                 title: "Disaster Response",
+//                 description: "We provide immediate relief to communities affected by disasters.",
+//                 // icon: <FaMapMarkerAlt className="w-12 h-12 mx-auto mb-4 text-red-600" />,
+//               },
+//               {
+//                 title: "Health Services",
+//                 description: "We offer healthcare services to underserved communities.",
+//                 // icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-red-600" />,
+//               },
+//               {
+//                 title: "Community Development",
+//                 description: "We empower communities through sustainable development programs.",
+//                 //icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-red-600" />,
+//               },
+//             ].map((program, index) => (
+//               <div
+//                 key={index}
+//                 className="p-6 bg-white rounded-lg shadow-md transform transition-transform duration-300 hover:scale-105"
+//               >
+//                 {/* {program.icon} */}
+//                 <h3 className="text-xl font-bold text-red-600 mb-2">{program.title}</h3>
+//                 <p className="text-gray-600">{program.description}</p>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Footer */}
+//       <footer className="bg-red-600 text-white py-8">
+//         <div className="container mx-auto px-4">
+//           <div className="grid md:grid-cols-4 gap-8">
+//             {/* Quick Links */}
+//             <div>
+//               <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+//               <ul className="space-y-2">
+//                 <li>
+//                   <Link to="/" className="hover:text-yellow-300 transition-all duration-200">
+//                     Home
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link to="/about" className="hover:text-yellow-300 transition-all duration-200">
+//                     About Us
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link to="/programs" className="hover:text-yellow-300 transition-all duration-200">
+//                     Programs
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link to="/contact" className="hover:text-yellow-300 transition-all duration-200">
+//                     Contact Us
+//                   </Link>
+//                 </li>
+//               </ul>
+//             </div>
+
+//             {/* Contact Information */}
+//             <div>
+//               <h3 className="text-lg font-bold mb-4">Contact Us</h3>
+//               <p>Phone: +254 700 000 000</p>
+//               <p>Email: info@redcross.or.ke</p>
+//               <p>Address: Nairobi, Kenya</p>
+//             </div>
+
+//             {/* Social Media Links */}
+//             <div>
+//               <h3 className="text-lg font-bold mb-4">Follow Us</h3>
+//               <div className="flex gap-4">
+//                 <a
+//                   href="https://facebook.com"
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   className="hover:text-yellow-300 transition-all duration-200"
+//                 >
+//                   <FaFacebook className="w-6 h-6" />
+//                 </a>
+//                 <a
+//                   href="https://twitter.com"
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   className="hover:text-yellow-300 transition-all duration-200"
+//                 >
+//                   <FaTwitter className="w-6 h-6" />
+//                 </a>
+//                 <a
+//                   href="https://instagram.com"
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   className="hover:text-yellow-300 transition-all duration-200"
+//                 >
+//                   <FaInstagram className="w-6 h-6" />
+//                 </a>
+//                 <a
+//                   href="https://youtube.com"
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   className="hover:text-yellow-300 transition-all duration-200"
+//                 >
+//                   <FaYoutube className="w-6 h-6" />
+//                 </a>
+//               </div>
+//             </div>
+
+//             {/* Newsletter Subscription */}
+//             <div>
+//               <h3 className="text-lg font-bold mb-4">Subscribe to Our Newsletter</h3>
+//               <form className="flex">
+//                 <input
+//                   type="email"
+//                   placeholder="Enter your email"
+//                   className="p-2 rounded-l-md focus:outline-none"
+//                 />
+//                 <button
+//                   type="submit"
+//                   className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-4 rounded-r-md"
+//                 >
+//                   Subscribe
+//                 </button>
+//               </form>
+//             </div>
+//           </div>
+//         </div>
+//       </footer>
+//     </div>
+//   );
+// };
+
+// export default Home;
