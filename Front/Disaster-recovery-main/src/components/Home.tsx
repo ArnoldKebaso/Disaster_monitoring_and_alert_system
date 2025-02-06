@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import Select, { MultiValue } from "react-select";
 import { FaBell, FaMapMarkerAlt, FaHandHoldingHeart, FaShieldAlt, FaUsers, FaMap } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -205,6 +206,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+
        {/* Subscribe Section */}
       <section className="py-16 bg-gray-100 text-center">
         <h2 className="text-3xl font-bold text-blue-900 mb-4">{t("subscribe.title")}</h2>
@@ -257,7 +259,7 @@ const Home: React.FC = () => {
           </button>
 
           {/* Status Message */}
-          <p className="mt-4 text-red-500">{statusMessage}</p>
+          <p className="mt-4 text-green-500">{statusMessage}</p>
         </form>
       </section>
 
@@ -378,7 +380,7 @@ export default Home;
 
 // import React from "react";
 // import { Link } from "react-router-dom";
-// import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+// 
 
 // const Home: React.FC = () => {
 //   return (
