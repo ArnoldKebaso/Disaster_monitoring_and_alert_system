@@ -29,6 +29,7 @@ interface AlertLog {
   status: "success" | "failed"; // Status of the alert
 }
 
+
 const useAlertLogger = () => {
   const [logs, setLogs] = useState<AlertLog[]>([]);
 
