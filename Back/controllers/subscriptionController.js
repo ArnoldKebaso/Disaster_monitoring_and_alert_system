@@ -1,5 +1,6 @@
 const Subscription = require("../models/subscription.js");
 const { sendEmail } = require('../config/mail.js');
+const Log = require("../models/log.js");
 // Subscribe a user
 const subscribeUser = async (req, res) => {
     try {
@@ -18,6 +19,40 @@ const subscribeUser = async (req, res) => {
         res.status(201).json({ message: "Subscription successful!", subscription: newSubscription });
     } catch (error) {
         res.status(500).json({ message: "Error subscribing user", error });
+    }
+};
+
+const sendEmailAlert = async (req, res) => {
+    const { to, subject, text, alertType, location } = req.body;
+
+    try {
+        await sendEmail(to, subject, text);
+
+        // Log the successful email alert
+        await Log.create({
+            method: "email",
+            contact: to,
+            alertType: alertType, // Ensure this is provided
+            location: location,   // Ensure this is provided
+            timeSent: new Date(),
+            status: "success",
+        });
+
+        res.status(200).json({ message: 'Email sent successfully!' });
+    } catch (error) {
+        console.error("Error sending email or creating log:", error);
+
+        // Log the failed email alert
+        await Log.create({
+            method: "email",
+            contact: to,
+            alertType: alertType, // Ensure this is provided
+            location: location,   // Ensure this is provided
+            timeSent: new Date(),
+            status: "failed",
+        });
+
+        res.status(500).json({ error: 'Failed to send email' });
     }
 };
 
@@ -98,16 +133,16 @@ const deleteSubscription = async (req, res) => {
 
 
 // Send email alert
-const sendEmailAlert = async (req, res) => {
-    const { to, subject, text } = req.body;
+// const sendEmailAlert = async (req, res) => {
+//     const { to, subject, text } = req.body;
 
-    try {
-        await sendEmail(to, subject, text);
-        res.status(200).json({ message: 'Email sent successfully!' });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to send email' });
-    }
-};
+//     try {
+//         await sendEmail(to, subject, text);
+//         res.status(200).json({ message: 'Email sent successfully!' });
+//     } catch (error) {
+//         res.status(500).json({ error: 'Failed to send email' });
+//     }
+// };
 
 
 
