@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import Select, { MultiValue } from "react-select";
 import { FaBell, FaMapMarkerAlt, FaHandHoldingHeart, FaShieldAlt, FaUsers, FaMap } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +45,7 @@ const Home: React.FC = () => {
         contact: contact,
         locations: selectedLocations.map((loc) => loc.value),
       });
-
+      alert("Report submitted successfully!");
       setStatusMessage(response.data.message);
       setSubscriptionMethod("");
       setContact("");
@@ -66,7 +67,8 @@ const Home: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
       <nav className="bg-blue-900 text-white px-6 py-4 shadow-lg">
-        <div className="container mx-auto flex justify-between items-center">
+        <div className="flex justify-between items-center">
+          {/* Logo */}
           <div className="text-2xl font-extrabold tracking-wide">
             {t("navbar.title")}
           </div>
@@ -76,8 +78,103 @@ const Home: React.FC = () => {
           >
             {t("languageToggle")}
           </button>
+        
+          {/* Hamburger Menu for Mobile */}
+          <button
+            className="lg:hidden focus:outline-none text-white"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <svg
+              className="w-6 h-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d={
+                  isMenuOpen
+                    ? "M6 18L18 6M6 6l12 12"
+                    : "M4 6h16M4 12h16M4 18h16"
+                }
+              />
+            </svg>
+          </button>
+
+          {/* Links */}
+          <ul
+            className={`lg:flex lg:items-center lg:gap-8 ${
+              isMenuOpen ? "flex flex-col mt-4 gap-4" : "hidden"
+            }`}
+          >
+            <li>
+              <Link
+                to="/"
+                className="hover:text-yellow-300 transition-all duration-200"
+              >
+                {t("navbar.home")}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/about"
+                className="hover:text-yellow-300 transition-all duration-200"
+              >
+                {t("navbar.about")}
+              </Link>
+            </li>
+            <li className="relative group">
+              <span className="cursor-pointer hover:text-yellow-300 transition-all duration-200">
+                {t("navbar.getInvolved")}
+              </span>
+              <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 mt-2 py-2 px-4 text-sm shadow-lg border-t-2 border-yellow-300">
+                <li>
+                  <Link to="/donate" className="hover:text-yellow-300">
+                    {t("navbar.donate")}
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className="relative group">
+              <span className="cursor-pointer hover:text-yellow-300 transition-all duration-200">
+                {t("navbar.resources")}
+              </span>
+              <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 mt-2 py-2 px-4 text-sm shadow-lg border-t-2 border-yellow-300">
+                <li>
+                  <Link to="/impact-stories" className="hover:text-yellow-300">
+                    {t("navbar.impactStories")}
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/annual-reports" className="hover:text-yellow-300">
+                    {t("navbar.annualReports")}
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <Link
+                to="/agencies"
+                className="hover:text-yellow-300 transition-all duration-200"
+              >
+                {t("navbar.agencies")}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/contact"
+                className="hover:text-yellow-300 transition-all duration-200"
+              >
+                {t("navbar.contact")}
+              </Link>
+            </li>
+          </ul>
         </div>
       </nav>
+
 
       {/* Hero Section */}
       <section
@@ -109,6 +206,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+
        {/* Subscribe Section */}
       <section className="py-16 bg-gray-100 text-center">
         <h2 className="text-3xl font-bold text-blue-900 mb-4">{t("subscribe.title")}</h2>
@@ -161,7 +259,7 @@ const Home: React.FC = () => {
           </button>
 
           {/* Status Message */}
-          <p className="mt-4 text-red-500">{statusMessage}</p>
+          <p className="mt-4 text-green-500">{statusMessage}</p>
         </form>
       </section>
 
@@ -188,6 +286,26 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+
+      {/* Report Now Section */}
+      <section
+        className="bg-cover bg-center h-[400px] flex flex-col justify-center items-center text-white"
+        style={{
+          backgroundImage:
+            "url('https://via.placeholder.com/1920x1080/003a8c/ffffff?text=Report+Flood+Now')",
+        }}
+      >
+        <div className="bg-black bg-opacity-50 p-8 rounded-md">
+          <h2 className="text-3xl font-bold mb-4">Report Flood Incidents</h2>
+          <Link
+            to="/report"
+            className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
+          >
+            Report Now
+          </Link>
+        </div>
+      </section>
+
       {/* Analytics Section */}
       <section className="py-16 bg-blue-900 text-white text-center">
         <h2 className="text-3xl font-bold mb-4">{t("analytics.title")}</h2>
@@ -210,7 +328,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Footer */}
+
       <footer className="bg-blue-900 text-white py-6 text-sm text-center">
         <div className="container mx-auto flex flex-col md:flex-row justify-around items-center">
           <div className="mb-4 md:mb-0">
@@ -262,7 +380,7 @@ export default Home;
 
 // import React from "react";
 // import { Link } from "react-router-dom";
-// import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+// 
 
 // const Home: React.FC = () => {
 //   return (

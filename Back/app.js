@@ -26,6 +26,8 @@ const demographicRouter = require('./routes/demographic');
 const healthcareRouter = require('./routes/healthcare');
 const floodRouter = require('./routes/flood');
 const emailRouter = require('./routes/emailRoutes');
+const logRoutes = require('./routes/logRoutes');
+
 require('dotenv').config();
 
 const cors = require('cors');
@@ -77,6 +79,7 @@ app.use('/healthcare', healthcareRouter);
 app.use('/floods', floodRouter);
 app.use('/subscriptions', subscriptionRouter);
 app.use('/send', emailRouter);
+app.use('/logs', logRoutes);
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
