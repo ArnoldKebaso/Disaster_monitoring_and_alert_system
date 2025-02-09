@@ -41,41 +41,42 @@ const severities = ['Low', 'Medium', 'High'];
 const CreateAlert: React.FC = () => {
   const { control, handleSubmit, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
+const onSubmit = async (data: any) => {
+  setLoading(true);
+  try {
+    const payload = {
+      alert_type: data.alert_type.value,
+      severity: data.severity.value,
+      location: data.location.value,
+      description: data.description,
+      water_levels: {
+        current: data.current_water_level,
+        predicted: data.predicted_water_level,
+      },
+      evacuation_routes: data.evacuation_routes.split('\n').filter((route: string) => route.trim()),
+      emergency_contacts: data.emergency_contacts.split('\n').filter((contact: string) => contact.trim()),
+      precautionary_measures: data.precautionary_measures.split('\n').filter((measure: string) => measure.trim()),
+      weather_forecast: {
+        next_24_hours: data.next_24_hours_forecast,
+        next_48_hours: data.next_48_hours_forecast,
+      },
+      status: 'active',
+    };
 
-  const onSubmit = async (data: any) => {
-    setLoading(true);
-    try {
-      const payload = {
-        alert_type: data.alert_type.value,
-        severity: data.severity.value,
-        location: data.location.value,
-        description: data.description,
-        water_levels: {
-          current: data.current_water_level,
-          predicted: data.predicted_water_level,
-        },
-        evacuation_routes: data.evacuation_routes.split('\n').filter((route: string) => route.trim()),
-        emergency_contacts: data.emergency_contacts.split('\n').filter((contact: string) => contact.trim()),
-        precautionary_measures: data.precautionary_measures.split('\n').filter((measure: string) => measure.trim()),
-        weather_forecast: {
-          next_24_hours: data.next_24_hours_forecast,
-          next_48_hours: data.next_48_hours_forecast,
-        },
-        status: 'active',
-      };
+    console.log('Payload:', payload); // Log the payload for debugging
 
-      await axios.post('http://localhost:3000/alerts', payload, {
-        headers: { 'Content-Type': 'application/json' },
-      });
+    await axios.post('http://localhost:3000/alerts', payload, {
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-      toast.success('Alert created successfully!');
-    } catch (error) {
-      console.error('Error creating alert:', error);
-      toast.error('Failed to create the alert.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    toast.success('Alert created successfully!');
+  } catch (error) {
+    console.error('Error creating alert:', error);
+    toast.error('Failed to create the alert.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
