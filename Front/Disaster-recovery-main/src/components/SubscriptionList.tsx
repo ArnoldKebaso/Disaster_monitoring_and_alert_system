@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { EnvelopeIcon, DevicePhoneMobileIcon, MapPinIcon } from '@heroicons/react/24/outline';
+import { ClipLoader } from 'react-spinners'; // Import the loading spinner
 
 interface Subscription {
   id: number;
@@ -29,7 +30,6 @@ interface AlertLog {
   status: "success" | "failed"; // Status of the alert
 }
 
-
 const useAlertLogger = () => {
   const [logs, setLogs] = useState<AlertLog[]>([]);
 
@@ -47,6 +47,8 @@ const useAlertLogger = () => {
 const SubscriptionList: React.FC = () => {
   const [subscriptionsByLocation, setSubscriptionsByLocation] = useState<{ [key: string]: Subscription[] }>({});
   const { logs, logAlert } = useAlertLogger(); // Use the logging hook
+  const [isEmailLoading, setIsEmailLoading] = useState<{ [key: string]: boolean }>({});
+  const [isSmsLoading, setIsSmsLoading] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     fetchSubscriptions();
@@ -77,216 +79,116 @@ const SubscriptionList: React.FC = () => {
   };
 
   // Send email alerts with logging
-  // const handleSendEmailAlert = async (location: string) => {
-  //   const alertData = await fetchAlertData(location);
-  //   if (!alertData) {
-  //     alert(`No active alert found for ${location}.`);
-  //     return;
-  //   }
-
-  //   const subject = `Flood Alert for ${location}`;
-  //   const text = `
-  //     Alert Type: ${alertData.alert_type}
-  //     Severity: ${alertData.severity}
-  //     Location: ${alertData.location}
-  //     Description: ${alertData.description}
-  //     Status: ${alertData.status}
-  //     Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
-  //   `;
-
-  //   try {
-  //     const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'email');
-  //     for (const subscription of subscriptions) {
-  //       await axios.post('http://localhost:3000/subscriptions/send-email', {
-  //         to: subscription.contact,
-  //         subject,
-  //         text,
-  //       });
-
-  //       // Log the email alert
-  //       logAlert({
-  //         method: "email",
-  //         contact: subscription.contact,
-  //         alertType: alertData.alert_type,
-  //         location: alertData.location,
-  //         timeSent: new Date().toISOString(),
-  //         status: "success",
-  //       });
-  //     }
-  //     alert(`Email alerts sent successfully for ${location}!`);
-  //   } catch (error) {
-  //     console.error('Error sending email alerts:', error);
-
-  //     // Log the failed email alert
-  //     logAlert({
-  //       method: "email",
-  //       contact: subscription.contact,
-  //       alertType: alertData.alert_type,
-  //       location: alertData.location,
-  //       timeSent: new Date().toISOString(),
-  //       status: "failed",
-  //     });
-
-  //     alert('Failed to send email alerts.');
-  //   }
-  // };
-
   const handleSendEmailAlert = async (location: string) => {
-  const alertData = await fetchAlertData(location);
-  if (!alertData) {
-    alert(`No active alert found for ${location}.`);
-    return;
-  }
+    setIsEmailLoading((prev) => ({ ...prev, [location]: true })); // Set loading state
 
-  const subject = `Flood Alert for ${location}`;
-  const text = `
-    Alert Type: ${alertData.alert_type}
-    Severity: ${alertData.severity}
-    Location: ${alertData.location}
-    Description: ${alertData.description}
-    Status: ${alertData.status}
-    Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
-  `;
-
-  const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'email');
-  for (const subscription of subscriptions) {
-    try {
-      await axios.post('http://localhost:3000/subscriptions/send-email', {
-        to: subscription.contact,
-        subject,
-        text,
-      });
-
-      // Log the email alert
-      logAlert({
-        method: "email",
-        contact: subscription.contact,
-        alertType: alertData.alert_type,
-        location: alertData.location,
-        timeSent: new Date().toISOString(),
-        status: "success",
-      });
-    } catch (error) {
-      console.error('Error sending email alerts:', error);
-
-      // Log the failed email alert
-      logAlert({
-        method: "email",
-        contact: subscription.contact,
-        alertType: alertData.alert_type,
-        location: alertData.location,
-        timeSent: new Date().toISOString(),
-        status: "failed",
-      });
+    const alertData = await fetchAlertData(location);
+    if (!alertData) {
+      alert(`No active alert found for ${location}.`);
+      setIsEmailLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
+      return;
     }
-  }
-  alert(`Email alerts sent successfully for ${location}!`);
-};
 
-  
+    const subject = `Flood Alert for ${location}`;
+    const text = `
+      Alert Type: ${alertData.alert_type}
+      Severity: ${alertData.severity}
+      Location: ${alertData.location}
+      Description: ${alertData.description}
+      Status: ${alertData.status}
+      Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
+    `;
 
+    const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'email');
+    for (const subscription of subscriptions) {
+      try {
+        await axios.post('http://localhost:3000/subscriptions/send-email', {
+          to: subscription.contact,
+          subject,
+          text,
+        });
 
+        // Log the email alert
+        logAlert({
+          method: "email",
+          contact: subscription.contact,
+          alertType: alertData.alert_type,
+          location: alertData.location,
+          timeSent: new Date().toISOString(),
+          status: "success",
+        });
+      } catch (error) {
+        console.error('Error sending email alerts:', error);
+
+        // Log the failed email alert
+        logAlert({
+          method: "email",
+          contact: subscription.contact,
+          alertType: alertData.alert_type,
+          location: alertData.location,
+          timeSent: new Date().toISOString(),
+          status: "failed",
+        });
+      }
+    }
+
+    setIsEmailLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
+    alert(`Email alerts sent successfully for ${location}!`);
+  };
 
   // Send SMS alerts with logging
-  // const handleSendSmsAlert = async (location: string) => {
-  //   const alertData = await fetchAlertData(location);
-  //   if (!alertData) {
-  //     alert(`No active alert found for ${location}.`);
-  //     return;
-  //   }
+  const handleSendSmsAlert = async (location: string) => {
+    setIsSmsLoading((prev) => ({ ...prev, [location]: true })); // Set loading state
 
-  //   const message = `
-  //     Flood Alert for ${location}:
-  //     Type: ${alertData.alert_type}
-  //     Severity: ${alertData.severity}
-  //     Description: ${alertData.description}
-  //     Status: ${alertData.status}
-  //     Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
-  //   `;
-
-  //   try {
-  //     const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'sms');
-  //     for (const subscription of subscriptions) {
-  //       // Replace with your SMS API logic
-  //       console.log(`Sending SMS to ${subscription.contact}: ${message}`);
-
-  //       // Log the SMS alert
-  //       logAlert({
-  //         method: "sms",
-  //         contact: subscription.contact,
-  //         alertType: alertData.alert_type,
-  //         location: alertData.location,
-  //         timeSent: new Date().toISOString(),
-  //         status: "success",
-  //       });
-  //     }
-  //     alert(`SMS alerts sent successfully for ${location}!`);
-  //   } catch (error) {
-  //     console.error('Error sending SMS alerts:', error);
-
-  //     // Log the failed SMS alert
-  //     logAlert({
-  //       method: "sms",
-  //       contact: subscription.contact,
-  //       alertType: alertData.alert_type,
-  //       location: alertData.location,
-  //       timeSent: new Date().toISOString(),
-  //       status: "failed",
-  //     });
-
-  //     alert('Failed to send SMS alerts.');
-  //   }
-  // };
-
-const handleSendSmsAlert = async (location: string) => {
-  const alertData = await fetchAlertData(location);
-  if (!alertData) {
-    alert(`No active alert found for ${location}.`);
-    return;
-  }
-
-  const message = `
-    Flood Alert for ${location}:
-    Type: ${alertData.alert_type}
-    Severity: ${alertData.severity}
-    Description: ${alertData.description}
-    Status: ${alertData.status}
-    Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
-  `;
-
-  const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'sms');
-  for (const subscription of subscriptions) {
-    try {
-      // Replace with your SMS API logic
-      console.log(`Sending SMS to ${subscription.contact}: ${message}`);
-
-      // Log the SMS alert
-      logAlert({
-        method: "sms",
-        contact: subscription.contact,
-        alertType: alertData.alert_type,
-        location: alertData.location,
-        timeSent: new Date().toISOString(),
-        status: "success",
-      });
-    } catch (error) {
-      console.error('Error sending SMS alerts:', error);
-
-      // Log the failed SMS alert
-      logAlert({
-        method: "sms",
-        contact: subscription.contact,
-        alertType: alertData.alert_type,
-        location: alertData.location,
-        timeSent: new Date().toISOString(),
-        status: "failed",
-      });
+    const alertData = await fetchAlertData(location);
+    if (!alertData) {
+      alert(`No active alert found for ${location}.`);
+      setIsSmsLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
+      return;
     }
-  }
-  alert(`SMS alerts sent successfully for ${location}!`);
-};
 
+    const message = `
+      Flood Alert for ${location}:
+      Type: ${alertData.alert_type}
+      Severity: ${alertData.severity}
+      Description: ${alertData.description}
+      Status: ${alertData.status}
+      Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
+    `;
 
+    const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'sms');
+    for (const subscription of subscriptions) {
+      try {
+        // Replace with your SMS API logic
+        console.log(`Sending SMS to ${subscription.contact}: ${message}`);
+
+        // Log the SMS alert
+        logAlert({
+          method: "sms",
+          contact: subscription.contact,
+          alertType: alertData.alert_type,
+          location: alertData.location,
+          timeSent: new Date().toISOString(),
+          status: "success",
+        });
+      } catch (error) {
+        console.error('Error sending SMS alerts:', error);
+
+        // Log the failed SMS alert
+        logAlert({
+          method: "sms",
+          contact: subscription.contact,
+          alertType: alertData.alert_type,
+          location: alertData.location,
+          timeSent: new Date().toISOString(),
+          status: "failed",
+        });
+      }
+    }
+
+    setIsSmsLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
+    alert(`SMS alerts sent successfully for ${location}!`);
+  };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -312,10 +214,17 @@ const handleSendSmsAlert = async (location: string) => {
                       <h3 className="text-lg font-semibold text-gray-700">Email Subscriptions</h3>
                       <button
                         onClick={() => handleSendEmailAlert(location)}
+                        disabled={isEmailLoading[location]} // Disable button during loading
                         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center space-x-2"
                       >
-                        <EnvelopeIcon className="h-5 w-5" />
-                        <span>Send Email Alert</span>
+                        {isEmailLoading[location] ? (
+                          <ClipLoader size={20} color="#ffffff" /> // Show spinner when loading
+                        ) : (
+                          <>
+                            <EnvelopeIcon className="h-5 w-5" />
+                            <span>Send Email Alert</span>
+                          </>
+                        )}
                       </button>
                     </div>
                     <table className="w-full">
@@ -351,10 +260,17 @@ const handleSendSmsAlert = async (location: string) => {
                       <h3 className="text-lg font-semibold text-gray-700">SMS Subscriptions</h3>
                       <button
                         onClick={() => handleSendSmsAlert(location)}
+                        disabled={isSmsLoading[location]} // Disable button during loading
                         className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200 flex items-center space-x-2"
                       >
-                        <DevicePhoneMobileIcon className="h-5 w-5" />
-                        <span>Send SMS Alert</span>
+                        {isSmsLoading[location] ? (
+                          <ClipLoader size={20} color="#ffffff" /> // Show spinner when loading
+                        ) : (
+                          <>
+                            <DevicePhoneMobileIcon className="h-5 w-5" />
+                            <span>Send SMS Alert</span>
+                          </>
+                        )}
                       </button>
                     </div>
                     <table className="w-full">

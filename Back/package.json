@@ -20,6 +20,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-validator": "^7.2.1",
     "i18next": "^24.2.2",
     "i18next-fs-backend": "^2.6.0",
     "jsonwebtoken": "^9.0.2",
@@ -30,7 +31,8 @@
     "react-chartjs-2": "^5.2.0",
     "sequelize": "^6.37.4",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
