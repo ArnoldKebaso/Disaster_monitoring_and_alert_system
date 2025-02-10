@@ -23,6 +23,3 @@ const Subscription = sequelize.define("Subscription", {
 });
 
 module.exports = Subscription;
-
-
-

@@ -5,45 +5,74 @@ const authMiddleware = require('../middleware/auth');
 
 /**
  * @swagger
- * tags:
- *   name: Alerts
- *   description: Alert management
- */
-
-/**
- * @swagger
  * /alerts:
- *   get:
- *     summary: Get all alerts
+ *   post:
+ *     summary: Create a new alert
  *     tags: [Alerts]
- *     responses:
- *       200:
- *         description: A list of alerts
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - alertType
+ *               - severity
+ *               - location
+ *               - description
+ *               - water_levels
+ *               - evacuation_routes
+ *               - emergency_contacts
+ *               - precautionary_measures
+ *               - weather_forecast
+ *               - timeSent
+ *               - status
+ *             properties:
+ *               alertType:
+ *                 type: string
+ *                 example: "RiverFlood"
+ *               severity:
+ *                 type: string
+ *                 example: "Medium"
+ *               location:
+ *                 type: string
+ *                 example: "Bumadeya"
+ *               description:
+ *                 type: string
+ *                 example: "River Nzoia has overflowed, causing moderate flooding in low-lying areas."
+ *               water_levels:
  *                 type: object
- *                 properties:
- *                   alert_id:
- *                     type: integer
- *                     example: 1
- *                   alert_type:
- *                     type: string
- *                     example: "Flood"
- *                   severity:
- *                     type: string
- *                     example: "High"
- *                   location:
- *                     type: string
- *                     example: "Nairobi"
- *                   description:
- *                     type: string
- *                     example: "Flood warning for Nairobi."
- *                   status:
- *                     type: string
- *                     example: "active"
+ *                 example: { "current": "3.8 meters", "predicted": "4.5 meters (in 24 hours)" }
+ *               evacuation_routes:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["From Bumadeya to Busia via Budalangi-Busia Road", "From Bumadeya to Port Victoria via Sio Port Road"]
+ *               emergency_contacts:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["Bumadeya Sub-County Office: +254 712 345 679", "Red Cross Kenya: +254 733 123 457"]
+ *               precautionary_measures:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["Avoid walking through flooded areas.", "Stay updated via local radio stations."]
+ *               weather_forecast:
+ *                 type: object
+ *                 example: { "next_24_hours": "Light rainfall expected, with up to 20mm of precipitation.", "next_48_hours": "Scattered showers expected, with up to 15mm of precipitation." }
+ *               timeSent:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2023-10-01T12:00:00Z"
+ *               status:
+ *                 type: string
+ *                 example: "active"
+ *     responses:
+ *       201:
+ *         description: Alert created successfully
+ *       400:
+ *         description: Bad request
  */
 router.get('/', getAllAlerts);
 
