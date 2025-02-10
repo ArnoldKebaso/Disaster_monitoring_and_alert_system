@@ -29,11 +29,18 @@ const sendEmailAlert = async (req, res) => {
         await sendEmail(to, subject, text);
 
         // Log the successful email alert
-        await Log.create({
+        await AlertLog.create({
             method: "email",
             contact: to,
-            alertType: alertType, // Ensure this is provided
-            location: location,   // Ensure this is provided
+            alertType,
+            location,
+            description,
+            severity,
+            water_levels,
+            evacuation_routes,
+            emergency_contacts,
+            precautionary_measures,
+            weather_forecast,
             timeSent: new Date(),
             status: "success",
         });
@@ -43,11 +50,18 @@ const sendEmailAlert = async (req, res) => {
         console.error("Error sending email or creating log:", error);
 
         // Log the failed email alert
-        await Log.create({
+        await AlertLog.create({
             method: "email",
             contact: to,
-            alertType: alertType, // Ensure this is provided
-            location: location,   // Ensure this is provided
+            alertType,
+            location,
+            description,
+            severity,
+            water_levels,
+            evacuation_routes,
+            emergency_contacts,
+            precautionary_measures,
+            weather_forecast,
             timeSent: new Date(),
             status: "failed",
         });

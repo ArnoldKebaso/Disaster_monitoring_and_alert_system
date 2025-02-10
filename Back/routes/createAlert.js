@@ -91,6 +91,7 @@ const router = express.Router();
  *         description: Bad request
  */
 
+
 router.post(
     '/',
     [
@@ -143,57 +144,5 @@ router.post(
         }
     }
 );
-
-
-// router.post(
-//     '/',
-//     [
-//         body('alert_type').isIn(['FlashFlood', 'RiverFlood', 'CoastalFlood', 'UrbanFlood', 'ElNinoFlooding']),
-//         body('severity').isIn(['Low', 'Medium', 'High']),
-//         body('location').notEmpty(),
-//         body('water_levels').isObject(),
-//         body('evacuation_routes').isArray(),
-//         body('emergency_contacts').isArray(),
-//         body('precautionary_measures').isArray(),
-//         body('weather_forecast').isObject(),
-//     ],
-//     async (req, res) => {
-//         const errors = validationResult(req);
-//         if (!errors.isEmpty()) {
-//             return res.status(400).json({ errors: errors.array() });
-//         }
-
-//         const {
-//             alert_type,
-//             severity,
-//             location,
-//             description,
-//             water_levels,
-//             evacuation_routes,
-//             emergency_contacts,
-//             precautionary_measures,
-//             weather_forecast,
-//         } = req.body;
-
-//         try {
-//             const newAlert = await Alert.create({
-//                 alert_type,
-//                 severity,
-//                 location,
-//                 description,
-//                 water_levels,
-//                 evacuation_routes,
-//                 emergency_contacts,
-//                 precautionary_measures,
-//                 weather_forecast,
-//                 status: 'active',
-//             });
-
-//             res.status(201).json(newAlert);
-//         } catch (error) {
-//             res.status(400).json({ error: error.message });
-//         }
-//     }
-// );
 
 module.exports = router;
