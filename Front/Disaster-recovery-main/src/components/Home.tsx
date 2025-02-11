@@ -78,7 +78,7 @@ const Home: React.FC = () => {
           >
             {t("languageToggle")}
           </button>
-        
+
           {/* Hamburger Menu for Mobile */}
           <button
             className="lg:hidden focus:outline-none text-white"
@@ -175,12 +175,11 @@ const Home: React.FC = () => {
         </div>
       </nav>
 
-
       {/* Hero Section */}
       <section
-        className="bg-cover bg-center h-[500px] flex flex-col justify-center items-center text-center text-white"
+        className="bg-cover bg-center h-[600px] flex flex-col justify-center items-center text-center text-white"
         style={{
-          backgroundImage: "url('https://via.placeholder.com/1920x1080/003a8c/ffffff?text=Flood+Management')",
+          backgroundImage: "url('/src/assets/sig.jpg')", // Add your hero image path here
         }}
       >
         <div className="bg-black bg-opacity-50 p-8 rounded-md">
@@ -207,7 +206,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-       {/* Subscribe Section */}
+      {/* Subscribe Section */}
       <section className="py-16 bg-gray-100 text-center">
         <h2 className="text-3xl font-bold text-blue-900 mb-4">{t("subscribe.title")}</h2>
         <form className="max-w-lg mx-auto" onSubmit={handleSubmit}>
@@ -239,7 +238,7 @@ const Home: React.FC = () => {
             />
           </div>
 
-          {/* Location Selection (Multi-select Dropdown with Checkboxes) */}
+          {/* Location Selection */}
           <div className="mb-4">
             <label className="block text-left text-gray-700 font-medium mb-2">{t("subscribe.selectLocation")}</label>
             <Select
@@ -263,7 +262,6 @@ const Home: React.FC = () => {
         </form>
       </section>
 
-
       {/* What We Do Section */}
       <section className="py-16 bg-white text-center">
         <h2 className="text-3xl font-bold text-blue-900 mb-8">What We Do</h2>
@@ -286,13 +284,11 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-
       {/* Report Now Section */}
       <section
         className="bg-cover bg-center h-[400px] flex flex-col justify-center items-center text-white"
         style={{
-          backgroundImage:
-            "url('https://via.placeholder.com/1920x1080/003a8c/ffffff?text=Report+Flood+Now')",
+          backgroundImage: "url('/path-to-report-image.jpg')", // Add your report image path here
         }}
       >
         <div className="bg-black bg-opacity-50 p-8 rounded-md">
@@ -328,33 +324,75 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Footer Section */}
+      <footer className="bg-blue-900 text-white py-12">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                {[
+                  "Admin Portal",
+                  "Responder Portal",
+                  "User Dashboard",
+                  "Publications",
+                  "Impact Stories",
+                  "Donate",
+                  "About Us",
+                  "Contact Us",
+                ].map((link, index) => (
+                  <li key={index} className="hover:text-yellow-300">
+                    <Link to={`/${link.replace(" ", "-").toLowerCase()}`}>{link}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-      <footer className="bg-blue-900 text-white py-6 text-sm text-center">
-        <div className="container mx-auto flex flex-col md:flex-row justify-around items-center">
-          <div className="mb-4 md:mb-0">
-            <h3 className="text-lg font-bold">Quick Links</h3>
-            <ul className="text-gray-300">
-              {[
-                "Admin Portal",
-                "Responder Portal",
-                "User Dashboard",
-                "Publications",
-                "Impact Stories",
-                "Donate",
-                "About Us",
-                "Contact Us",
-              ].map((link, index) => (
-                <li key={index} className="hover:text-yellow-300">
-                  <Link to={`/${link.replace(" ", "-").toLowerCase()}`}>{link}</Link>
-                </li>
-              ))}
-            </ul>
+            {/* Contact Info */}
+            <div>
+              <h3 className="text-lg font-bold mb-4">{t("footer.contactTitle")}</h3>
+              <p>{t("footer.phone")}</p>
+              <p>{t("footer.email")}</p>
+              <p>{t("footer.address")}</p>
+            </div>
+
+            {/* Social Media */}
+            <div>
+              <h3 className="text-lg font-bold mb-4">Follow Us</h3>
+              <div className="flex gap-4">
+                <a href="https://www.facebook.com/travis.nonini/" className="text-white hover:text-yellow-300">
+                  <FaFacebook className="w-6 h-6" />
+                </a>
+                <a href="#" className="text-white hover:text-yellow-300">
+                  <FaTwitter className="w-6 h-6" />
+                </a>
+                <a href="#" className="text-white hover:text-yellow-300">
+                  <FaInstagram className="w-6 h-6" />
+                </a>
+                <a href="#" className="text-white hover:text-yellow-300">
+                  <FaYoutube className="w-6 h-6" />
+                </a>
+              </div>
+            </div>
+
+            {/* Newsletter */}
+            {/* <div>
+              <h3 className="text-lg font-bold mb-4">Subscribe to Our Newsletter</h3>
+              <form className="flex flex-col gap-2">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+                <button type="submit" className="bg-yellow-400 hover:bg-yellow-500 text-black">
+                  Subscribe
+                </button>
+              </form>
+            </div> */}
           </div>
-          <div>
-            <h3 className="text-lg font-bold">{t("footer.contactTitle")}</h3>
-            <p>{t("footer.phone")}</p>
-            <p>{t("footer.email")}</p>
-            <p>{t("footer.address")}</p>
+          <div className="border-t border-gray-700 mt-8 pt-8 text-center">
+            <p>&copy; 2023 Flood Alert & Monitoring System. All rights reserved.</p>
           </div>
         </div>
       </footer>
