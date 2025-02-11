@@ -1,18 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Search, MapPin, Home } from 'lucide-react';
+import { Search, MapPin, Home, AlertCircle } from 'lucide-react';
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent } from "./ui/card";
 import shelterIconUrl from '../assets/shelter.png'; // Ensure the path is correct
+import floodIconUrl from '../assets/flood.png'; // Ensure the path is correct
 
-const center = [-1.286389, 36.817223]; // Nairobi, Kenya
+// Center the map on Budalangi area
+const center = [0.1667, 34.1667]; // Approximate coordinates for Budalangi, Kenya
 
-const shelters = [
-  { id: 1, name: 'City Hall Shelter', location: { lat: -1.286389, lng: 36.817223 } },
-  { id: 2, name: 'Community Center', location: { lat: -1.285, lng: 36.820 } },
+// JSON data for flood alerts
+const floodAlerts = [
+  // Your JSON data here
 ];
+
+// Location options for markers
+const locationOptions = [
+  { value: "Bumadeya", label: "Bumadeya" },
+  { value: "Budalangi Central", label: "Budalangi Central" },
+  { value: "Budubusi", label: "Budubusi" },
+  { value: "Mundere", label: "Mundere" },
+  { value: "Musoma", label: "Musoma" },
+  { value: "Sibuka", label: "Sibuka" },
+  { value: "Sio Port", label: "Sio Port" },
+  { value: "Rukala", label: "Rukala" },
+  { value: "Mukhweya", label: "Mukhweya" },
+  { value: "Sigulu Island", label: "Sigulu Island" },
+  { value: "Siyaya", label: "Siyaya" },
+  { value: "Nambuku", label: "Nambuku" },
+  { value: "West Bunyala", label: "West Bunyala" },
+  { value: "East Bunyala", label: "East Bunyala" },
+  { value: "South Bunyala", label: "South Bunyala" },
+];
+
+// Coordinates for the locations (replace with actual coordinates from your JSON data)
+const locationCoordinates = {
+  Bumadeya: { lat: -0.1667, lng: 34.1667 },
+  "Budalangi Central": { lat: 0.1667, lng: 34.1667 },
+  Budubusi: { lat: 0.1667, lng: 34.1667 },
+  Mundere: { lat: 0.1667, lng: 34.1667 },
+  Musoma: { lat: 0.1667, lng: 34.1667 },
+  Sibuka: { lat: 0.1667, lng: 34.1667 },
+  "Sio Port": { lat: 0.1667, lng: 34.1667 },
+  Rukala: { lat: 0.1667, lng: 34.1667 },
+  Mukhweya: { lat: 0.1667, lng: 34.1667 },
+  "Sigulu Island": { lat: 0.1667, lng: 34.1667 },
+  Siyaya: { lat: 0.1667, lng: 34.1667 },
+  Nambuku: { lat: 0.1667, lng: 34.1667 },
+  "West Bunyala": { lat: 0.1667, lng: 34.1667 },
+  "East Bunyala": { lat: 0.1667, lng: 34.1667 },
+  "South Bunyala": { lat: 0.1667, lng: 34.1667 },
+};
 
 const SafetyMaps: React.FC = () => {
   const [map, setMap] = useState<L.Map | null>(null);
@@ -20,7 +60,7 @@ const SafetyMaps: React.FC = () => {
   const [markerLayer, setMarkerLayer] = useState<L.LayerGroup | null>(null);
 
   useEffect(() => {
-    const mapInstance = L.map('map').setView(center, 7);
+    const mapInstance = L.map('map').setView(center, 10); // Zoom level adjusted for better visibility
     setMap(mapInstance);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -31,16 +71,40 @@ const SafetyMaps: React.FC = () => {
     const layerGroup = L.layerGroup().addTo(mapInstance);
     setMarkerLayer(layerGroup);
 
-    // Add shelter markers with custom icons
-    shelters.forEach(shelter => {
-      L.marker([shelter.location.lat, shelter.location.lng], {
+    // Add markers for each location
+    locationOptions.forEach(location => {
+      const { lat, lng } = locationCoordinates[location.value];
+      const marker = L.marker([lat, lng], {
         icon: L.icon({
-          iconUrl: shelterIconUrl,
+          iconUrl: floodIconUrl,
           iconSize: [30, 30],
           iconAnchor: [15, 30],
           popupAnchor: [0, -30]
         })
-      }).addTo(layerGroup).bindPopup(`<strong>${shelter.name}</strong>`);
+      }).addTo(layerGroup);
+
+      // Find the corresponding flood alert for this location
+      const alert = floodAlerts.find(alert => alert.location === location.value);
+      if (alert) {
+        const popupContent = `
+          <strong>${location.label}</strong><br>
+          <strong>Type:</strong> ${alert.alert_type}<br>
+          <strong>Severity:</strong> ${alert.severity}<br>
+          <strong>Evacuation Routes:</strong><br>
+          ${alert.evacuation_routes.join('<br>')}
+        `;
+        marker.bindPopup(popupContent);
+
+        // Draw evacuation routes
+        alert.evacuation_routes.forEach(route => {
+          // Assuming route is a string of coordinates (e.g., "lat1,lng1 lat2,lng2")
+          const routeCoordinates = route.split(' ').map(coord => {
+            const [lat, lng] = coord.split(',').map(Number);
+            return [lat, lng];
+          });
+          L.polyline(routeCoordinates, { color: 'red' }).addTo(layerGroup);
+        });
+      }
     });
 
     return () => {
@@ -65,7 +129,7 @@ const SafetyMaps: React.FC = () => {
         markerLayer.clearLayers();
         L.marker([lat, lon], {
           icon: L.icon({
-            iconUrl: shelterIconUrl, // You can replace this with a different icon if needed
+            iconUrl: floodIconUrl, // You can replace this with a different icon if needed
             iconSize: [30, 30],
             iconAnchor: [15, 30],
             popupAnchor: [0, -30]
@@ -110,12 +174,16 @@ const SafetyMaps: React.FC = () => {
             <h2 className="text-xl font-semibold mb-4">Legend</h2>
             <div className="space-y-2">
               <div className="flex items-center">
-                <MapPin className="h-5 w-5 text-red-500 mr-2" />
-                <span>Disaster Area</span>
+                <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
+                <span>Flood Alert</span>
               </div>
               <div className="flex items-center">
                 <Home className="h-5 w-5 text-green-500 mr-2" />
                 <span>Shelter</span>
+              </div>
+              <div className="flex items-center">
+                <MapPin className="h-5 w-5 text-blue-500 mr-2" />
+                <span>Evacuation Route</span>
               </div>
             </div>
           </CardContent>

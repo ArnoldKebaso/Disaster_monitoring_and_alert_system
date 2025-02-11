@@ -643,6 +643,14 @@ body {
   z-index: 50;
 }
 
+.order-1 {
+  order: 1;
+}
+
+.order-2 {
+  order: 2;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -713,6 +721,10 @@ body {
   margin-top: 2rem;
 }
 
+.mb-12 {
+  margin-bottom: 3rem;
+}
+
 .block {
   display: block;
 }
@@ -771,6 +783,10 @@ body {
 
 .h-full {
   height: 100%;
+}
+
+.h-screen {
+  height: 100vh;
 }
 
 .min-h-screen {
@@ -860,6 +876,10 @@ body {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.list-inside {
+  list-style-position: inside;
 }
 
 .list-disc {
@@ -1231,6 +1251,11 @@ body {
   padding-bottom: 2rem;
 }
 
+.py-20 {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
 .pb-2 {
   padding-bottom: 0.5rem;
 }
@@ -1288,6 +1313,11 @@ body {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-5xl {
+  font-size: 3rem;
+  line-height: 1;
 }
 
 .font-bold {
@@ -1578,6 +1608,11 @@ body {
   background-color: rgb(234 179 8 / var(--tw-bg-opacity, 1));
 }
 
+.hover\:bg-red-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(185 28 28 / var(--tw-bg-opacity, 1));
+}
+
 .hover\:text-gray-700:hover {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity, 1));
@@ -1660,12 +1695,24 @@ body {
 }
 
 @media (min-width: 768px) {
+  .md\:order-1 {
+    order: 1;
+  }
+
+  .md\:order-2 {
+    order: 2;
+  }
+
   .md\:col-span-2 {
     grid-column: span 2 / span 2;
   }
 
   .md\:mb-0 {
     margin-bottom: 0px;
+  }
+
+  .md\:mt-0 {
+    margin-top: 0px;
   }
 
   .md\:w-1\/2 {
@@ -1691,6 +1738,10 @@ body {
   .md\:px-16 {
     padding-left: 4rem;
     padding-right: 4rem;
+  }
+
+  .md\:pl-12 {
+    padding-left: 3rem;
   }
 
   .md\:text-4xl {
