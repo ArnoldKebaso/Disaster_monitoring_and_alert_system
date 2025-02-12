@@ -8,7 +8,8 @@ import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import HeroUrl from '../assets/sig.jpg';
- 
+import ReportImage from "../assets/report.jpg";
+
 const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t, i18n } = useTranslation();
@@ -299,141 +300,185 @@ const Home: React.FC = () => {
       <p className="mt-4 text-green-600 font-medium">{statusMessage}</p>
     </form>
   </div>
-</section>
-      {/* What We Do Section */}
-      <section className="py-16 bg-white text-center">
-        <h2 className="text-3xl font-bold text-blue-900 mb-8">What We Do</h2>
-        <div className="container mx-auto grid md:grid-cols-4 gap-8 px-4">
-          {[
-            { title: "Flood Monitoring", icon: <FaMapMarkerAlt className="w-12 h-12 mx-auto mb-4" /> },
-            { title: "Flood Alert", icon: <FaBell className="w-12 h-12 mx-auto mb-4" /> },
-            { title: "Resource Allocation", icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4" /> },
-            { title: "Flood Response", icon: <FaShieldAlt className="w-12 h-12 mx-auto mb-4" /> },
-          ].map((item, index) => (
-            <div
-              key={index}
-              className="p-6 bg-blue-50 rounded-lg shadow-md transform transition-transform duration-300 hover:scale-105"
-            > 
-              {item.icon}
-              <h3 className="text-xl font-bold text-blue-900 mb-2">{item.title}</h3>
-              <p className="text-gray-600">Learn more about our {item.title} efforts.</p>
-            </div>
-          ))}
-        </div>
       </section>
+      
+{/* What We Do Section */}
+<section className="py-16 bg-white text-center">
+  <h2 className="text-4xl font-bold text-blue-900 mb-12">What We Do</h2>
+  <div className="container mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+    {[
+      {
+        title: "Flood Monitoring",
+        icon: <FaMapMarkerAlt className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
+        image: "https://via.placeholder.com/400x300?text=Flood+Monitoring", 
+      },
+      {
+        title: "Flood Alert",
+        icon: <FaBell className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
+        image: "https://via.placeholder.com/400x300?text=Flood+Alert", 
+      },
+      {
+        title: "Resource Allocation",
+        icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
+        image: "https://via.placeholder.com/400x300?text=Resource+Allocation",
+      },
+      {
+        title: "Flood Response",
+        icon: <FaShieldAlt className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
+        image: "https://via.placeholder.com/400x300?text=Flood+Response", 
+      },
+    ].map((item, index) => (
+      <div
+        key={index}
+        className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
+      >
+        <img src={item.image} alt={item.title} className="w-full h-48 object-cover" />
+        <div className="p-6">
+          {item.icon}
+          <h3 className="text-xl font-bold text-blue-900 mb-2">{item.title}</h3>
+          <p className="text-gray-600">Learn more about our {item.title} efforts.</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
 
       {/* Report Now Section */}
-      <section
-        className="bg-cover bg-center h-[400px] flex flex-col justify-center items-center text-white"
-        style={{
-          backgroundImage: "url('/path-to-report-image.jpg')", // Add your report image path here
-        }}
-      >
-        <div className="bg-black bg-opacity-50 p-8 rounded-md">
-          <h2 className="text-3xl font-bold mb-4">Report Flood Incidents</h2>
-          <Link
-            to="/report"
-            className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
-          >
-            Report Now
-          </Link>
-        </div>
-      </section>
+<section className="relative h-[500px] flex flex-col justify-center items-center text-white mt- 5 mb-8 p-8 ">
+  <img src={ReportImage} alt="Report" className="absolute inset-0 w-full h-full object-cover" />
+  <div className="bg-black bg-opacity-50 p-8 rounded-xl z-10 text-center  w-full max-w-7xl mx-auto">
+    <h2 className="text-5xl font-bold mb-6">Report Flood Incidents</h2>
+    <p className="text-xl mb-8 max-w-2xl mx-auto">
+      Help us respond faster by reporting flood incidents in your area. Your input can save lives.
+    </p>
+    <Link
+      to="/report"
+      className="bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-8 rounded-lg text-lg transition-all duration-200"
+    >
+      Report Now
+    </Link>
+  </div>
+</section>
 
-      {/* Analytics Section */}
-      <section className="py-16 bg-blue-900 text-white text-center">
-        <h2 className="text-3xl font-bold mb-4">{t("analytics.title")}</h2>
-        <div className="container mx-auto grid md:grid-cols-4 gap-8 px-4">
-          {[
-            { label: "County Branches", value: "12", icon: <FaMap className="w-12 h-12 mx-auto mb-4" /> },
-            { label: "Regional Offices", value: "20", icon: <FaUsers className="w-12 h-12 mx-auto mb-4" /> },
-            { label: "Members & Volunteers", value: "5k+", icon: <FaUsers className="w-12 h-12 mx-auto mb-4" /> },
-            { label: "Beneficiaries Supported", value: "1k+", icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4" /> },
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className="p-6 bg-blue-800 rounded-lg shadow-md transform transition-transform duration-300 hover:scale-105"
-            >
-              {stat.icon}
-              <h3 className="text-4xl font-bold text-yellow-400">{stat.value}</h3>
-              <p className="text-lg mt-2">{stat.label}</p>
-            </div>
-          ))}
+
+      
+      {/* Our Impact Section */}
+<section className="py-16 bg-blue-900 text-white text-center p-8 mt-4 mb-6 ">
+  <h2 className="text-4xl font-bold mb-12">{t("analytics.title")}</h2>
+  <div className="container mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+    {[
+      {
+        label: "County Branches",
+        value: "12",
+        icon: <FaMap className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
+        image: "https://via.placeholder.com/400x300?text=County+Branches",
+      },
+      {
+        label: "Regional Offices",
+        value: "20",
+        icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
+        image: "https://via.placeholder.com/400x300?text=Regional+Offices",
+      },
+      {
+        label: "Members & Volunteers",
+        value: "5k+",
+        icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
+        image: "https://via.placeholder.com/400x300?text=Members+%26+Volunteers",
+      },
+      {
+        label: "Beneficiaries Supported",
+        value: "1k+",
+        icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
+        image: "https://via.placeholder.com/400x300?text=Beneficiaries+Supported", // Replace with your image URL
+      },
+    ].map((stat, index) => (
+      <div
+        key={index}
+        className="bg-blue-800 rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
+      >
+        <img src={stat.image} alt={stat.label} className="w-full h-48 object-cover" />
+        <div className="p-6">
+          {stat.icon}
+          <h3 className="text-4xl font-bold text-yellow-400 mb-2">{stat.value}</h3>
+          <p className="text-lg mt-2">{stat.label}</p>
         </div>
-      </section>
+      </div>
+    ))}
+  </div>
+</section>
 
       {/* Footer Section */}
-      <footer className="bg-blue-900 text-white py-12">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Quick Links */}
-            <div>
-              <h3 className="text-lg font-bold mb-4">Quick Links</h3>
-              <ul className="space-y-2">
-                {[
-                  "Admin Portal",
-                  "Responder Portal",
-                  "User Dashboard",
-                  "Publications",
-                  "Impact Stories",
-                  "Donate",
-                  "About Us",
-                  "Contact Us",
-                ].map((link, index) => (
-                  <li key={index} className="hover:text-yellow-300">
-                    <Link to={`/${link.replace(" ", "-").toLowerCase()}`}>{link}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+<footer className="bg-gray-800 text-white py-12 ">
+  <div className="container mx-auto px-6">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      {/* Quick Links */}
+      <div>
+        <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+        <ul className="space-y-2">
+          {[
+            "Admin Portal",
+            "Responder Portal",
+            "User Dashboard",
+            "Publications",
+            "Impact Stories",
+            "Donate",
+            "About Us",
+            "Contact Us",
+          ].map((link, index) => (
+            <li key={index} className="hover:text-yellow-300">
+              <Link to={`/${link.replace(" ", "-").toLowerCase()}`}>{link}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-            {/* Contact Info */}
-            <div>
-              <h3 className="text-lg font-bold mb-4">{t("footer.contactTitle")}</h3>
-              <p>{t("footer.phone")}</p>
-              <p>{t("footer.email")}</p>
-              <p>{t("footer.address")}</p>
-            </div>
+      {/* Contact Info */}
+      <div>
+        <h3 className="text-lg font-bold mb-4">{t("footer.contactTitle")}</h3>
+        <p>{t("footer.phone")}</p>
+        <p>{t("footer.email")}</p>
+        <p>{t("footer.address")}</p>
+      </div>
 
-            {/* Social Media */}
-            <div>
-              <h3 className="text-lg font-bold mb-4">Follow Us</h3>
-              <div className="flex gap-4">
-                <a href="https://www.facebook.com/travis.nonini/" className="text-white hover:text-yellow-300">
-                  <FaFacebook className="w-6 h-6" />
-                </a>
-                <a href="#" className="text-white hover:text-yellow-300">
-                  <FaTwitter className="w-6 h-6" />
-                </a>
-                <a href="#" className="text-white hover:text-yellow-300">
-                  <FaInstagram className="w-6 h-6" />
-                </a>
-                <a href="#" className="text-white hover:text-yellow-300">
-                  <FaYoutube className="w-6 h-6" />
-                </a>
-              </div>
-            </div>
-
-            {/* Newsletter */}
-             <div>
-              <h3 className="text-lg font-bold mb-4">Subscribe to Our Newsletter</h3>
-              <form className="flex flex-col gap-2">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                />
-                <Button type="submit" className="bg-yellow-400 hover:bg-yellow-500 text-black">
-                  Subscribe
-                </Button>
-              </form>
-            </div> 
-          </div>
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-            <p>&copy; 2023 Flood Alert & Monitoring System. All rights reserved.</p>
-          </div>
+      {/* Social Media */}
+      <div>
+        <h3 className="text-lg font-bold mb-4">Follow Us</h3>
+        <div className="flex gap-4">
+          <a href="https://www.facebook.com/travis.nonini/" className="text-white hover:text-yellow-300">
+            <FaFacebook className="w-6 h-6" />
+          </a>
+          <a href="#" className="text-white hover:text-yellow-300">
+            <FaTwitter className="w-6 h-6" />
+          </a>
+          <a href="#" className="text-white hover:text-yellow-300">
+            <FaInstagram className="w-6 h-6" />
+          </a>
+          <a href="#" className="text-white hover:text-yellow-300">
+            <FaYoutube className="w-6 h-6" />
+          </a>
         </div>
-      </footer>
+      </div>
+
+      {/* Newsletter */}
+      <div>
+        <h3 className="text-lg font-bold mb-4">Subscribe to Our Newsletter</h3>
+        <form className="flex flex-col gap-2">
+          <Input
+            type="email"
+            placeholder="Enter your email"
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+          <Button type="submit" className="bg-yellow-400 hover:bg-yellow-500 text-black">
+            Subscribe
+          </Button>
+        </form>
+      </div>
+    </div>
+    <div className="border-t border-gray-700 mt-8 pt-8 text-center">
+      <p>&copy; 2023 Flood Alert & Monitoring System. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
     </div>
   );
 };
