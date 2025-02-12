@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
+import axios from 'axios';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, role }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const userMenuItems = [
     { label: 'Home', path: '/home' },
@@ -39,6 +41,23 @@ const Layout: React.FC<LayoutProps> = ({ children, role }) => {
 
   const menuItems = role === 'admin' ? adminMenuItems : userMenuItems;
 
+  // const handleLogout = () => {
+  //   localStorage.removeItem('token'); // Clear the token
+  //   navigate('/'); // Redirect to the default view
+  //   window.location.reload(); // Refresh the page to reset the role
+  // };
+  const handleLogout = async () => {
+  try {
+    await axios.post('http://localhost:3000/logout'); // Call the logout endpoint
+  } catch (error) {
+    console.error('Logout failed:', error);
+  } finally {
+    localStorage.removeItem('token'); // Clear the token
+    navigate('/'); // Redirect to the default view
+    window.location.reload(); // Refresh the page to reset the role
+  }
+};
+
   return (
     <div className="min-h-screen bg-gray-100 flex">
       {/* Sidebar */}
@@ -67,6 +86,15 @@ const Layout: React.FC<LayoutProps> = ({ children, role }) => {
             ))}
           </ul>
         </nav>
+        {/* Logout Button */}
+        <div className="p-4">
+          <button
+            onClick={handleLogout}
+            className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600"
+          >
+            Logout
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
