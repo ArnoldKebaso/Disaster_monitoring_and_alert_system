@@ -23,9 +23,9 @@
     "selectMethod": "Chagua njia",
     "email": "Barua Pepe",
     "sms": "SMS",
-    "phonePlaceholder": "weka nambari ya simu",
-    "emailPlaceholder": "Weka barua pepe ",
-    "selectLocation": "Ni eneo au maeneo gani ungependa kupokea arifa",
+    "phonePlaceholder": "Weka nambari ya simu",
+    "emailPlaceholder": "Weka barua pepe",
+    "selectLocation": "Ni eneo au maeneo gani ungependa kupokea arifa?",
     "subscribeButton": "Jisajili"
   },
   "whatWeDo": {
@@ -45,6 +45,7 @@
   },
   "reportFlood": {
     "title": "Ripoti Matukio ya Mafuriko",
+    "description": "Tusaidie kujibu haraka kwa kuripoti matukio ya mafuriko katika eneo lako. Mawazo yako yanaweza kuokoa maisha.",
     "button": "Ripoti Sasa"
   },
   "footer": {

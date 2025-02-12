@@ -9,6 +9,14 @@ import { Input } from './ui/input';
 import { Button } from './ui/button';
 import HeroUrl from '../assets/sig.jpg';
 import ReportImage from "../assets/report.jpg";
+import floodImage from "../assets/floodResponse.png";
+import reourceImage from "../assets/resourceAllocation.png";
+import alertIcon from "../assets/alert.png";
+import monitorIcon from "../assets/floodMonitoring.png";
+import county from "../assets/county.png";
+import regional from "../assets/regi.png";
+import beneficiary from "../assets/beneficiary.png";
+import volunteer from "../assets/volunteer.png";
 
 const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -178,37 +186,36 @@ const Home: React.FC = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-    {/* Hero Section */}
+{/* Hero Section */}
 <section className="relative h-[600px] flex flex-col justify-center items-center text-center text-white">
   <img src={HeroUrl} alt="Hero" className="absolute inset-0 w-full h-full object-cover" />
   <div className="bg-black bg-opacity-50 p-8 rounded-md z-10 w-full max-w-7xl mx-auto">
     <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-4">
-      Be Prepared, Stay Safe
+      {t("hero.title")}
     </h1>
     <p className="text-2xl lg:text-3xl mb-6">
-      Comprehensive Flood Monitoring and Disaster Management Solutions.
+      {t("hero.description")}
     </p>
     <div className="flex gap-4 justify-center">
       <Link
         to="/donate"
         className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
       >
-        Donate
+        {t("navbar.donate")}
       </Link>
       <Link
         to="/alerts"
         className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
       >
-        View Alerts
+        {t("navbar.alerts")}
       </Link>
     </div>
   </div>
 </section>
 
       {/* Subscribe Section */}
-<section className="py-16 bg-gradient-to-r from-blue-50 to-gray-100 text-center">
-  <div className="max-w-2xl mx-auto px-4">
+      <section className="py-16 bg-gradient-to-r from-blue-50 to-gray-100 text-center">
+        <div className="max-w-2xl mx-auto px-4">
     <h2 className="text-4xl font-bold text-blue-900 mb-6">{t("subscribe.title")}</h2>
     <form
       className="bg-white p-8 rounded-xl shadow-lg border border-gray-200"
@@ -304,39 +311,39 @@ const Home: React.FC = () => {
       
 {/* What We Do Section */}
 <section className="py-16 bg-white text-center">
-  <h2 className="text-4xl font-bold text-blue-900 mb-12">What We Do</h2>
+  <h2 className="text-4xl font-bold text-blue-900 mb-12">{t("whatWeDo.title")}</h2>
   <div className="container mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
     {[
       {
-        title: "Flood Monitoring",
+        title: t("whatWeDo.floodMonitoring"),
         icon: <FaMapMarkerAlt className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
-        image: "https://via.placeholder.com/400x300?text=Flood+Monitoring", 
+        image: monitorIcon,
       },
       {
-        title: "Flood Alert",
+        title: t("whatWeDo.floodAlert"),
         icon: <FaBell className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
-        image: "https://via.placeholder.com/400x300?text=Flood+Alert", 
+        image: alertIcon,
       },
       {
-        title: "Resource Allocation",
+        title: t("whatWeDo.resourceAllocation"),
         icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
-        image: "https://via.placeholder.com/400x300?text=Resource+Allocation",
+        image: reourceImage,
       },
       {
-        title: "Flood Response",
+        title: t("whatWeDo.floodResponse"),
         icon: <FaShieldAlt className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
-        image: "https://via.placeholder.com/400x300?text=Flood+Response", 
+        image: floodImage,
       },
     ].map((item, index) => (
       <div
         key={index}
         className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
       >
-        <img src={item.image} alt={item.title} className="w-full h-48 object-cover" />
+        <img src={item.image} alt={item.title} className="w-full h-60 object-cover" />
         <div className="p-6">
           {item.icon}
           <h3 className="text-xl font-bold text-blue-900 mb-2">{item.title}</h3>
-          <p className="text-gray-600">Learn more about our {item.title} efforts.</p>
+          <p className="text-gray-600">{t("whatWeDo.description")}</p>
         </div>
       </div>
     ))}
@@ -344,22 +351,21 @@ const Home: React.FC = () => {
 </section>
 
       {/* Report Now Section */}
-<section className="relative h-[500px] flex flex-col justify-center items-center text-white mt- 5 mb-8 p-8 ">
+<section className="relative h-[500px] flex flex-col justify-center items-center text-white mt-30 mb-8 p-8">
   <img src={ReportImage} alt="Report" className="absolute inset-0 w-full h-full object-cover" />
-  <div className="bg-black bg-opacity-50 p-8 rounded-xl z-10 text-center  w-full max-w-7xl mx-auto">
-    <h2 className="text-5xl font-bold mb-6">Report Flood Incidents</h2>
+  <div className="bg-black bg-opacity-50 p-8 rounded-xl z-10 text-center w-full max-w-7xl mx-auto">
+    <h2 className="text-5xl font-bold mb-6">{t("reportFlood.title")}</h2>
     <p className="text-xl mb-8 max-w-2xl mx-auto">
-      Help us respond faster by reporting flood incidents in your area. Your input can save lives.
+      {t("reportFlood.description")}
     </p>
     <Link
       to="/report"
       className="bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-8 rounded-lg text-lg transition-all duration-200"
     >
-      Report Now
+      {t("reportFlood.button")}
     </Link>
   </div>
 </section>
-
 
       
       {/* Our Impact Section */}
@@ -371,32 +377,32 @@ const Home: React.FC = () => {
         label: "County Branches",
         value: "12",
         icon: <FaMap className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
-        image: "https://via.placeholder.com/400x300?text=County+Branches",
+        image: county,
       },
       {
         label: "Regional Offices",
         value: "20",
         icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
-        image: "https://via.placeholder.com/400x300?text=Regional+Offices",
+        image: regional,
       },
       {
         label: "Members & Volunteers",
         value: "5k+",
         icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
-        image: "https://via.placeholder.com/400x300?text=Members+%26+Volunteers",
+        image: volunteer,
       },
       {
         label: "Beneficiaries Supported",
         value: "1k+",
         icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
-        image: "https://via.placeholder.com/400x300?text=Beneficiaries+Supported", // Replace with your image URL
+        image: beneficiary, 
       },
     ].map((stat, index) => (
       <div
         key={index}
         className="bg-blue-800 rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
       >
-        <img src={stat.image} alt={stat.label} className="w-full h-48 object-cover" />
+        <img src={stat.image} alt={stat.label} className="w-full h-70 object-cover p-5" />
         <div className="p-6">
           {stat.icon}
           <h3 className="text-4xl font-bold text-yellow-400 mb-2">{stat.value}</h3>
@@ -475,7 +481,7 @@ const Home: React.FC = () => {
       </div>
     </div>
     <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-      <p>&copy; 2023 Flood Alert & Monitoring System. All rights reserved.</p>
+      <p>&copy; FMAS( Flood Alert & Monitoring System.)</p>
     </div>
   </div>
 </footer>
