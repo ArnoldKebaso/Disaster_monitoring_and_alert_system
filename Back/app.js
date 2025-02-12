@@ -35,6 +35,11 @@ app.use(cors({
   origin: 'http://localhost:3001',
   credentials: true
 }));
+app.post('/logout', (req, res) => {
+  // Clear the session or token (if using sessions)
+  res.clearCookie('token'); // Clear the token cookie
+  res.status(200).json({ message: 'Logged out successfully' });
+});
 
 app.use(express.json());
 app.use(cookieParser());

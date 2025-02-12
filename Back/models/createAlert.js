@@ -22,6 +22,26 @@ const Alert = sequelize.define('Alert', {
     description: {
         type: DataTypes.TEXT,
     },
+    water_levels: {
+        type: DataTypes.JSON, // Store current and predicted water levels
+        allowNull: false,
+    },
+    evacuation_routes: {
+        type: DataTypes.JSON, // Store as an array of strings
+        allowNull: false,
+    },
+    emergency_contacts: {
+        type: DataTypes.JSON, // Store as an array of strings
+        allowNull: false,
+    },
+    precautionary_measures: {
+        type: DataTypes.JSON, // Store as an array of strings
+        allowNull: false,
+    },
+    weather_forecast: {
+        type: DataTypes.JSON, // Store next 24 and 48 hours forecast
+        allowNull: false,
+    },
     status: {
         type: DataTypes.ENUM('active', 'resolved'),
         defaultValue: 'active',

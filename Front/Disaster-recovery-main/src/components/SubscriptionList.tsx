@@ -15,10 +15,22 @@ interface Alert {
   severity: string;
   location: string;
   description: string;
+  water_levels: {
+    current: string;
+    predicted: string;
+  };
+  evacuation_routes: string[];
+  emergency_contacts: string[];
+  precautionary_measures: string[];
+  weather_forecast: {
+    next_24_hours: string;
+    next_48_hours: string;
+  };
   status: string;
   createdAt: string;
   updatedAt: string;
 }
+
 
 interface AlertLog {
   id: string; // Unique ID for each log
@@ -26,10 +38,22 @@ interface AlertLog {
   contact: string; // Recipient's email or phone number
   alertType: string; // Type of alert (e.g., Flood, Fire)
   location: string; // Location of the alert
+  description: string; // Description of the alert
+  severity: string; // Severity of the alert
+  water_levels: {
+    current: string;
+    predicted: string;
+  };
+  evacuation_routes: string[];
+  emergency_contacts: string[];
+  precautionary_measures: string[];
+  weather_forecast: {
+    next_24_hours: string;
+    next_48_hours: string;
+  };
   timeSent: string; // Timestamp when the alert was sent
   status: "success" | "failed"; // Status of the alert
 }
-
 const useAlertLogger = () => {
   const [logs, setLogs] = useState<AlertLog[]>([]);
 
@@ -95,41 +119,70 @@ const SubscriptionList: React.FC = () => {
       Severity: ${alertData.severity}
       Location: ${alertData.location}
       Description: ${alertData.description}
+      Water Levels: Current - ${alertData.water_levels.current}, Predicted - ${alertData.water_levels.predicted}
+      Evacuation Routes: ${alertData.evacuation_routes.join(', ')}
+      Emergency Contacts: ${alertData.emergency_contacts.join(', ')}
+      Precautionary Measures: ${alertData.precautionary_measures.join(', ')}
+      Weather Forecast: Next 24 Hours - ${alertData.weather_forecast.next_24_hours}, Next 48 Hours - ${alertData.weather_forecast.next_48_hours}
       Status: ${alertData.status}
       Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
     `;
 
+
     const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'email');
     for (const subscription of subscriptions) {
-      try {
-        await axios.post('http://localhost:3000/subscriptions/send-email', {
-          to: subscription.contact,
-          subject,
-          text,
-        });
+        try {
+            await axios.post('http://localhost:3000/subscriptions/send-email', {
+                to: subscription.contact,
+                subject,
+                text,
+                alertType: alertData.alert_type,
+                location: alertData.location,
+                description: alertData.description,
+                severity: alertData.severity,
+                water_levels: alertData.water_levels,
+                evacuation_routes: alertData.evacuation_routes,
+                emergency_contacts: alertData.emergency_contacts,
+                precautionary_measures: alertData.precautionary_measures,
+                weather_forecast: alertData.weather_forecast,
+            });
 
-        // Log the email alert
-        logAlert({
-          method: "email",
-          contact: subscription.contact,
-          alertType: alertData.alert_type,
-          location: alertData.location,
-          timeSent: new Date().toISOString(),
-          status: "success",
-        });
-      } catch (error) {
-        console.error('Error sending email alerts:', error);
+            // Log the email alert
+            logAlert({
+                method: "email",
+                contact: subscription.contact,
+                alertType: alertData.alert_type,
+                location: alertData.location,
+                description: alertData.description,
+                severity: alertData.severity,
+                water_levels: alertData.water_levels,
+                evacuation_routes: alertData.evacuation_routes,
+                emergency_contacts: alertData.emergency_contacts,
+                precautionary_measures: alertData.precautionary_measures,
+                weather_forecast: alertData.weather_forecast,
+                timeSent: new Date().toISOString(),
+                status: "success",
+            });
+        } catch (error) {
+            console.error('Error sending email alerts:', error);
 
-        // Log the failed email alert
-        logAlert({
-          method: "email",
-          contact: subscription.contact,
-          alertType: alertData.alert_type,
-          location: alertData.location,
-          timeSent: new Date().toISOString(),
-          status: "failed",
-        });
-      }
+            // Log the failed email alert
+            logAlert({
+                method: "email",
+                contact: subscription.contact,
+                alertType: alertData.alert_type,
+                location: alertData.location,
+                description: alertData.description,
+                severity: alertData.severity,
+                water_levels: alertData.water_levels,
+                evacuation_routes: alertData.evacuation_routes,
+                emergency_contacts: alertData.emergency_contacts,
+                precautionary_measures: alertData.precautionary_measures,
+                weather_forecast: alertData.weather_forecast,
+                timeSent: new Date().toISOString(),
+                status: "failed",
+            });
+        }
     }
 
     setIsEmailLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
@@ -152,6 +205,11 @@ const SubscriptionList: React.FC = () => {
       Type: ${alertData.alert_type}
       Severity: ${alertData.severity}
       Description: ${alertData.description}
+      Water Levels: Current - ${alertData.water_levels.current}, Predicted - ${alertData.water_levels.predicted}
+      Evacuation Routes: ${alertData.evacuation_routes.join(', ')}
+      Emergency Contacts: ${alertData.emergency_contacts.join(', ')}
+      Precautionary Measures: ${alertData.precautionary_measures.join(', ')}
+      Weather Forecast: Next 24 Hours - ${alertData.weather_forecast.next_24_hours}, Next 48 Hours - ${alertData.weather_forecast.next_48_hours}
       Status: ${alertData.status}
       Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
     `;
@@ -168,6 +226,13 @@ const SubscriptionList: React.FC = () => {
           contact: subscription.contact,
           alertType: alertData.alert_type,
           location: alertData.location,
+          description: alertData.description,
+          severity: alertData.severity,
+          water_levels: alertData.water_levels,
+          evacuation_routes: alertData.evacuation_routes,
+          emergency_contacts: alertData.emergency_contacts,
+          precautionary_measures: alertData.precautionary_measures,
+          weather_forecast: alertData.weather_forecast,
           timeSent: new Date().toISOString(),
           status: "success",
         });
@@ -180,6 +245,13 @@ const SubscriptionList: React.FC = () => {
           contact: subscription.contact,
           alertType: alertData.alert_type,
           location: alertData.location,
+          description: alertData.description,
+          severity: alertData.severity,
+          water_levels: alertData.water_levels,
+          evacuation_routes: alertData.evacuation_routes,
+          emergency_contacts: alertData.emergency_contacts,
+          precautionary_measures: alertData.precautionary_measures,
+          weather_forecast: alertData.weather_forecast,
           timeSent: new Date().toISOString(),
           status: "failed",
         });
@@ -189,6 +261,7 @@ const SubscriptionList: React.FC = () => {
     setIsSmsLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
     alert(`SMS alerts sent successfully for ${location}!`);
   };
+
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">

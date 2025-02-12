@@ -23,15 +23,32 @@ const getAlertById = async (req, res) => {
 
 // Create a new alert
 const createAlert = async (req, res) => {
-  const { alert_type, severity, location, description, status } = req.body;
+  const {
+    alert_type,
+    severity,
+    location,
+    description,
+    water_levels,
+    evacuation_routes,
+    emergency_contacts,
+    precautionary_measures,
+    weather_forecast,
+  } = req.body;
+
   try {
     const newAlert = await Alert.create({
       alert_type,
       severity,
       location,
       description,
-      status
+      water_levels,
+      evacuation_routes,
+      emergency_contacts,
+      precautionary_measures,
+      weather_forecast,
+      status: 'active',
     });
+
     res.status(201).json(newAlert);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -43,7 +60,7 @@ const updateAlert = async (req, res) => {
   try {
     const alert = await Alert.findByPk(req.params.id);
     if (!alert) return res.status(404).json({ error: 'Alert not found' });
-    
+
     const updatedAlert = await alert.update(req.body);
     res.status(200).json(updatedAlert);
   } catch (error) {
@@ -56,7 +73,7 @@ const deleteAlert = async (req, res) => {
   try {
     const alert = await Alert.findByPk(req.params.id);
     if (!alert) return res.status(404).json({ error: 'Alert not found' });
-    
+
     await alert.destroy();
     res.status(204).send();
   } catch (error) {
