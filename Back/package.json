@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "africastalking": "^0.7.2",
     "argon2": "^0.41.1",
     "axios": "^1.7.7",
     "chart": "^0.1.2",

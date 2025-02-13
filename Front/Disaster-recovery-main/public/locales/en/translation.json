@@ -24,8 +24,8 @@
     "email": "Email",
     "sms": "SMS",
     "phonePlaceholder": "Enter your phone number",
-    "emailPlaceholder": "Enter your email ",
-    "selectLocation": "Which location(s) would you like to receive alerts for",
+    "emailPlaceholder": "Enter your email",
+    "selectLocation": "Which location(s) would you like to receive alerts for?",
     "subscribeButton": "Subscribe"
   },
   "whatWeDo": {
@@ -45,6 +45,7 @@
   },
   "reportFlood": {
     "title": "Report Flood Incidents",
+    "description": "Help us respond faster by reporting flood incidents in your area. Your input can save lives.",
     "button": "Report Now"
   },
   "footer": {

@@ -1,6 +1,8 @@
 const Subscription = require("../models/subscription.js");
 const { sendEmail } = require('../config/mail.js');
 const Log = require("../models/log.js");
+const AlertLog = require("../models/alertLog.js");
+
 // Subscribe a user
 const subscribeUser = async (req, res) => {
     try {
@@ -23,7 +25,20 @@ const subscribeUser = async (req, res) => {
 };
 
 const sendEmailAlert = async (req, res) => {
-    const { to, subject, text, alertType, location } = req.body;
+    const {
+        to,
+        subject,
+        text,
+        alertType,
+        location,
+        description = "", // Default to empty string if not provided
+        severity = "", // Default to empty string if not provided
+        water_levels = {}, // Default to empty object if not provided
+        evacuation_routes = [], // Default to empty array if not provided
+        emergency_contacts = [], // Default to empty array if not provided
+        precautionary_measures = [], // Default to empty array if not provided
+        weather_forecast = {}, // Default to empty object if not provided
+    } = req.body;
 
     try {
         await sendEmail(to, subject, text);
@@ -69,6 +84,7 @@ const sendEmailAlert = async (req, res) => {
         res.status(500).json({ error: 'Failed to send email' });
     }
 };
+
 
 // Get all subscriptions
 const getAllSubscriptions = async (req, res) => {

@@ -13,9 +13,10 @@ const Login: React.FC = () => {
 
     try {
       const response = await axios.post('http://localhost:3000/login', { email, password });
+      localStorage.setItem('token', response.data.token); // Store the token
       setMessage('Login successful');
-      // Redirect to dashboard after successful login
-      navigate('/');
+      navigate('/'); // Redirect to the default view
+      window.location.reload(); // Refresh the page to update the role
     } catch (error: any) {
       setMessage(error.response?.data?.error || 'An error occurred during login.');
     }

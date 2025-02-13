@@ -79,5 +79,10 @@ router.post('/register', registerUser);
  *         description: User not found
  */
 router.post('/login', loginUser);
+router.post('/logout', (req, res) => {
+    // Clear the token or session (if using sessions)
+    res.clearCookie('token'); // Clear the token cookie
+    res.status(200).json({ message: 'Logged out successfully' });
+});
 
 module.exports = router;
