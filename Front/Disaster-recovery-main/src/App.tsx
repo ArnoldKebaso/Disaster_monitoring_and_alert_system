@@ -24,6 +24,7 @@ import EmailForm from './components/EmailForm';
 import SubscriptionList from './components/SubscriptionList';
 import ProtectedRoute from './components/ProtectedRoute';
 import { decodeToken } from './utils/decodeToken';
+import SmsAlertForm from './components/SmsAlertForm';
 
 const App: React.FC = () => {
   const token = localStorage.getItem('token');
@@ -58,6 +59,7 @@ const App: React.FC = () => {
             <Route path="/createAlert" element={<CreateAlert />} />
             <Route path="/email" element={<EmailForm />} />
             <Route path="/subscriptions" element={<SubscriptionList />} />
+            <Route path="/sms" element={<SmsAlertForm />} />
           </Route>
         </Routes>
       </Layout>

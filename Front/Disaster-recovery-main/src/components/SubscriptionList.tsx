@@ -378,7 +378,7 @@ const SubscriptionList: React.FC = () => {
       </div>
 
       {/* Display Logs */}
-      <div className="mt-12">
+      {/* <div className="mt-12">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Alert Logs</h2>
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <table className="w-full">
@@ -414,7 +414,7 @@ const SubscriptionList: React.FC = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
