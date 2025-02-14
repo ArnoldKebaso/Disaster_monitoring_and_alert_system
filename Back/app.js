@@ -86,7 +86,7 @@ app.use('/floods', floodRouter);
 app.use('/subscriptions', subscriptionRouter);
 app.use('/send', emailRouter);
 app.use('/logs', logRoutes);
-app.use('/sms', smsRoutes);
+app.use('/api', smsRoutes);
 
 
 app.listen(3000, () => {
