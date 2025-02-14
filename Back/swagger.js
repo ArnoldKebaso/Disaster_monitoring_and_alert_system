@@ -7,12 +7,12 @@ const swaggerOptions = {
     info: {
       title: 'Disaster Alert API',
       version: '1.0.0',
-      description: 'API documentation for the Disaster Alert System',
+      description: 'API documentation for the Flood Alert and Monitoring System',
     },
     servers: [
       {
         url: 'http://localhost:3000',
-      },{url: 'http://kerberos.co.ke'},
+      }, { url: 'http://kerberos.co.ke' },
     ],
     components: {
       securitySchemes: {

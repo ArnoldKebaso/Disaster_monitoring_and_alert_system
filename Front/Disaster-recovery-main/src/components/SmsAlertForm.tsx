@@ -8,27 +8,27 @@ const SmsAlertForm: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccess('');
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+  setSuccess('');
 
-    try {
-      const response = await axios.post('http://localhost:3000/api/send-sms', {
-        to: phoneNumber,
-        message: message,
-      });
+  try {
+    const response = await axios.post('http://localhost:3000/api/send-sms', {
+      to: phoneNumber,
+      message: message,
+    });
 
-      setSuccess('SMS sent successfully!');
-      console.log('SMS response:', response.data);
-    } catch (error) {
-      setError('Failed to send SMS. Please try again.');
-      console.error('Error sending SMS:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setSuccess('SMS sent successfully!');
+    console.log('SMS response:', response.data);
+  } catch (error) {
+    setError('Failed to send SMS. Please try again.');
+    console.error('Error sending SMS:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
