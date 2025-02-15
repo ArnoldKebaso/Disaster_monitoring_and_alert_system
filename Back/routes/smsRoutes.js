@@ -1,6 +1,7 @@
 const express = require('express');
-const router = express.Router();
 const { sendSmsAlert } = require('../controllers/smsController');
+
+const router = express.Router();
 
 // Send SMS Alert
 router.post('/send-sms', sendSmsAlert);
