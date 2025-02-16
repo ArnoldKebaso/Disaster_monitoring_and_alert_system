@@ -4,12 +4,14 @@ import { AlertTriangle } from 'lucide-react';
 import axios from 'axios';
 
 interface LayoutProps {
+  children?: React.ReactNode;
   role?: 'admin' | 'viewer' | 'reporter';
 }
 
 const Layout: React.FC<LayoutProps> = ({ role }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  
 
   const userMenuItems = [
     { label: 'Home', path: '/' },

@@ -8,16 +8,7 @@ import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import HeroUrl from '../assets/sig.jpg';
-import ReportImage from "../assets/report.jpg";
-import floodImage from "../assets/floodResponse.png";
-import reourceImage from "../assets/resourceAllocation.png";
-import alertIcon from "../assets/alert.png";
-import monitorIcon from "../assets/floodMonitoring.png";
-import county from "../assets/county.png";
-import regional from "../assets/regi.png";
-import beneficiary from "../assets/beneficiary.png";
-import volunteer from "../assets/volunteer.png";
-
+ 
 const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t, i18n } = useTranslation();
@@ -186,239 +177,161 @@ const Home: React.FC = () => {
         </div>
       </nav>
 
-{/* Hero Section */}
-<section className="relative h-[600px] flex flex-col justify-center items-center text-center text-white">
-  <img src={HeroUrl} alt="Hero" className="absolute inset-0 w-full h-full object-cover" />
-  <div className="bg-black bg-opacity-50 p-8 rounded-md z-10 w-full max-w-7xl mx-auto">
-    <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-4">
-      {t("hero.title")}
-    </h1>
-    <p className="text-2xl lg:text-3xl mb-6">
-      {t("hero.description")}
-    </p>
-    <div className="flex gap-4 justify-center">
-      <Link
-        to="/donate"
-        className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
+      {/* Hero Section */}
+    <section
+        className="bg-cover bg-center h-[600px] flex flex-col justify-center items-center text-center text-white"
+        style={{
+          backgroundImage: "url('Front/Disaster-recovery-main/public/assets/sig.jpg')", // Corrected hero image path
+        }}
       >
-        {t("navbar.donate")}
-      </Link>
-      <Link
-        to="/alerts"
-        className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
-      >
-        {t("navbar.alerts")}
-      </Link>
-    </div>
-  </div>
-</section>
+        <div className="bg-black bg-opacity-50 p-8 rounded-md">
+          <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-4">
+            {t("hero.title")}
+          </h1>
+          <p className="text-lg lg:text-xl mb-6">
+            {t("hero.description")}
+          </p>
+          <div className="flex gap-4">
+            <Link
+              to="/donate"
+              className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
+            >
+              {t("navbar.donate")}
+            </Link>
+            <Link
+              to="/alerts"
+              className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
+            >
+              {t("navbar.alerts")}
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Subscribe Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-50 to-gray-100 text-center">
-        <div className="max-w-2xl mx-auto px-4">
-    <h2 className="text-4xl font-bold text-blue-900 mb-6">{t("subscribe.title")}</h2>
-    <form
-      className="bg-white p-8 rounded-xl shadow-lg border border-gray-200"
-      onSubmit={handleSubmit}
-    >
-      {/* Subscription Method */}
-      <div className="mb-6">
-        <label className="block text-left text-blue-900 font-semibold mb-2">
-          {t("subscribe.method")}
-        </label>
-        <select
-          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-          value={subscriptionMethod}
-          onChange={(e) => setSubscriptionMethod(e.target.value)}
-        >
-          <option value="">{t("subscribe.selectMethod")}</option>
-          <option value="email">{t("subscribe.email")}</option>
-          <option value="sms">{t("subscribe.sms")}</option>
-        </select>
-      </div>
+      <section className="py-16 bg-gray-100 text-center">
+        <h2 className="text-3xl font-bold text-blue-900 mb-4">{t("subscribe.title")}</h2>
+        <form className="max-w-lg mx-auto" onSubmit={handleSubmit}>
+          {/* Subscription Method */}
+          <div className="mb-4">
+            <label className="block text-left text-gray-700 font-medium mb-2">{t("subscribe.method")}</label>
+            <select
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={subscriptionMethod}
+              onChange={(e) => setSubscriptionMethod(e.target.value)}
+            >
+              <option value="">{t("subscribe.selectMethod")}</option>
+              <option value="email">{t("subscribe.email")}</option>
+              <option value="sms">{t("subscribe.sms")}</option>
+            </select>
+          </div>
 
-      {/* Contact Input */}
-      <div className="mb-6">
-        <label className="block text-left text-blue-900 font-semibold mb-2">
-          {subscriptionMethod === "email" ? t("subscribe.emailPlaceholder") : t("subscribe.phonePlaceholder")}
-        </label>
-        <input
-          type="text"
-          placeholder={subscriptionMethod === "email" ? "Enter your email" : "Enter your phone number"}
-          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-          value={contact}
-          onChange={(e) => setContact(e.target.value)}
-        />
-      </div>
+          {/* Contact Input */}
+          <div className="mb-4">
+            <label className="block text-left text-gray-700 font-medium mb-2">
+              {subscriptionMethod === "email" ? t("subscribe.emailPlaceholder") : t("subscribe.phonePlaceholder")}
+            </label>
+            <input
+              type="text"
+              placeholder={subscriptionMethod === "email" ? "Enter your email" : "Enter your phone number"}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+            />
+          </div>
 
-      {/* Location Selection */}
-      <div className="mb-6">
-        <label className="block text-left text-blue-900 font-semibold mb-2">
-          {t("subscribe.selectLocation")}
-        </label>
-        <Select
-          isMulti
-          options={locationOptions}
-          value={selectedLocations}
-          onChange={handleLocationChange}
-          className="basic-multi-select"
-          classNamePrefix="select"
-          placeholder="Select locations..."
-          styles={{
-            control: (base) => ({
-              ...base,
-              border: "1px solid #d1d5db",
-              borderRadius: "0.5rem",
-              padding: "0.5rem",
-              boxShadow: "none",
-              "&:hover": {
-                borderColor: "#3b82f6",
-              },
-            }),
-            multiValue: (base) => ({
-              ...base,
-              backgroundColor: "#dbeafe",
-              borderRadius: "0.375rem",
-            }),
-            multiValueLabel: (base) => ({
-              ...base,
-              color: "#1e40af",
-            }),
-            multiValueRemove: (base) => ({
-              ...base,
-              color: "#1e40af",
-              "&:hover": {
-                backgroundColor: "#93c5fd",
-              },
-            }),
-          }}
-        />
-      </div>
+          {/* Location Selection */}
+          <div className="mb-4">
+            <label className="block text-left text-gray-700 font-medium mb-2">{t("subscribe.selectLocation")}</label>
+            <Select
+              isMulti
+              options={locationOptions}
+              value={selectedLocations}
+              onChange={handleLocationChange}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder="Select locations..."
+            />
+          </div>
 
-      {/* Submit Button */}
-      <button
-        type="submit"
-        className="w-full bg-blue-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-800 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      >
-        {t("subscribe.subscribeButton")}
-      </button>
+          {/* Submit Button */}
+          <button type="submit" className="bg-blue-900 text-white py-2 px-6 rounded-md hover:bg-blue-700">
+            {t("subscribe.subscribeButton")}
+          </button>
 
-      {/* Status Message */}
-      <p className="mt-4 text-green-600 font-medium">{statusMessage}</p>
-    </form>
-  </div>
+          {/* Status Message */}
+          <p className="mt-4 text-green-500">{statusMessage}</p>
+        </form>
       </section>
-      
-{/* What We Do Section */}
-<section className="py-16 bg-white text-center">
-  <h2 className="text-4xl font-bold text-blue-900 mb-12">{t("whatWeDo.title")}</h2>
-  <div className="container mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
-    {[
-      {
-        title: t("whatWeDo.floodMonitoring"),
-        icon: <FaMapMarkerAlt className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
-        image: monitorIcon,
-      },
-      {
-        title: t("whatWeDo.floodAlert"),
-        icon: <FaBell className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
-        image: alertIcon,
-      },
-      {
-        title: t("whatWeDo.resourceAllocation"),
-        icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
-        image: reourceImage,
-      },
-      {
-        title: t("whatWeDo.floodResponse"),
-        icon: <FaShieldAlt className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
-        image: floodImage,
-      },
-    ].map((item, index) => (
-      <div
-        key={index}
-        className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
-      >
-        <img src={item.image} alt={item.title} className="w-full h-60 object-cover" />
-        <div className="p-6">
-          {item.icon}
-          <h3 className="text-xl font-bold text-blue-900 mb-2">{item.title}</h3>
-          <p className="text-gray-600">{t("whatWeDo.description")}</p>
+
+      {/* What We Do Section */}
+      <section className="py-16 bg-white text-center">
+        <h2 className="text-3xl font-bold text-blue-900 mb-8">What We Do</h2>
+        <div className="container mx-auto grid md:grid-cols-4 gap-8 px-4">
+          {[
+            { title: "Flood Monitoring", icon: <FaMapMarkerAlt className="w-12 h-12 mx-auto mb-4" /> },
+            { title: "Flood Alert", icon: <FaBell className="w-12 h-12 mx-auto mb-4" /> },
+            { title: "Resource Allocation", icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4" /> },
+            { title: "Flood Response", icon: <FaShieldAlt className="w-12 h-12 mx-auto mb-4" /> },
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="p-6 bg-blue-50 rounded-lg shadow-md transform transition-transform duration-300 hover:scale-105"
+            > 
+              {item.icon}
+              <h3 className="text-xl font-bold text-blue-900 mb-2">{item.title}</h3>
+              <p className="text-gray-600">Learn more about our {item.title} efforts.</p>
+            </div>
+          ))}
         </div>
-      </div>
-    ))}
-  </div>
-</section>
+      </section>
 
       {/* Report Now Section */}
-<section className="relative h-[500px] flex flex-col justify-center items-center text-white mt-30 mb-8 p-8">
-  <img src={ReportImage} alt="Report" className="absolute inset-0 w-full h-full object-cover" />
-  <div className="bg-black bg-opacity-50 p-8 rounded-xl z-10 text-center w-full max-w-7xl mx-auto">
-    <h2 className="text-5xl font-bold mb-6">{t("reportFlood.title")}</h2>
-    <p className="text-xl mb-8 max-w-2xl mx-auto">
-      {t("reportFlood.description")}
-    </p>
-    <Link
-      to="/report"
-      className="bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-8 rounded-lg text-lg transition-all duration-200"
-    >
-      {t("reportFlood.button")}
-    </Link>
-  </div>
-</section>
-
-      
-      {/* Our Impact Section */}
-<section className="py-16 bg-blue-900 text-white text-center p-8 mt-4 mb-6 ">
-  <h2 className="text-4xl font-bold mb-12">{t("analytics.title")}</h2>
-  <div className="container mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
-    {[
-      {
-        label: "County Branches",
-        value: "12",
-        icon: <FaMap className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
-        image: county,
-      },
-      {
-        label: "Regional Offices",
-        value: "20",
-        icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
-        image: regional,
-      },
-      {
-        label: "Members & Volunteers",
-        value: "5k+",
-        icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
-        image: volunteer,
-      },
-      {
-        label: "Beneficiaries Supported",
-        value: "1k+",
-        icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
-        image: beneficiary, 
-      },
-    ].map((stat, index) => (
-      <div
-        key={index}
-        className="bg-blue-800 rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
+      <section
+        className="bg-cover bg-center h-[400px] flex flex-col justify-center items-center text-white"
+        style={{
+          backgroundImage: "url('/path-to-report-image.jpg')", // Add your report image path here
+        }}
       >
-        <img src={stat.image} alt={stat.label} className="w-full h-70 object-cover p-5" />
-        <div className="p-6">
-          {stat.icon}
-          <h3 className="text-4xl font-bold text-yellow-400 mb-2">{stat.value}</h3>
-          <p className="text-lg mt-2">{stat.label}</p>
+        <div className="bg-black bg-opacity-50 p-8 rounded-md">
+          <h2 className="text-3xl font-bold mb-4">Report Flood Incidents</h2>
+          <Link
+            to="/report"
+            className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
+          >
+            Report Now
+          </Link>
         </div>
-      </div>
-    ))}
-  </div>
-</section>
+      </section>
+
+      {/* Analytics Section */}
+      <section className="py-16 bg-blue-900 text-white text-center">
+        <h2 className="text-3xl font-bold mb-4">{t("analytics.title")}</h2>
+        <div className="container mx-auto grid md:grid-cols-4 gap-8 px-4">
+          {[
+            { label: "County Branches", value: "12", icon: <FaMap className="w-12 h-12 mx-auto mb-4" /> },
+            { label: "Regional Offices", value: "20", icon: <FaUsers className="w-12 h-12 mx-auto mb-4" /> },
+            { label: "Members & Volunteers", value: "5k+", icon: <FaUsers className="w-12 h-12 mx-auto mb-4" /> },
+            { label: "Beneficiaries Supported", value: "1k+", icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4" /> },
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className="p-6 bg-blue-800 rounded-lg shadow-md transform transition-transform duration-300 hover:scale-105"
+            >
+              {stat.icon}
+              <h3 className="text-4xl font-bold text-yellow-400">{stat.value}</h3>
+              <p className="text-lg mt-2">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Footer Section */}
-<footer className="bg-gray-800 text-white py-12 ">
-  <div className="container mx-auto px-6">
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-      {/* Quick Links */}
-      <div>
+      <footer className="bg-blue-900 text-white py-12">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Quick Links */}
+            <div>
         <h3 className="text-lg font-bold mb-4">Quick Links</h3>
         <ul className="space-y-2">
           {[
@@ -430,61 +343,72 @@ const Home: React.FC = () => {
             "Donate",
             "About Us",
             "Contact Us",
-          ].map((link, index) => (
-            <li key={index} className="hover:text-yellow-300">
-              <Link to={`/${link.replace(" ", "-").toLowerCase()}`}>{link}</Link>
-            </li>
-          ))}
+          ].map((link, index) => {
+            // Define custom paths for specific links
+            let path = `/${link.replace(" ", "-").toLowerCase()}`;
+            
+            if (link === "Admin Portal") {
+              path = "/login";
+            } else if (link === "User Dashboard") {
+              path = "/dashboard";
+            }
+
+            return (
+              <li key={index} className="hover:text-yellow-300">
+                <Link to={path}>{link}</Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
-      {/* Contact Info */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">{t("footer.contactTitle")}</h3>
-        <p>{t("footer.phone")}</p>
-        <p>{t("footer.email")}</p>
-        <p>{t("footer.address")}</p>
-      </div>
+            {/* Contact Info */}
+            <div>
+              <h3 className="text-lg font-bold mb-4">{t("footer.contactTitle")}</h3>
+              <p>{t("footer.phone")}</p>
+              <p>{t("footer.email")}</p>
+              <p>{t("footer.address")}</p>
+            </div>
 
-      {/* Social Media */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">Follow Us</h3>
-        <div className="flex gap-4">
-          <a href="https://www.facebook.com/travis.nonini/" className="text-white hover:text-yellow-300">
-            <FaFacebook className="w-6 h-6" />
-          </a>
-          <a href="#" className="text-white hover:text-yellow-300">
-            <FaTwitter className="w-6 h-6" />
-          </a>
-          <a href="#" className="text-white hover:text-yellow-300">
-            <FaInstagram className="w-6 h-6" />
-          </a>
-          <a href="#" className="text-white hover:text-yellow-300">
-            <FaYoutube className="w-6 h-6" />
-          </a>
+            {/* Social Media */}
+            <div>
+              <h3 className="text-lg font-bold mb-4">Follow Us</h3>
+              <div className="flex gap-4">
+                <a href="https://www.facebook.com/travis.nonini/" className="text-white hover:text-yellow-300">
+                  <FaFacebook className="w-6 h-6" />
+                </a>
+                <a href="#" className="text-white hover:text-yellow-300">
+                  <FaTwitter className="w-6 h-6" />
+                </a>
+                <a href="#" className="text-white hover:text-yellow-300">
+                  <FaInstagram className="w-6 h-6" />
+                </a>
+                <a href="#" className="text-white hover:text-yellow-300">
+                  <FaYoutube className="w-6 h-6" />
+                </a>
+              </div>
+            </div>
+
+            {/* Newsletter */}
+             <div>
+              <h3 className="text-lg font-bold mb-4">Subscribe to Our Newsletter</h3>
+              <form className="flex flex-col gap-2">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+                <Button type="submit" className="bg-yellow-400 hover:bg-yellow-500 text-black">
+                  Subscribe
+                </Button>
+              </form>
+            </div> 
+          </div>
+          <div className="border-t border-gray-700 mt-8 pt-8 text-center">
+            <p>&copy; 2023 Flood Alert & Monitoring System. All rights reserved.</p>
+          </div>
         </div>
-      </div>
-
-      {/* Newsletter */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">Subscribe to Our Newsletter</h3>
-        <form className="flex flex-col gap-2">
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
-          <Button type="submit" className="bg-yellow-400 hover:bg-yellow-500 text-black">
-            Subscribe
-          </Button>
-        </form>
-      </div>
-    </div>
-    <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-      <p>&copy; FMAS( Flood Alert & Monitoring System.)</p>
-    </div>
-  </div>
-</footer>
+      </footer>
     </div>
   );
 };
