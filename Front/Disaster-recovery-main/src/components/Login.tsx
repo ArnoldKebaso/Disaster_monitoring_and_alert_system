@@ -9,19 +9,17 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post('http://localhost:3000/login', { email, password });
-      localStorage.setItem('token', response.data.token); // Store the token
-      setMessage('Login successful');
-      navigate('/'); // Redirect to the default view
-      window.location.reload(); // Refresh the page to update the role
-    } catch (error: any) {
-      setMessage(error.response?.data?.error || 'An error occurred during login.');
-    }
-  };
-
+  e.preventDefault();
+  try {
+    const response = await axios.post('http://localhost:3000/login', { email, password });
+    localStorage.setItem('token', response.data.token);
+    setMessage('Login successful');
+    navigate('/dashboard'); // Redirect to dashboard
+    window.location.reload(); // Refresh to update role
+  } catch (error: any) {
+    setMessage(error.response?.data?.error || 'An error occurred during login.');
+  }
+};
   return (
     <div className="container mx-auto max-w-md p-8 mt-10 border rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6">Login</h2>

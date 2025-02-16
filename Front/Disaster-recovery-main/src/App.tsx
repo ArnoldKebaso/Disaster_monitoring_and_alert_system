@@ -28,29 +28,32 @@ import SmsAlertForm from './components/SmsAlertForm';
 
 const App: React.FC = () => {
   const token = localStorage.getItem('token');
-  const role = token ? decodeToken(token) : 'viewer'; // Decode the token to get the role
+  const role = token ? decodeToken(token) : 'viewer';
 
   return (
     <Router>
-      <Layout role={role}>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+      <Routes>
+        {/* Public routes without layout */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<ContactUS />} />
+        <Route path="/disasterinfo" element={<DisasterInfo />} />
+        <Route path="/donate" element={<Donate />} />
+
+        {/* Dashboard routes with layout */}
+        <Route element={<Layout role={role} />}>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/alerts" element={<ActiveAlerts />} />
           <Route path="/report" element={<CommunityReporting />} />
           <Route path="/maps" element={<SafetyMaps />} />
           <Route path="/disaster/:id" element={<DisasterDetails />} />
-          <Route path="/disasterinfo" element={<DisasterInfo />} />
-          <Route path="/donate" element={<Donate />} />
-          <Route path="/contact" element={<ContactUS />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/home" element={<Home />} />
           <Route path="/agencies" element={<Agencies />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/home" element={<Home />} />
 
-          {/* Admin-Only Routes */}
-          <Route element={<ProtectedRoute requiredRole="admin" />}>
+          {/* Admin protected routes */}
+          <Route element={<ProtectedRoute requiredRole="admin" currentRole={role} />}>
             <Route path="/locations" element={<Location />} />
             <Route path="/resources" element={<ResourceComponent />} />
             <Route path="/demographics" element={<DemographicComponent />} />
@@ -61,8 +64,8 @@ const App: React.FC = () => {
             <Route path="/subscriptions" element={<SubscriptionList />} />
             <Route path="/sms" element={<SmsAlertForm />} />
           </Route>
-        </Routes>
-      </Layout>
+        </Route>
+      </Routes>
     </Router>
   );
 };

@@ -1,26 +1,26 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
 import axios from 'axios';
 
 interface LayoutProps {
-  children: React.ReactNode;
-  role?: 'admin' | 'viewer' | 'reporter'; // Role passed as a prop
+  children?: React.ReactNode;
+  role?: 'admin' | 'viewer' | 'reporter';
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, role }) => {
+const Layout: React.FC<LayoutProps> = ({ role }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  
 
   const userMenuItems = [
-    { label: 'Home', path: '/home' },
-    { label: 'Dashboard', path: '/' },
+    { label: 'Home', path: '/' },
+    { label: 'Dashboard', path: '/dashboard' },
     { label: 'Alerts', path: '/alerts' },
     { label: 'Community Reporting', path: '/report' },
     { label: 'Safety Map', path: '/maps' },
     { label: 'Agencies', path: '/agencies' },
     { label: 'Register', path: '/register' },
-    
   ];
 
   const adminMenuItems = [
@@ -35,30 +35,30 @@ const Layout: React.FC<LayoutProps> = ({ children, role }) => {
     { label: 'Register', path: '/register' },
     { label: 'Create Alert', path: '/createAlert' },
     { label: 'Send Email', path: '/email' },
-    { label: 'Home', path: '/home' },
-    { label: 'Dashboard', path: '/' },
+    { label: 'Home', path: '/' },
+    { label: 'Dashboard', path: '/dashboard' },
     { label: 'Alerts', path: '/alerts' },
-    {label: 'sms' , path: '/sms'},
+    { label: 'sms', path: '/sms' },
   ];
 
   const menuItems = role === 'admin' ? adminMenuItems : userMenuItems;
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:3000/logout'); // Call the logout endpoint
+      await axios.post('http://localhost:3000/logout');
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {
-      localStorage.removeItem('token'); // Clear the token
-      navigate('/'); // Redirect to the default view
-      window.location.reload(); // Refresh the page to reset the role
+      localStorage.removeItem('token');
+      navigate('/');
+      window.location.reload();
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-blue-900 text-white shadow-lg transform transition-transform duration-300 ease-in-out hover:translate-x-0 -translate-x-full md:translate-x-0">
+      <aside className="w-64 bg-blue-900 text-white shadow-lg">
         <div className="p-6">
           <Link to="/" className="flex items-center space-x-2">
             <AlertTriangle className="h-8 w-8 text-white" />
@@ -96,7 +96,7 @@ const Layout: React.FC<LayoutProps> = ({ children, role }) => {
 
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-y-auto">
-        {children}
+        <Outlet /> {/* Use Outlet for nested routes */}
       </main>
     </div>
   );

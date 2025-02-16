@@ -639,10 +639,6 @@ body {
   top: 50%;
 }
 
-.z-10 {
-  z-index: 10;
-}
-
 .z-50 {
   z-index: 50;
 }
@@ -659,10 +655,6 @@ body {
 
 .mb-1 {
   margin-bottom: 0.25rem;
-}
-
-.mb-12 {
-  margin-bottom: 3rem;
 }
 
 .mb-2 {
@@ -695,10 +687,6 @@ body {
 
 .mt-10 {
   margin-top: 2.5rem;
-}
-
-.mt-12 {
-  margin-top: 3rem;
 }
 
 .mt-16 {
@@ -759,10 +747,6 @@ body {
 
 .h-6 {
   height: 1.5rem;
-}
-
-.h-60 {
-  height: 15rem;
 }
 
 .h-8 {
@@ -867,11 +851,6 @@ body {
 
 .border-collapse {
   border-collapse: collapse;
-}
-
-.-translate-x-full {
-  --tw-translate-x: -100%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .-translate-y-1\/2 {
@@ -1001,20 +980,12 @@ body {
   border-radius: 0.25rem;
 }
 
-.rounded-full {
-  border-radius: 9999px;
-}
-
 .rounded-lg {
   border-radius: var(--radius);
 }
 
 .rounded-md {
   border-radius: calc(var(--radius) - 2px);
-}
-
-.rounded-xl {
-  border-radius: 0.75rem;
 }
 
 .border {
@@ -1118,19 +1089,9 @@ body {
   background-color: rgb(31 41 55 / var(--tw-bg-opacity, 1));
 }
 
-.bg-green-100 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 252 231 / var(--tw-bg-opacity, 1));
-}
-
 .bg-green-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(22 163 74 / var(--tw-bg-opacity, 1));
-}
-
-.bg-red-100 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(254 226 226 / var(--tw-bg-opacity, 1));
 }
 
 .bg-red-500 {
@@ -1155,20 +1116,6 @@ body {
 
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
-}
-
-.bg-gradient-to-r {
-  background-image: linear-gradient(to right, var(--tw-gradient-stops));
-}
-
-.from-blue-50 {
-  --tw-gradient-from: #eff6ff var(--tw-gradient-from-position);
-  --tw-gradient-to: rgb(239 246 255 / 0) var(--tw-gradient-to-position);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-}
-
-.to-gray-100 {
-  --tw-gradient-to: #f3f4f6 var(--tw-gradient-to-position);
 }
 
 .bg-cover {
@@ -1197,10 +1144,6 @@ body {
 
 .p-4 {
   padding: 1rem;
-}
-
-.p-5 {
-  padding: 1.25rem;
 }
 
 .p-6 {
@@ -1234,11 +1177,6 @@ body {
 .px-6 {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-}
-
-.px-8 {
-  padding-left: 2rem;
-  padding-right: 2rem;
 }
 
 .py-1 {
@@ -1329,11 +1267,6 @@ body {
   line-height: 2.5rem;
 }
 
-.text-5xl {
-  font-size: 3rem;
-  line-height: 1;
-}
-
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -1347,11 +1280,6 @@ body {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
-}
-
-.text-xs {
-  font-size: 0.75rem;
-  line-height: 1rem;
 }
 
 .font-bold {
@@ -1455,11 +1383,6 @@ body {
   color: rgb(22 163 74 / var(--tw-text-opacity, 1));
 }
 
-.text-green-800 {
-  --tw-text-opacity: 1;
-  color: rgb(22 101 52 / var(--tw-text-opacity, 1));
-}
-
 .text-orange-500 {
   --tw-text-opacity: 1;
   color: rgb(249 115 22 / var(--tw-text-opacity, 1));
@@ -1478,11 +1401,6 @@ body {
 .text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity, 1));
-}
-
-.text-red-800 {
-  --tw-text-opacity: 1;
-  color: rgb(153 27 27 / var(--tw-text-opacity, 1));
 }
 
 .text-white {
@@ -1574,10 +1492,6 @@ body {
   transition-duration: 300ms;
 }
 
-.ease-in-out {
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 @keyframes enter {
   from {
     opacity: var(--tw-enter-opacity, 1);
@@ -1598,15 +1512,6 @@ body {
 
 .duration-300 {
   animation-duration: 300ms;
-}
-
-.ease-in-out {
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hover\:translate-x-0:hover {
-  --tw-translate-x: 0px;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .hover\:scale-105:hover {
@@ -1769,11 +1674,6 @@ body {
     width: 50%;
   }
 
-  .md\:translate-x-0 {
-    --tw-translate-x: 0px;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1826,18 +1726,8 @@ body {
     gap: 2rem;
   }
 
-  .lg\:text-3xl {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
-  }
-
   .lg\:text-6xl {
     font-size: 3.75rem;
-    line-height: 1;
-  }
-
-  .lg\:text-7xl {
-    font-size: 4.5rem;
     line-height: 1;
   }
 

@@ -1,19 +1,23 @@
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 interface ProtectedRouteProps {
+  children?: React.ReactNode;
   requiredRole: 'admin' | 'viewer' | 'reporter';
+  currentRole?: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
-  const token = localStorage.getItem('token');
-  const role = token ? JSON.parse(atob(token.split('.')[1])).role : 'viewer';
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+  children,
+  requiredRole,
+  currentRole
+}) => {
+  const location = useLocation();
 
-  if (role !== requiredRole) {
-    return <Navigate to="/login" />;
+  if (requiredRole !== currentRole) {
+    return <Navigate to="/dashboard" state={{ from: location }} replace />;
   }
 
-  return <Outlet />; // Use Outlet to render nested routes
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;
