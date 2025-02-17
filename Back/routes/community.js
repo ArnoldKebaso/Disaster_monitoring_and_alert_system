@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllReports, getReportById, createReport, updateReport, deleteReport } = require('../controllers/communityController');
+const { getAllReports, getReportById, createReport, updateReport, deleteReport, getReportsByMonth, getFrequentReportTypes, getFrequentLocations, getReportsByLocation } = require('../controllers/communityController');
 
 /**
  * @swagger
@@ -176,5 +176,68 @@ router.put('/:id', updateReport);
  *         description: Report not found
  */
 router.delete('/:id', deleteReport);
+/**
+ * @swagger
+ * /community-reports/filter/month:
+ *   get:
+ *     summary: Get reports by month and year
+ *     tags: [CommunityReports]
+ *     parameters:
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *         required: true
+ *       - in: query
+ *         name: month
+ *         schema:
+ *           type: integer
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: List of reports filtered by month
+ */
+router.get('/filter/month', getReportsByMonth);
 
+/**
+ * @swagger
+ * /community-reports/analytics/frequent-types:
+ *   get:
+ *     summary: Get most frequent report types
+ *     tags: [CommunityReports]
+ *     responses:
+ *       200:
+ *         description: List of frequent report types with counts
+ */
+router.get('/analytics/frequent-types', getFrequentReportTypes);
+
+/**
+ * @swagger
+ * /community-reports/analytics/frequent-locations:
+ *   get:
+ *     summary: Get most frequent report locations
+ *     tags: [CommunityReports]
+ *     responses:
+ *       200:
+ *         description: List of frequent locations with counts
+ */
+router.get('/analytics/frequent-locations', getFrequentLocations);
+
+/**
+ * @swagger
+ * /community-reports/filter/location:
+ *   get:
+ *     summary: Get reports by location
+ *     tags: [CommunityReports]
+ *     parameters:
+ *       - in: query
+ *         name: location
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: List of reports filtered by location
+ */
+router.get('/filter/location', getReportsByLocation);
 module.exports = router;

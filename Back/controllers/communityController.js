@@ -86,4 +86,80 @@ const deleteReport = async (req, res) => {
   }
 };
 
-module.exports = { getAllReports, getReportById, createReport, updateReport, deleteReport };
+
+
+const getReportsByMonth = async (req, res) => {
+  try {
+    const { year, month } = req.query;
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0);
+
+    const reports = await CommunityReport.findAll({
+      where: {
+        createdAt: {
+          [Op.between]: [startDate, endDate]
+        }
+      },
+      include: User
+    });
+
+    res.status(200).json(reports);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get frequent reports by type
+const getFrequentReportTypes = async (req, res) => {
+  try {
+    const frequentTypes = await CommunityReport.findAll({
+      attributes: [
+        'report_type',
+        [sequelize.fn('COUNT', sequelize.col('report_id')), 'count']
+      ],
+      group: ['report_type'],
+      order: [[sequelize.literal('count'), 'DESC']],
+      limit: 5
+    });
+
+    res.status(200).json(frequentTypes);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get frequent report locations
+const getFrequentLocations = async (req, res) => {
+  try {
+    const frequentLocations = await CommunityReport.findAll({
+      attributes: [
+        'location',
+        [sequelize.fn('COUNT', sequelize.col('report_id')), 'count']
+      ],
+      group: ['location'],
+      order: [[sequelize.literal('count'), 'DESC']],
+      limit: 5
+    });
+
+    res.status(200).json(frequentLocations);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get reports by location
+const getReportsByLocation = async (req, res) => {
+  try {
+    const { location } = req.query;
+    const reports = await CommunityReport.findAll({
+      where: { location },
+      include: User
+    });
+
+    res.status(200).json(reports);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { getAllReports, getReportById, createReport, updateReport, deleteReport, getReportsByMonth, getFrequentReportTypes, getFrequentLocations, getReportsByLocation};

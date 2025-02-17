@@ -39,6 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ role }) => {
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'Alerts', path: '/alerts' },
     { label: 'sms', path: '/sms' },
+    {label: 'Reports', path: '/adminReport' },
   ];
 
   const menuItems = role === 'admin' ? adminMenuItems : userMenuItems;
