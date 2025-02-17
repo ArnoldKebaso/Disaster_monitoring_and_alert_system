@@ -37,7 +37,7 @@ interface Report {
   id: number;
   type: string;
   location: string;
-  timestamp: string;
+  createdAt: string; // Changed from 'timestamp'
   status: string;
   user: string;
 }
@@ -193,7 +193,7 @@ const CommunityReporting: React.FC = () => {
                           </div>
                           <div className="flex items-center mt-1">
                             <Clock className="mr-2 h-4 w-4 text-gray-400" />
-                            <span className="text-sm text-gray-500">{formatDate(report.timestamp)}</span>
+                            <span className="text-sm text-gray-500">{formatDate(report.createdAt)}</span>
                           </div>
                         </div>
                         {report.status === 'Verified' && (
