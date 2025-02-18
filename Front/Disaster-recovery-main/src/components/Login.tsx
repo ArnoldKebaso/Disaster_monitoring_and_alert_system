@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
   e.preventDefault();
   try {
     const response = await axios.post('http://localhost:3000/login', { email, password });
-    localStorage.setItem('token', response.data.token);
+    login(response.data.token);
     setMessage('Login successful');
     navigate('/dashboard'); // Redirect to dashboard
-    window.location.reload(); // Refresh to update role
+    // window.location.reload(); // Refresh to update role
   } catch (error: any) {
     setMessage(error.response?.data?.error || 'An error occurred during login.');
   }

@@ -1,6 +1,10 @@
 var express = require('express')
 var cors = require('cors')
 var app = express()
+const sequelize = require('../config/database');
+const { Op } = require('sequelize');
+
+
 
 // const corsOptions = {
 //   origin: 'http://localhost:3001',
@@ -86,4 +90,107 @@ const deleteReport = async (req, res) => {
   }
 };
 
-module.exports = { getAllReports, getReportById, createReport, updateReport, deleteReport };
+
+
+// Add these controller functions
+const getReportsByMonth = async (req, res) => {
+  try {
+    const { year, month } = req.query;
+
+    // Validate inputs
+    if (!year || !month) {
+      return res.status(400).json({ error: 'Year and month parameters are required' });
+    }
+
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0);
+
+    const reports = await CommunityReport.findAll({
+      where: {
+        createdAt: {
+          [Op.between]: [startDate, endDate]
+        }
+      },
+      include: [{
+        model: User,
+        attributes: ['user_id', 'username', 'email'] // Only include necessary user fields
+      }],
+      attributes: {
+        exclude: ['updatedAt'], // Remove this if you need updatedAt
+        include: [
+          // Explicitly specify table for createdAt
+          [sequelize.fn('DATE_FORMAT', sequelize.col('CommunityReport.createdAt'), '%Y-%m-%d'), 'formatted_date']
+        ]
+      }
+    });
+
+    res.status(200).json(reports);
+  } catch (error) {
+    console.error('Error in getReportsByMonth:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+// communityController.js
+
+const getFrequentReportTypes = async (req, res) => {
+  try {
+    console.log('Attempting to fetch frequent report types...');
+
+    const frequentTypes = await CommunityReport.findAll({
+      attributes: [
+        'report_type',
+        [sequelize.fn('COUNT', sequelize.col('report_id')), 'count']
+      ],
+      group: ['report_type'],
+      order: [[sequelize.literal('count'), 'DESC']],
+      limit: 5
+    });
+
+    console.log('Frequent types query result:', JSON.stringify(frequentTypes, null, 2));
+
+    res.status(200).json(frequentTypes);
+  } catch (error) {
+    console.error('Error in getFrequentReportTypes:', error);
+    console.error('Full error stack:', error.stack);
+    res.status(500).json({
+      error: 'Failed to fetch frequent report types',
+      details: error.message
+    });
+  }
+};
+
+const getFrequentLocations = async (req, res) => {
+  try {
+    const frequentLocations = await CommunityReport.findAll({
+      attributes: [
+        'location',
+        [sequelize.fn('COUNT', sequelize.col('report_id')), 'count']
+      ],
+      group: ['location'],
+      order: [[sequelize.literal('count'), 'DESC']],
+      // Remove limit to get all locations
+    });
+
+    res.status(200).json(frequentLocations);
+  } catch (error) {
+    console.error('Error in getFrequentLocations:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get reports by location
+const getReportsByLocation = async (req, res) => {
+  try {
+    const { location } = req.query;
+    const reports = await CommunityReport.findAll({
+      where: { location },
+      include: User
+    });
+
+    res.status(200).json(reports);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { getAllReports, getReportById, createReport, updateReport, deleteReport, getReportsByMonth, getFrequentReportTypes, getFrequentLocations, getReportsByLocation};

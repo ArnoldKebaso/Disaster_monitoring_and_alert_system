@@ -1,36 +1,25 @@
 import React from 'react';
 
 interface SelectProps {
-  id: string;
-  value: string;
-  onValueChange: (value: string) => void;
-  placeholder: string;
   children: React.ReactNode;
+  value: string;
+  onChange: (value: string) => void; // Now expects direct string value
+  className?: string;
 }
 
-interface OptionProps {
-  value: string;
-  children: React.ReactNode;
-}
-
-const Option: React.FC<OptionProps> = ({ value, children }) => (
-  <option value={value}>{children}</option>
-);
-
-const Select = ({ id, value, onValueChange, placeholder, children }: SelectProps) => {
+export const Select: React.FC<SelectProps> = ({ 
+  children, 
+  value, 
+  onChange, 
+  className = '' 
+}) => {
   return (
     <select
-      id={id}
       value={value}
-      onChange={(e) => onValueChange(e.target.value)}
-      className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
+      onChange={(e) => onChange(e.target.value)} // Handle event internally
+      className={`block w-full p-2 border border-gray-300 rounded-md shadow-sm ${className}`}
     >
-      <option value="" disabled hidden>{placeholder}</option>
       {children}
     </select>
   );
 };
-
-Select.Option = Option;
-
-export { Select };

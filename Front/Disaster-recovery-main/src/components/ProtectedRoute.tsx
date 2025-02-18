@@ -1,23 +1,25 @@
-import { Navigate, useLocation } from 'react-router-dom';
+// components/ProtectedRoute.tsx
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-interface ProtectedRouteProps {
-  children?: React.ReactNode;
-  requiredRole: 'admin' | 'viewer' | 'reporter';
-  currentRole?: string;
-}
+type ProtectedRouteProps = {
+  allowedRoles?: ('admin' | 'viewer' | 'reporter')[];
+};
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children,
-  requiredRole,
-  currentRole
-}) => {
+const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
+  const { user } = useAuth();
   const location = useLocation();
+  const token = localStorage.getItem('token');
 
-  if (requiredRole !== currentRole) {
-    return <Navigate to="/dashboard" state={{ from: location }} replace />;
+  if (!token) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return <>{children}</>;
+  if (allowedRoles && !allowedRoles.includes(user?.role!)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

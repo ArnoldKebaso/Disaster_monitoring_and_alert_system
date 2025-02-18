@@ -25,12 +25,14 @@ import SubscriptionList from './components/SubscriptionList';
 import ProtectedRoute from './components/ProtectedRoute';
 import { decodeToken } from './utils/decodeToken';
 import SmsAlertForm from './components/SmsAlertForm';
-
+import { AuthProvider } from './context/AuthContext';
+import  AdminReportsDashboard from './components/AdminReports';
 const App: React.FC = () => {
   const token = localStorage.getItem('token');
   const role = token ? decodeToken(token) : 'viewer';
 
   return (
+    <AuthProvider>
     <Router>
       <Routes>
         {/* Public routes without layout */}
@@ -42,7 +44,7 @@ const App: React.FC = () => {
         <Route path="/donate" element={<Donate />} />
 
         {/* Dashboard routes with layout */}
-        <Route element={<Layout role={role} />}>
+        <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/alerts" element={<ActiveAlerts />} />
           <Route path="/report" element={<CommunityReporting />} />
@@ -53,7 +55,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<Home />} />
 
           {/* Admin protected routes */}
-          <Route element={<ProtectedRoute requiredRole="admin" currentRole={role} />}>
+          <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
             <Route path="/locations" element={<Location />} />
             <Route path="/resources" element={<ResourceComponent />} />
             <Route path="/demographics" element={<DemographicComponent />} />
@@ -63,10 +65,13 @@ const App: React.FC = () => {
             <Route path="/email" element={<EmailForm />} />
             <Route path="/subscriptions" element={<SubscriptionList />} />
             <Route path="/sms" element={<SmsAlertForm />} />
+            <Route path="/adminReport" element={<AdminReportsDashboard />} />
           </Route>
         </Route>
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 };
 

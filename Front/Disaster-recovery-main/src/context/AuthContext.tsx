@@ -1,37 +1,38 @@
-import React, { createContext, useContext, useState } from 'react';
+// context/AuthContext.tsx
+import { createContext, useContext, useState, ReactNode } from 'react';
 
-// interface AuthContextProps {
-//   isAuthenticated: boolean;
-//   userRole: 'admin' | 'user' | null;
-//   login: (role: 'admin' | 'user') => void;
-//   logout: () => void;
-// }
+type User = {
+  id: string;
+  role: 'admin' | 'viewer' | 'reporter';
+};
 
-// const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+type AuthContextType = {
+  user: User | null;
+  login: (token: string) => void;
+  logout: () => void;
+};
 
-// export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const [userRole, setUserRole] = useState<'admin' | 'user' | null>(null);
+const AuthContext = createContext<AuthContextType>(null!);
 
-//   const login = (role: 'admin' | 'user') => {
-//     setIsAuthenticated(true);
-//     setUserRole(role);
-//   };
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
 
-//   const logout = () => {
-//     setIsAuthenticated(false);
-//     setUserRole(null);
-//   };
+  const login = (token: string) => {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    setUser({ id: payload.id, role: payload.role });
+    localStorage.setItem('token', token);
+  };
 
-//   return (
-//     <AuthContext.Provider value={{ isAuthenticated, userRole, login, logout }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('token');
+  };
 
-// export const useAuth = () => {
-//   const context = useContext(AuthContext);
-//   if (!context) throw new Error('useAuth must be used within an AuthProvider');
-//   return context;
-// };
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => useContext(AuthContext);

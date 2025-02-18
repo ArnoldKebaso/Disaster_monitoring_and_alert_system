@@ -1,8 +1,10 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const session = require('express-session');
 var logger = require('morgan');
 //const cors = require('cors');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 var cookieParser = require('cookie-parser');
 const sequelize = require('./config/database');
 const swaggerUi = require('swagger-ui-express');
@@ -32,6 +34,24 @@ const smsRoutes = require('./routes/smsRoutes');
 require('dotenv').config();
 
 const cors = require('cors');
+app.use(session({
+  secret: process.env.JWT_SECRET || 'your-secret-key', // set this in your .env file
+  store: new SequelizeStore({
+    db: sequelize,
+  }),
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // set to true if using HTTPS
+    maxAge: 3600000, // 1 hour
+  },
+}));
+
+// Sync the session store
+const store = new SequelizeStore({ db: sequelize });
+store.sync();
+
+
 app.use(cors({
   origin: 'http://localhost:3001',
   credentials: true
