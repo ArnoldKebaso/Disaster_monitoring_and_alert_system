@@ -1,6 +1,8 @@
 var express = require('express')
 var cors = require('cors')
 var app = express()
+const { Op } = require('sequelize');
+
 
 // const corsOptions = {
 //   origin: 'http://localhost:3001',
@@ -88,9 +90,16 @@ const deleteReport = async (req, res) => {
 
 
 
+// Add these controller functions
 const getReportsByMonth = async (req, res) => {
   try {
     const { year, month } = req.query;
+
+    // Validate inputs
+    if (!year || !month) {
+      return res.status(400).json({ error: 'Year and month parameters are required' });
+    }
+
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0);
 
@@ -105,11 +114,11 @@ const getReportsByMonth = async (req, res) => {
 
     res.status(200).json(reports);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error in getReportsByMonth:', error);
+    res.status(500).json({ error: 'Failed to fetch monthly reports' });
   }
 };
 
-// Get frequent reports by type
 const getFrequentReportTypes = async (req, res) => {
   try {
     const frequentTypes = await CommunityReport.findAll({
@@ -124,11 +133,11 @@ const getFrequentReportTypes = async (req, res) => {
 
     res.status(200).json(frequentTypes);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error in getFrequentReportTypes:', error);
+    res.status(500).json({ error: 'Failed to fetch frequent report types' });
   }
 };
 
-// Get frequent report locations
 const getFrequentLocations = async (req, res) => {
   try {
     const frequentLocations = await CommunityReport.findAll({
@@ -143,7 +152,8 @@ const getFrequentLocations = async (req, res) => {
 
     res.status(200).json(frequentLocations);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error in getFrequentLocations:', error);
+    res.status(500).json({ error: 'Failed to fetch frequent locations' });
   }
 };
 

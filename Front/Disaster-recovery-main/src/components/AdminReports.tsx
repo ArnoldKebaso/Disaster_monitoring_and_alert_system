@@ -28,6 +28,7 @@ const AdminReportsDashboard: React.FC = () => {
   const [frequentLocations, setFrequentLocations] = useState<AnalyticsData[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
 
+  
   useEffect(() => {
     // Fetch initial analytics data
     axios.get('http://localhost:3000/community-reports/analytics/frequent-types')
@@ -71,6 +72,7 @@ const AdminReportsDashboard: React.FC = () => {
       {/* Filters */}
       <div className="flex gap-4">
         <div className="w-64">
+       
           <label className="block text-sm font-medium mb-2">Filter by Month</label>
           <input
             type="month"
@@ -90,7 +92,7 @@ const AdminReportsDashboard: React.FC = () => {
             {locations.map(location => (
               <option key={location} value={location}>{location}</option>
           ))}
-</Select>
+      </Select>
         </div>
       </div>
 

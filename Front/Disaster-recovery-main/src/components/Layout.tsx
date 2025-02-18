@@ -1,17 +1,14 @@
+// components/Layout.tsx
 import React from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
-interface LayoutProps {
-  children?: React.ReactNode;
-  role?: 'admin' | 'viewer' | 'reporter';
-}
-
-const Layout: React.FC<LayoutProps> = ({ role }) => {
+const Layout: React.FC = () => {
+  const { user, logout } = useAuth(); // Destructure from context
   const location = useLocation();
   const navigate = useNavigate();
-  
 
   const userMenuItems = [
     { label: 'Home', path: '/' },
@@ -39,20 +36,19 @@ const Layout: React.FC<LayoutProps> = ({ role }) => {
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'Alerts', path: '/alerts' },
     { label: 'sms', path: '/sms' },
-    {label: 'Reports', path: '/adminReport' },
+     { label: 'Reports', path: '/adminReport' },
+    
   ];
 
-  const menuItems = role === 'admin' ? adminMenuItems : userMenuItems;
+  const menuItems = user?.role === 'admin' ? adminMenuItems : userMenuItems;
 
   const handleLogout = async () => {
     try {
       await axios.post('http://localhost:3000/logout');
+      logout(); // Use context logout
+      navigate('/login');
     } catch (error) {
       console.error('Logout failed:', error);
-    } finally {
-      localStorage.removeItem('token');
-      navigate('/');
-      window.location.reload();
     }
   };
 
@@ -60,12 +56,7 @@ const Layout: React.FC<LayoutProps> = ({ role }) => {
     <div className="min-h-screen bg-gray-100 flex">
       {/* Sidebar */}
       <aside className="w-64 bg-blue-900 text-white shadow-lg">
-        <div className="p-6">
-          <Link to="/" className="flex items-center space-x-2">
-            <AlertTriangle className="h-8 w-8 text-white" />
-            <span className="text-2xl font-bold">Dashboard</span>
-          </Link>
-        </div>
+        {/* ... rest of your sidebar JSX */}
         <nav className="mt-6">
           <ul className="space-y-2">
             {menuItems.map((item) => (
@@ -97,7 +88,7 @@ const Layout: React.FC<LayoutProps> = ({ role }) => {
 
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-y-auto">
-        <Outlet /> {/* Use Outlet for nested routes */}
+        <Outlet />
       </main>
     </div>
   );
