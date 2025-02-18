@@ -2,8 +2,13 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+import { motion } from "framer-motion";
 import Select, { MultiValue } from "react-select";
 import { FaBell, FaMapMarkerAlt, FaHandHoldingHeart, FaShieldAlt, FaUsers, FaMap } from "react-icons/fa";
+import { 
+  Bell, MapPin, HeartHandshake, Shield, Users, Map, AlertTriangle, 
+  DownloadCloud, Mail, Smartphone, ChevronDown 
+} from "lucide-react";
 
 import HeroUrl from '../assets/sig.jpg';
 import ReportImage from "../assets/report.jpg";
@@ -26,7 +31,15 @@ const Home: React.FC = () => {
   const [contact, setContact] = useState("");
   const [selectedLocations, setSelectedLocations] = useState<{ value: string; label: string }[]>([]);
   const [statusMessage, setStatusMessage] = useState("");
+  
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
 
+  const staggerChildren = {
+    visible: { transition: { staggerChildren: 0.1 } }
+  };
   const locationOptions = [
     { value: "Bumadeya", label: "Bumadeya" },
     { value: "Budalangi Central", label: "Budalangi Central" },
@@ -50,6 +63,7 @@ const Home: React.FC = () => {
       setStatusMessage("All fields are required!");
       return;
     }
+   
 
     try {
       const response = await axios.post("http://localhost:3000/subscriptions", {
@@ -79,7 +93,7 @@ const Home: React.FC = () => {
         <Navbar />
 
 {/* Hero Section */}
-<section className="relative h-[600px] flex flex-col justify-center items-center text-center text-white">
+{/* <section className="relative h-[600px] flex flex-col justify-center items-center text-center text-white">
   <img src={HeroUrl} alt="Hero" className="absolute inset-0 w-full h-full object-cover" />
   <div className="bg-black bg-opacity-50 p-8 rounded-md z-10 w-full max-w-7xl mx-auto">
     <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-4">
@@ -103,12 +117,57 @@ const Home: React.FC = () => {
       </Link>
     </div>
   </div>
-</section>
+</section> */}
+   <motion.section 
+        initial="hidden"
+        animate="visible"
+        variants={staggerChildren}
+        className="relative h-[80vh] flex flex-col justify-center items-center text-center text-white"
+      >
+        <div className="absolute inset-0 w-full h-full">
+          <img src={HeroUrl} alt="Hero" className="w-full h-full object-cover object-center" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/60 to-cyan-900/40" />
+        </div>
+        
+        <motion.div 
+          variants={fadeIn}
+          className="relative z-10 w-full max-w-7xl px-4"
+        >
+          <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
+            {t("hero.title")}
+          </h1>
+          <motion.p 
+            variants={fadeIn}
+            className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-blue-100"
+          >
+            {t("hero.description")}
+          </motion.p>
+          <motion.div 
+            variants={fadeIn}
+            className="flex gap-4 justify-center"
+          >
+            <Link
+              to="/donate"
+              className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-300 shadow-lg flex items-center gap-2"
+            >
+              <HeartHandshake className="w-5 h-5" />
+              {t("navbar.donate")}
+            </Link>
+            <Link
+              to="/alerts"
+              className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-300 shadow-lg flex items-center gap-2"
+            >
+              <AlertTriangle className="w-5 h-5" />
+              {t("navbar.alerts")}
+            </Link>
+          </motion.div>
+        </motion.div>
+      </motion.section>
 
       {/* Subscribe Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-50 to-gray-100 text-center">
+      <section className="py-20 bg-gradient-to-br from-blue-900 to-cyan-800">
         <div className="max-w-2xl mx-auto px-4">
-    <h2 className="text-4xl font-bold text-blue-900 mb-6">{t("subscribe.title")}</h2>
+    <h2 className="text-4xl md:text-6xl font-black mb-6 leading-tight bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">{t("subscribe.title")}</h2>
     <form
       className="bg-white p-8 rounded-xl shadow-lg border border-gray-200"
       onSubmit={handleSubmit}
@@ -119,7 +178,7 @@ const Home: React.FC = () => {
           {t("subscribe.method")}
         </label>
         <select
-          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+          className="w-full px-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 appearance-none"
           value={subscriptionMethod}
           onChange={(e) => setSubscriptionMethod(e.target.value)}
         >
@@ -137,7 +196,7 @@ const Home: React.FC = () => {
         <input
           type="text"
           placeholder={subscriptionMethod === "email" ? "Enter your email" : "Enter your phone number"}
-          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+          className="w-full px-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 appearance-none"
           value={contact}
           onChange={(e) => setContact(e.target.value)}
         />
@@ -149,11 +208,12 @@ const Home: React.FC = () => {
           {t("subscribe.selectLocation")}
         </label>
         <Select
+        
           isMulti
           options={locationOptions}
           value={selectedLocations}
           onChange={handleLocationChange}
-          className="basic-multi-select"
+          className="basic-multi-select w-full px-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 appearance-none "
           classNamePrefix="select"
           placeholder="Select locations..."
           styles={{
@@ -188,18 +248,20 @@ const Home: React.FC = () => {
       </div>
 
       {/* Submit Button */}
-      <button
-        type="submit"
-        className="w-full bg-blue-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-800 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      >
-        {t("subscribe.subscribeButton")}
-      </button>
+      <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white py-4 px-8 rounded-xl font-bold shadow-lg transition-all"
+                type="submit"
+              >
+                {t("subscribe.subscribeButton")}
+        </motion.button>
 
       {/* Status Message */}
       <p className="mt-4 text-green-600 font-medium">{statusMessage}</p>
     </form>
   </div>
-      </section>
+  </section>
       
 {/* What We Do Section */}
 <section className="py-16 bg-white text-center">
@@ -243,21 +305,38 @@ const Home: React.FC = () => {
 </section>
 
       {/* Report Now Section */}
-<section className="relative h-[500px] flex flex-col justify-center items-center text-white mt-30 mb-8 p-8">
-  <img src={ReportImage} alt="Report" className="absolute inset-0 w-full h-full object-cover" />
-  <div className="bg-black bg-opacity-50 p-8 rounded-xl z-10 text-center w-full max-w-7xl mx-auto">
-    <h2 className="text-5xl font-bold mb-6">{t("reportFlood.title")}</h2>
-    <p className="text-xl mb-8 max-w-2xl mx-auto">
-      {t("reportFlood.description")}
-    </p>
-    <Link
-      to="/report"
-      className="bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-8 rounded-lg text-lg transition-all duration-200"
-    >
-      {t("reportFlood.button")}
-    </Link>
-  </div>
-</section>
+<section className="relative py-32 overflow-hidden">
+        <img 
+          src={ReportImage} 
+          alt="Report Background" 
+          className="absolute inset-0 w-full h-full object-cover" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-cyan-800/60" />
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 max-w-4xl mx-auto text-center px-4"
+        >
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
+            {t("reportFlood.title")}
+          </h2>
+          <p className="text-xl text-cyan-100 mb-8 max-w-2xl mx-auto">
+            {t("reportFlood.description")}
+          </p>
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Link
+              to="/report"
+              className="inline-flex items-center bg-white text-blue-900 font-bold px-8 py-4 rounded-full shadow-lg hover:bg-cyan-50 transition-all"
+              
+            >
+              <AlertTriangle className="w-6 h-6 mr-2" />
+              {t("reportFlood.button")}
+            </Link>
+          </motion.div>
+        </motion.div>
+      </section>
+
 
       
       {/* Our Impact Section */}
