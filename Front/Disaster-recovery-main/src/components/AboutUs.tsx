@@ -1,6 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Droplet, ShieldAlert, Navigation, HeartHandshake, Globe, AlertCircle } from "lucide-react";
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const AboutUs: React.FC = () => {
   const fadeIn = {
@@ -14,8 +16,8 @@ const AboutUs: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      
-
+       {/* Navbar */}
+        <Navbar />
     <section className="bg-gradient-to-b from-blue-50 to-cyan-50 py-20 px-6 md:px-16">
       {/* Hero Section */}
       <motion.div
@@ -187,6 +189,9 @@ const AboutUs: React.FC = () => {
         </motion.div>
       </div>
     </section>
+         {/* Footer Section */}
+          <Footer />
+      
     </div>
   );
 };

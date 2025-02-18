@@ -306,7 +306,7 @@ const Home: React.FC = () => {
 </section>
 
       {/* Footer Section */}
- <Footer />
+      <Footer />
     </div>
   );
 };

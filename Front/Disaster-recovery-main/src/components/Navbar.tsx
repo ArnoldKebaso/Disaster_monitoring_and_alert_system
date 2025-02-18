@@ -92,7 +92,7 @@ const Navbar: React.FC = () => {
             </span>
             <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 mt-2 py-2 px-4 text-sm shadow-lg border-t-2 border-yellow-300">
               <li>
-                <Link to="/impact-stories" className="hover:text-yellow-300">
+                <Link to="/userReSources" className="hover:text-yellow-300">
                   {t("navbar.impactStories")}
                 </Link>
               </li>
@@ -109,6 +109,14 @@ const Navbar: React.FC = () => {
               className="hover:text-yellow-300 transition-all duration-200"
             >
               {t("navbar.agencies")}
+            </Link>
+          </li>
+           <li>
+            <Link
+              to="/userReSources"
+              className="hover:text-yellow-300 transition-all duration-200"
+            >
+              Resources
             </Link>
           </li>
           <li>
