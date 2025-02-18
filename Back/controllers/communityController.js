@@ -1,7 +1,9 @@
 var express = require('express')
 var cors = require('cors')
 var app = express()
+const sequelize = require('../config/database');
 const { Op } = require('sequelize');
+
 
 
 // const corsOptions = {
@@ -109,18 +111,31 @@ const getReportsByMonth = async (req, res) => {
           [Op.between]: [startDate, endDate]
         }
       },
-      include: User
+      include: [{
+        model: User,
+        attributes: ['user_id', 'username', 'email'] // Only include necessary user fields
+      }],
+      attributes: {
+        exclude: ['updatedAt'], // Remove this if you need updatedAt
+        include: [
+          // Explicitly specify table for createdAt
+          [sequelize.fn('DATE_FORMAT', sequelize.col('CommunityReport.createdAt'), '%Y-%m-%d'), 'formatted_date']
+        ]
+      }
     });
 
     res.status(200).json(reports);
   } catch (error) {
     console.error('Error in getReportsByMonth:', error);
-    res.status(500).json({ error: 'Failed to fetch monthly reports' });
+    res.status(500).json({ error: error.message });
   }
 };
+// communityController.js
 
 const getFrequentReportTypes = async (req, res) => {
   try {
+    console.log('Attempting to fetch frequent report types...');
+
     const frequentTypes = await CommunityReport.findAll({
       attributes: [
         'report_type',
@@ -131,10 +146,16 @@ const getFrequentReportTypes = async (req, res) => {
       limit: 5
     });
 
+    console.log('Frequent types query result:', JSON.stringify(frequentTypes, null, 2));
+
     res.status(200).json(frequentTypes);
   } catch (error) {
     console.error('Error in getFrequentReportTypes:', error);
-    res.status(500).json({ error: 'Failed to fetch frequent report types' });
+    console.error('Full error stack:', error.stack);
+    res.status(500).json({
+      error: 'Failed to fetch frequent report types',
+      details: error.message
+    });
   }
 };
 
@@ -147,13 +168,13 @@ const getFrequentLocations = async (req, res) => {
       ],
       group: ['location'],
       order: [[sequelize.literal('count'), 'DESC']],
-      limit: 5
+      // Remove limit to get all locations
     });
 
     res.status(200).json(frequentLocations);
   } catch (error) {
     console.error('Error in getFrequentLocations:', error);
-    res.status(500).json({ error: 'Failed to fetch frequent locations' });
+    res.status(500).json({ error: error.message });
   }
 };
 

@@ -3,20 +3,23 @@ import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { Select } from './ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
 interface Report {
-  id: number;
+  report_id: number;
   report_type: string;
   location: string;
-  createdAt: string;
+  description: string;
   status: string;
-  user: { username: string };
+  createdAt: string;
+  User: {
+    username: string;
+  } | null;
 }
 
 interface AnalyticsData {
-  report_type?: string;
   location?: string;
+  report_type?: string;
   count: number;
 }
 
@@ -27,45 +30,94 @@ const AdminReportsDashboard: React.FC = () => {
   const [frequentTypes, setFrequentTypes] = useState<AnalyticsData[]>([]);
   const [frequentLocations, setFrequentLocations] = useState<AnalyticsData[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  
+  // Fetch initial analytics data
   useEffect(() => {
-    // Fetch initial analytics data
-    axios.get('http://localhost:3000/community-reports/analytics/frequent-types')
-      .then(res => setFrequentTypes(res.data));
+    const fetchAnalyticsData = async () => {
+      try {
+        const [typesRes, locationsRes] = await Promise.all([
+          axios.get('http://localhost:3000/community-reports/analytics/frequent-types'),
+          axios.get('http://localhost:3000/community-reports/analytics/frequent-locations')
+        ]);
 
-    axios.get('http://localhost:3000/community-reports/analytics/frequent-locations')
-      .then(res => {
-        setFrequentLocations(res.data);
-        setLocations(res.data.map((loc: AnalyticsData) => loc.location || ''));
-      });
+        setFrequentTypes(typesRes.data);
+        setFrequentLocations(locationsRes.data);
+        
+        // Combine backend locations with existing options
+        const allLocations = Array.from(
+          new Set([
+          ...locationsRes.data.map((loc: AnalyticsData) => loc.location || ''),
+          ...locationOptions.map(opt => opt.value)
+  ])
+);
+        setLocations(allLocations.filter(l => l));
+      } catch (err) {
+        setError('Failed to load analytics data');
+        console.error('API Error:', err);
+      }
+    };
+
+    fetchAnalyticsData();
   }, []);
 
+  // Handle month filter
   useEffect(() => {
-    // Handle month filter
-    if (selectedMonth) {
-      const [year, month] = selectedMonth.split('-');
-      axios.get(`http://localhost:3000/community-reports/filter/month?year=${year}&month=${month}`)
-        .then(res => setFilteredReports(res.data));
-    }
+    const fetchMonthlyReports = async () => {
+      if (!selectedMonth) return;
+
+      try {
+        const [year, month] = selectedMonth.split('-');
+        const response = await axios.get(
+          `http://localhost:3000/community-reports/filter/month?year=${year}&month=${month}`
+        );
+        setFilteredReports(response.data);
+      } catch (err) {
+        setError('Failed to load monthly reports');
+        console.error('Monthly filter error:', err);
+      }
+    };
+
+    fetchMonthlyReports();
   }, [selectedMonth]);
 
+  // Handle location filter
   useEffect(() => {
-    // Handle location filter
-    if (selectedLocation) {
-      axios.get(`http://localhost:3000/community-reports/filter/location?location=${selectedLocation}`)
-        .then(res => setFilteredReports(res.data));
-    }
+    const fetchLocationReports = async () => {
+      if (!selectedLocation) return;
+
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/community-reports/filter/location?location=${encodeURIComponent(selectedLocation)}`
+        );
+        setFilteredReports(response.data);
+      } catch (err) {
+        setError('Failed to load location reports');
+        console.error('Location filter error:', err);
+      }
+    };
+
+    fetchLocationReports();
   }, [selectedLocation]);
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
+
+  // Location options from your original component
+  const locationOptions = [
+    { value: "Bumadeya", label: "Bumadeya" },
+    { value: "Budalangi Central", label: "Budalangi Central" },
+    // ... include all your location options here
+  ];
+
 
   return (
     <div className="p-6 space-y-6">
@@ -149,12 +201,12 @@ const AdminReportsDashboard: React.FC = () => {
             </TableHeader>
             <TableBody>
               {filteredReports.map(report => (
-                <TableRow key={report.id}>
+                <TableRow key={report.report_id}>
                   <TableCell>{report.report_type}</TableCell>
                   <TableCell>{report.location}</TableCell>
                   <TableCell>{formatDate(report.createdAt)}</TableCell>
                   <TableCell>{report.status}</TableCell>
-                  <TableCell>{report.user?.username || 'Anonymous'}</TableCell>
+                  <TableCell>{report.User?.username || 'Anonymous'}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
