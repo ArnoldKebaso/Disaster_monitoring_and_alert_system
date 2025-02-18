@@ -4,9 +4,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import Select, { MultiValue } from "react-select";
 import { FaBell, FaMapMarkerAlt, FaHandHoldingHeart, FaShieldAlt, FaUsers, FaMap } from "react-icons/fa";
-import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
-import { Input } from './ui/input';
-import { Button } from './ui/button';
+
 import HeroUrl from '../assets/sig.jpg';
 import ReportImage from "../assets/report.jpg";
 import floodImage from "../assets/floodResponse.png";
@@ -17,6 +15,9 @@ import county from "../assets/county.png";
 import regional from "../assets/regi.png";
 import beneficiary from "../assets/beneficiary.png";
 import volunteer from "../assets/volunteer.png";
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+
 
 const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -70,121 +71,12 @@ const Home: React.FC = () => {
     setSelectedLocations(selectedOptions as { value: string; label: string }[]);
   };
 
-  const toggleLanguage = () => {
-    i18n.changeLanguage(i18n.language === "en" ? "sw" : "en");
-  };
+  
 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
-      <nav className="bg-blue-900 text-white px-6 py-4 shadow-lg">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
-          <div className="text-2xl font-extrabold tracking-wide">
-            {t("navbar.title")}
-          </div>
-          <button
-            onClick={toggleLanguage}
-            className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-4 rounded-md transition"
-          >
-            {t("languageToggle")}
-          </button>
-
-          {/* Hamburger Menu for Mobile */}
-          <button
-            className="lg:hidden focus:outline-none text-white"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <svg
-              className="w-6 h-6"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d={
-                  isMenuOpen
-                    ? "M6 18L18 6M6 6l12 12"
-                    : "M4 6h16M4 12h16M4 18h16"
-                }
-              />
-            </svg>
-          </button>
-
-          {/* Links */}
-          <ul
-            className={`lg:flex lg:items-center lg:gap-8 ${
-              isMenuOpen ? "flex flex-col mt-4 gap-4" : "hidden"
-            }`}
-          >
-            <li>
-              <Link
-                to="/"
-                className="hover:text-yellow-300 transition-all duration-200"
-              >
-                {t("navbar.home")}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/about"
-                className="hover:text-yellow-300 transition-all duration-200"
-              >
-                {t("navbar.about")}
-              </Link>
-            </li>
-            <li className="relative group">
-              <span className="cursor-pointer hover:text-yellow-300 transition-all duration-200">
-                {t("navbar.getInvolved")}
-              </span>
-              <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 mt-2 py-2 px-4 text-sm shadow-lg border-t-2 border-yellow-300">
-                <li>
-                  <Link to="/donate" className="hover:text-yellow-300">
-                    {t("navbar.donate")}
-                  </Link>
-                </li>
-              </ul>
-            </li>
-            <li className="relative group">
-              <span className="cursor-pointer hover:text-yellow-300 transition-all duration-200">
-                {t("navbar.resources")}
-              </span>
-              <ul className="absolute hidden group-hover:flex flex-col bg-blue-900 mt-2 py-2 px-4 text-sm shadow-lg border-t-2 border-yellow-300">
-                <li>
-                  <Link to="/impact-stories" className="hover:text-yellow-300">
-                    {t("navbar.impactStories")}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/annual-reports" className="hover:text-yellow-300">
-                    {t("navbar.annualReports")}
-                  </Link>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <Link
-                to="/agencies"
-                className="hover:text-yellow-300 transition-all duration-200"
-              >
-                {t("navbar.agencies")}
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/contact"
-                className="hover:text-yellow-300 transition-all duration-200"
-              >
-                {t("navbar.contact")}
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </nav>
+        <Navbar />
 
 {/* Hero Section */}
 <section className="relative h-[600px] flex flex-col justify-center items-center text-center text-white">
@@ -414,88 +306,7 @@ const Home: React.FC = () => {
 </section>
 
       {/* Footer Section */}
-<footer className="bg-gray-800 text-white py-12 ">
-  <div className="container mx-auto px-6">
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-      {/* Quick Links */}
-        <div>
-        <h3 className="text-lg font-bold mb-4">Quick Links</h3>
-        <ul className="space-y-2">
-          {[
-            "Admin Portal",
-            "Responder Portal",
-            "User Dashboard",
-            "Publications",
-            "Impact Stories",
-            "Donate",
-            "About Us",
-            "Contact Us",
-          ].map((link, index) => {
-            // Define custom paths for specific links
-            let path = `/${link.replace(" ", "-").toLowerCase()}`;
-            
-            if (link === "Admin Portal") {
-              path = "/login";
-            } else if (link === "User Dashboard") {
-              path = "/dashboard";
-            }
-
-            return (
-              <li key={index} className="hover:text-yellow-300">
-                <Link to={path}>{link}</Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-
-      {/* Contact Info */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">{t("footer.contactTitle")}</h3>
-        <p>{t("footer.phone")}</p>
-        <p>{t("footer.email")}</p>
-        <p>{t("footer.address")}</p>
-      </div>
-
-      {/* Social Media */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">Follow Us</h3>
-        <div className="flex gap-4">
-          <a href="https://www.facebook.com/travis.nonini/" className="text-white hover:text-yellow-300">
-            <FaFacebook className="w-6 h-6" />
-          </a>
-          <a href="#" className="text-white hover:text-yellow-300">
-            <FaTwitter className="w-6 h-6" />
-          </a>
-          <a href="#" className="text-white hover:text-yellow-300">
-            <FaInstagram className="w-6 h-6" />
-          </a>
-          <a href="#" className="text-white hover:text-yellow-300">
-            <FaYoutube className="w-6 h-6" />
-          </a>
-        </div>
-      </div>
-
-      {/* Newsletter */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">Subscribe to Our Newsletter</h3>
-        <form className="flex flex-col gap-2">
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
-          <Button type="submit" className="bg-yellow-400 hover:bg-yellow-500 text-black">
-            Subscribe
-          </Button>
-        </form>
-      </div>
-    </div>
-    <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-      <p>&copy; FMAS( Flood Alert & Monitoring System.)</p>
-    </div>
-  </div>
-</footer>
+ <Footer />
     </div>
   );
 };
