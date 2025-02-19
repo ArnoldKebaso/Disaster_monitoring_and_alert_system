@@ -18,6 +18,8 @@ const Layout: React.FC = () => {
     { label: 'Safety Map', path: '/maps' },
     { label: 'Agencies', path: '/agencies' },
     { label: 'Register', path: '/register' },
+     { label: 'Resources', path: '/userReSources' },
+    
   ];
 
   const adminMenuItems = [
@@ -36,7 +38,7 @@ const Layout: React.FC = () => {
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'Alerts', path: '/alerts' },
     { label: 'sms', path: '/sms' },
-     { label: 'Reports', path: '/adminReport' },
+    { label: 'Reports', path: '/adminReport' },
     
   ];
 

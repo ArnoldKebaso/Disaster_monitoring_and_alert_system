@@ -18,6 +18,7 @@
     "@types/recharts": "^1.8.29",
     "axios": "^1.7.9",
     "chart.js": "^4.4.6",
+    "framer-motion": "^12.4.4",
     "i18next": "^23.2.3",
     "i18next-browser-languagedetector": "^8.0.2",
     "i18next-http-backend": "^3.0.2",

@@ -17,7 +17,7 @@ import DisasterInfo from './components/Infomation';
 import Donate from './components/DonateComponent';
 import ContactUS from './components/ContactUS';
 import Agencies from './components/Agencies';
-import AboutUs from './components/AboutUs';
+  import AboutUs from './components/AboutUs';
 import Home from './components/Home';
 import CreateAlert from './components/CreateAlert';
 import EmailForm from './components/EmailForm';
@@ -27,6 +27,7 @@ import { decodeToken } from './utils/decodeToken';
 import SmsAlertForm from './components/SmsAlertForm';
 import { AuthProvider } from './context/AuthContext';
 import  AdminReportsDashboard from './components/AdminReports';
+import Resources from  './components/UserResources';
 const App: React.FC = () => {
   const token = localStorage.getItem('token');
   const role = token ? decodeToken(token) : 'viewer';
@@ -42,6 +43,7 @@ const App: React.FC = () => {
         <Route path="/contact" element={<ContactUS />} />
         <Route path="/disasterinfo" element={<DisasterInfo />} />
         <Route path="/donate" element={<Donate />} />
+        <Route path="/userReSources" element={<Resources />} />
 
         {/* Dashboard routes with layout */}
         <Route element={<Layout />}>

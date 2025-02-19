@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent } from './ui/card';
 
-const AlertTypes = ['All Types', 'FlashFlood', 'RiverFlood', 'CoastalFlood', 'UrbanFlood', 'ElNinoFlooding'];
+const AlertTypes = ['All Types', 'RiverFlood', 'FlashFlood', 'UrbanFlood', 'CoastalFlood', 'ElNinoFlooding'];
 const Severities = ['All Severities', 'Low', 'Medium', 'High'];
 
 const ActiveAlerts: React.FC = () => {
@@ -13,15 +13,13 @@ const ActiveAlerts: React.FC = () => {
   const [activeSeverity, setActiveSeverity] = useState('All Severities');
   const [alerts, setAlerts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedAlert, setSelectedAlert] = useState<any>(null); // Track the selected alert for details
+  const [selectedAlert, setSelectedAlert] = useState<any>(null);
 
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
         const response = await fetch('http://localhost:3000/alerts');
-        if (!response.ok) {
-          throw new Error('Failed to fetch alerts');
-        }
+        if (!response.ok) throw new Error('Failed to fetch alerts');
         const data = await response.json();
         setAlerts(data);
       } catch (error) {
@@ -30,7 +28,6 @@ const ActiveAlerts: React.FC = () => {
         setLoading(false);
       }
     };
-
     fetchAlerts();
   }, []);
 
@@ -41,16 +38,16 @@ const ActiveAlerts: React.FC = () => {
   const filteredAlerts = alerts.filter(
     (alert) =>
       alert.location.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (activeType === 'All Types' || alert.alertType === activeType) &&
+      (activeType === 'All Types' || alert.alert_type === activeType) &&
       (activeSeverity === 'All Severities' || alert.severity === activeSeverity)
   );
 
   const handleViewDetails = (alert: any) => {
-    setSelectedAlert(alert); // Set the selected alert to show details
+    setSelectedAlert(alert);
   };
 
   const closeDetailsModal = () => {
-    setSelectedAlert(null); // Close the modal
+    setSelectedAlert(null);
   };
 
   if (loading) {
@@ -117,7 +114,7 @@ const ActiveAlerts: React.FC = () => {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredAlerts.map((alert) => (
             <Card
-              key={alert.id}
+              key={alert.alert_id}
               className="bg-white border rounded-lg shadow-md transition-transform transform hover:scale-105"
             >
               <CardContent className="p-4">
@@ -131,7 +128,7 @@ const ActiveAlerts: React.FC = () => {
                         : 'text-green-500'
                     }`}
                   />
-                  <h3 className="text-lg font-bold text-gray-800">{alert.alertType} Alert</h3>
+                  <h3 className="text-lg font-bold text-gray-800">{alert.alert_type} Alert</h3>
                 </div>
 
                 <p className="text-sm font-medium text-gray-600 mb-2">
@@ -162,7 +159,7 @@ const ActiveAlerts: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">{selectedAlert.alertType} Alert Details</h2>
+              <h2 className="text-2xl font-bold text-gray-800">{selectedAlert.alert_type} Alert Details</h2>
               <Button
                 onClick={closeDetailsModal}
                 className="text-gray-500 hover:text-gray-700"
