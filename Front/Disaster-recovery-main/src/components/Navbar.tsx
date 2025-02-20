@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
     },
     { path: "/agencies", name: t("navbar.agencies"), key: "agencies" },
     // Remove or change the duplicate "Resources" item to avoid conflict:
-    { path: "/resources", name: "Resources (User)", key: "resources-user" },
+    { path: "/userReSources", name: "Resources (User)", key: "resources-user" },
     { path: "/contact", name: t("navbar.contact"), key: "contact" }
   ];
 

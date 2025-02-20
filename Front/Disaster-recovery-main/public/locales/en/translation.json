@@ -18,7 +18,7 @@
     "description": "Comprehensive Flood Monitoring and Disaster Management Solutions."
   },
   "subscribe": {
-    "title": "Subscribe for Email Notifications",
+    "title": "Subscribe for Notifications",
     "method": "Choose Notification Method",
     "selectMethod": "Select a method",
     "email": "Email",

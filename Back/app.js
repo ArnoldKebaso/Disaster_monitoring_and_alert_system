@@ -30,6 +30,8 @@ const floodRouter = require('./routes/flood');
 const emailRouter = require('./routes/emailRoutes');
 const logRoutes = require('./routes/logRoutes');
 const smsRoutes = require('./routes/smsRoutes');
+// const ussdRoutes = require('./routes/ussdRoutes');
+// const mpesaRoutes = require('./routes/mpesaRoutes');
 
 require('dotenv').config();
 
@@ -107,7 +109,8 @@ app.use('/subscriptions', subscriptionRouter);
 app.use('/send', emailRouter);
 app.use('/logs', logRoutes);
 app.use('/api', smsRoutes);
-
+// app.use('/ussd', ussdRoutes);
+// app.use('/stkpush', mpesaRoutes);
 
 
 app.listen(3000, () => {
