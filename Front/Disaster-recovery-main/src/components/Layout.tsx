@@ -39,7 +39,7 @@ const Layout: React.FC = () => {
     { label: 'Alerts', path: '/alerts' },
     { label: 'sms', path: '/sms' },
     { label: 'Reports', path: '/adminReport' },
-    
+    { label: 'Subscribed Users', path: '/subscriptionReport' },
   ];
 
   const menuItems = user?.role === 'admin' ? adminMenuItems : userMenuItems;

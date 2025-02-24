@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { Select } from './ui/select';
+//import { Select } from './ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from './ui/select';
 interface Report {
   report_id: number;
   report_type: string;
@@ -136,15 +143,19 @@ const AdminReportsDashboard: React.FC = () => {
         
         <div className="w-64">
           <label className="block text-sm font-medium mb-2">Filter by Location</label>
-          <Select
-            value={selectedLocation}
-            onChange={(value) => setSelectedLocation(value)} // Now receives direct string value
-          >
-            <option value="">All Locations</option>
-            {locations.map(location => (
-              <option key={location} value={location}>{location}</option>
-          ))}
-      </Select>
+          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+  <SelectTrigger className="your-custom-class">
+    <SelectValue placeholder="Select location" />
+  </SelectTrigger>
+  
+  <SelectContent>
+    {locations.map(location => (
+      <SelectItem key={location} value={location}>
+        {location}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
         </div>
       </div>
 

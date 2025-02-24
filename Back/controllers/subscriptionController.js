@@ -161,7 +161,49 @@ const deleteSubscription = async (req, res) => {
     }
 };
 
+// Add these new methods to your existing subscriptionController
 
+const getSubscriptionMethodCounts = async (req, res) => {
+    try {
+        const methodCounts = await Subscription.findAll({
+            attributes: [
+                'method',
+                [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+            ],
+            group: ['method']
+        });
+
+        const formatted = methodCounts.map(item => ({
+            label: item.method,
+            count: item.get('count')
+        }));
+
+        res.status(200).json(formatted);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching method counts", error });
+    }
+};
+
+const getSubscriptionLocationCounts = async (req, res) => {
+    try {
+        const allSubs = await Subscription.findAll();
+        const locationCounts = allSubs.reduce((acc, sub) => {
+            sub.locations.forEach(location => {
+                acc[location] = (acc[location] || 0) + 1;
+            });
+            return acc;
+        }, {});
+
+        const formatted = Object.entries(locationCounts).map(([label, count]) => ({
+            label,
+            count
+        }));
+
+        res.status(200).json(formatted);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching location counts", error });
+    }
+};
 // Send email alert
 // const sendEmailAlert = async (req, res) => {
 //     const { to, subject, text } = req.body;
@@ -176,4 +218,4 @@ const deleteSubscription = async (req, res) => {
 
 
 
-module.exports = { subscribeUser, getAllSubscriptions, updateSubscription, deleteSubscription, getSubscriptionsByLocation, sendEmailAlert };
+module.exports = { subscribeUser, getAllSubscriptions, updateSubscription, deleteSubscription, getSubscriptionsByLocation, sendEmailAlert, getSubscriptionMethodCounts, getSubscriptionLocationCounts };
