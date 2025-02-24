@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/lib/utils": ["./src/lib/utils.ts"]
+    },
     "target": "es5",
     "baseUrl": "src",
     "lib": [

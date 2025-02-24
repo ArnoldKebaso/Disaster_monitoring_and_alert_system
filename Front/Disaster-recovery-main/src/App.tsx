@@ -27,7 +27,9 @@ import { decodeToken } from './utils/decodeToken';
 import SmsAlertForm from './components/SmsAlertForm';
 import { AuthProvider } from './context/AuthContext';
 import  AdminReportsDashboard from './components/AdminReports';
-import Resources from  './components/UserResources';
+import Resources from './components/UserResources';
+
+import SubscriptionReportsDashboard from './components/SubscriptionReport';
 const App: React.FC = () => {
   const token = localStorage.getItem('token');
   const role = token ? decodeToken(token) : 'viewer';
@@ -68,6 +70,7 @@ const App: React.FC = () => {
             <Route path="/subscriptions" element={<SubscriptionList />} />
             <Route path="/sms" element={<SmsAlertForm />} />
             <Route path="/adminReport" element={<AdminReportsDashboard />} />
+              <Route path="/subscriptionReport" element={<SubscriptionReportsDashboard />} />
           </Route>
         </Route>
         {/* <Route path="*" element={<NotFound />} /> */}
