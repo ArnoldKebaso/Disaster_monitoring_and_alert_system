@@ -43,20 +43,33 @@ export const SelectContent = React.forwardRef<
   </SelectPrimitive.Portal>
 ));
 
+// export const SelectItem = React.forwardRef<
+//   HTMLDivElement,
+//   SelectPrimitive.SelectItemProps
+// >(({ className, children, ...props }, ref) => {
+//   // Validate value prop
+//   if (!props.value || typeof props.value !== 'string') {
+//     console.error('Select.Item must have a valid string value prop');
+//     return null;
+//   }
+
+// Update SelectItem component with better validation
 export const SelectItem = React.forwardRef<
-  HTMLDivElement,
-  SelectPrimitive.SelectItemProps
->(({ className, children, ...props }, ref) => {
-  // Validate value prop
-  if (!props.value || typeof props.value !== 'string') {
+  React.ElementRef<typeof SelectPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
+>(({ className, children, value, ...props }, ref) => {
+  if (!value || typeof value !== 'string') {
     console.error('Select.Item must have a valid string value prop');
     return null;
   }
+
+
 
   return (
     <SelectPrimitive.Item
       ref={ref}
       className={`flex items-center p-2 text-sm cursor-pointer hover:bg-gray-100 ${className}`}
+      value={value}
       {...props}
     >
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
