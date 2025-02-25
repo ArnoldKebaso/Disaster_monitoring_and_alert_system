@@ -160,9 +160,7 @@ const deleteSubscription = async (req, res) => {
         res.status(500).json({ message: "Error deleting subscription", error });
     }
 };
-
-// Add these new methods to your existing subscriptionController
-
+// Fix method-counts endpoint
 const getSubscriptionMethodCounts = async (req, res) => {
     try {
         const methodCounts = await Subscription.findAll({
@@ -170,49 +168,90 @@ const getSubscriptionMethodCounts = async (req, res) => {
                 'method',
                 [sequelize.fn('COUNT', sequelize.col('id')), 'count']
             ],
-            group: ['method']
+            group: ['method'],
+            raw: true // Add this to get plain objects
         });
 
-        const formatted = methodCounts.map(item => ({
-            label: item.method,
-            count: item.get('count')
-        }));
-
-        res.status(200).json(formatted);
+        res.status(200).json(methodCounts);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching method counts", error });
+        console.error('Error fetching method counts:', error);
+        res.status(500).json({
+            message: "Error fetching method counts",
+            error: error.message
+        });
     }
 };
 
+// Fix location-counts endpoint
 const getSubscriptionLocationCounts = async (req, res) => {
     try {
-        const allSubs = await Subscription.findAll();
-        const locationCounts = allSubs.reduce((acc, sub) => {
+        const subscriptions = await Subscription.findAll();
+        const locationCounts = subscriptions.reduce((acc, sub) => {
             sub.locations.forEach(location => {
-                acc[location] = (acc[location] || 0) + 1;
+                if (location && location.trim()) { // Validate location
+                    acc[location] = (acc[location] || 0) + 1;
+                }
             });
             return acc;
         }, {});
 
-        const formatted = Object.entries(locationCounts).map(([label, count]) => ({
-            label,
-            count
-        }));
+        const formatted = Object.entries(locationCounts)
+            .filter(([location]) => location) // Filter empty locations
+            .map(([label, count]) => ({ label, count }));
 
         res.status(200).json(formatted);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching location counts", error });
+        console.error('Error fetching location counts:', error);
+        res.status(500).json({
+            message: "Error fetching location counts",
+            error: error.message
+        });
     }
 };
-// Send email alert
-// const sendEmailAlert = async (req, res) => {
-//     const { to, subject, text } = req.body;
 
+
+
+// // Add these new methods to your existing subscriptionController
+
+// const getSubscriptionMethodCounts = async (req, res) => {
 //     try {
-//         await sendEmail(to, subject, text);
-//         res.status(200).json({ message: 'Email sent successfully!' });
+//         const methodCounts = await Subscription.findAll({
+//             attributes: [
+//                 'method',
+//                 [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+//             ],
+//             group: ['method']
+//         });
+
+//         const formatted = methodCounts.map(item => ({
+//             label: item.method,
+//             count: item.get('count')
+//         }));
+
+//         res.status(200).json(formatted);
 //     } catch (error) {
-//         res.status(500).json({ error: 'Failed to send email' });
+//         res.status(500).json({ message: "Error fetching method counts", error });
+//     }
+// };
+
+// const getSubscriptionLocationCounts = async (req, res) => {
+//     try {
+//         const allSubs = await Subscription.findAll();
+//         const locationCounts = allSubs.reduce((acc, sub) => {
+//             sub.locations.forEach(location => {
+//                 acc[location] = (acc[location] || 0) + 1;
+//             });
+//             return acc;
+//         }, {});
+
+//         const formatted = Object.entries(locationCounts).map(([label, count]) => ({
+//             label,
+//             count
+//         }));
+
+//         res.status(200).json(formatted);
+//     } catch (error) {
+//         res.status(500).json({ message: "Error fetching location counts", error });
 //     }
 // };
 

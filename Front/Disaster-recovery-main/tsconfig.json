@@ -4,7 +4,10 @@
       "@/*": ["./src/*"],
       "@/shared/*": ["./src/shared/*"],
       "@/lib/utils": ["./src/lib/utils.ts"]
+      "downlevelIteration": true,
+      "lib": ["es2015", "dom"]
     },
+    
     "target": "es5",
     "baseUrl": "src",
     "lib": [
@@ -12,6 +15,7 @@
       "dom.iterable",
       "esnext"
     ],
+
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

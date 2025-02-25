@@ -37,28 +37,46 @@ const SubscriptionReportsDashboard: React.FC = () => {
   const [locations, setLocations] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [subsRes, methodsRes, locationsRes] = await Promise.all([
-          axios.get('http://localhost:3000/subscriptions'),
-          axios.get('http://localhost:3000/subscriptions/analytics/method-counts'),
-          axios.get('http://localhost:3000/subscriptions/analytics/location-counts')
-        ]);
+  // Update your fetchData useEffect
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const [subsRes, methodsRes, locationsRes] = await Promise.all([
+        axios.get('http://localhost:3000/subscriptions'),
+        axios.get('http://localhost:3000/subscriptions/analytics/method-counts'),
+        axios.get('http://localhost:3000/subscriptions/analytics/location-counts')
+      ]);
 
-        setSubscriptions(subsRes.data);
-        setMethodDistribution(methodsRes.data);
-        setLocationDistribution(locationsRes.data);
-        setLocations(Array.from(new Set(subsRes.data.flatMap(sub => sub.locations))));
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      }
-    };
+      // Add data validation
+      const validSubs = subsRes.data.filter(sub => 
+        sub.locations && Array.isArray(sub.locations)
+      );
+      
+      const validLocations = locationsRes.data
+        .filter(item => item.label && item.label.trim());
 
-    fetchData();
-  }, []);
+      setSubscriptions(validSubs);
+      setMethodDistribution(methodsRes.data);
+      setLocationDistribution(validLocations);
+      
+      // Extract and validate locations
+      const allLocations = validSubs
+        .flatMap(sub => sub.locations)
+        .filter(location => location && location.trim());
+      
+      setLocations([...new Set(allLocations)]);
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      // Add error handling
+      alert('Failed to load data. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
 
   useEffect(() => {
     let filtered = subscriptions;
