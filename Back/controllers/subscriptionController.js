@@ -2,6 +2,8 @@ const Subscription = require("../models/subscription.js");
 const { sendEmail } = require('../config/mail.js');
 const Log = require("../models/log.js");
 const AlertLog = require("../models/alertLog.js");
+const { Sequelize } = require('sequelize');
+const db = require('../config/database');
 
 // Subscribe a user
 const subscribeUser = async (req, res) => {
@@ -163,20 +165,20 @@ const deleteSubscription = async (req, res) => {
 // Fix method-counts endpoint
 const getSubscriptionMethodCounts = async (req, res) => {
     try {
-        const methodCounts = await Subscription.findAll({
+        const methodCounts = await db.Subscription.findAll({
             attributes: [
                 'method',
-                [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+                [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']
             ],
             group: ['method'],
-            raw: true // Add this to get plain objects
+            raw: true
         });
 
         res.status(200).json(methodCounts);
     } catch (error) {
-        console.error('Error fetching method counts:', error);
+        console.error('Database Error:', error);
         res.status(500).json({
-            message: "Error fetching method counts",
+            message: "Failed to fetch method counts",
             error: error.message
         });
     }
