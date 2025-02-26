@@ -36,57 +36,69 @@ const SubscriptionReportsDashboard: React.FC = () => {
   const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: '', end: '' });
   const [locations, setLocations] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Update your fetchData useEffect
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const [subsRes, methodsRes, locationsRes] = await Promise.all([
-        axios.get('http://localhost:3000/subscriptions'),
-        axios.get('http://localhost:3000/subscriptions/analytics/method-counts'),
-        axios.get('http://localhost:3000/subscriptions/analytics/location-counts')
-      ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [subsRes, methodsRes, locationsRes] = await Promise.all([
+          axios.get('http://localhost:3000/subscriptions'),
+          axios.get('http://localhost:3000/subscriptions/analytics/method-counts'),
+          axios.get('http://localhost:3000/subscriptions/analytics/location-counts')
+        ]);
 
-      // Add data validation
-      const validSubs = subsRes.data.filter(sub => 
-        sub.locations && Array.isArray(sub.locations)
-      );
-      
-      const validLocations = locationsRes.data
-        .filter(item => item.label && item.label.trim());
+        // Validate subscription data
+        const validSubs = subsRes.data.filter((sub: Subscription) => 
+          sub.locations && Array.isArray(sub.locations)
+        );
+        
+        // Validate method counts
+        const validMethods = methodsRes.data.filter((item: AnalyticsData) => 
+          item.label && ['email', 'sms'].includes(item.label)
+        );
+        
+        // Validate location counts
+        const validLocations = locationsRes.data.filter((item: AnalyticsData) => 
+          item.label && typeof item.label === 'string' && item.label.trim() !== ''
+        );
 
-      setSubscriptions(validSubs);
-      setMethodDistribution(methodsRes.data);
-      setLocationDistribution(validLocations);
-      
-      // Extract and validate locations
-      const allLocations = validSubs
-        .flatMap(sub => sub.locations)
-        .filter(location => location && location.trim());
-      
-      setLocations([...new Set(allLocations)]);
-      
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      // Add error handling
-      alert('Failed to load data. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
+        setSubscriptions(validSubs);
+        setMethodDistribution(validMethods);
+        setLocationDistribution(validLocations);
+        
+        // Extract and validate locations
+        const allLocations = validSubs
+          .flatMap(sub => sub.locations)
+          .filter((location): location is string => 
+            typeof location === 'string' && location.trim() !== ''
+          );
 
-  fetchData();
-}, []);
+        setLocations(Array.from(new Set(allLocations)));
+        
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError('Failed to load data. Please check your connection and try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     let filtered = subscriptions;
 
     if (selectedLocation) {
-      filtered = filtered.filter(sub => sub.locations.includes(selectedLocation));
+      filtered = filtered.filter(sub => 
+        sub.locations.includes(selectedLocation)
+      );
     }
 
     if (selectedMethod) {
-      filtered = filtered.filter(sub => sub.method === selectedMethod);
+      filtered = filtered.filter(sub => 
+        sub.method === selectedMethod
+      );
     }
 
     if (dateRange.start && dateRange.end) {
@@ -100,6 +112,7 @@ useEffect(() => {
 
     setFilteredSubscriptions(filtered);
   }, [selectedLocation, selectedMethod, dateRange, subscriptions]);
+
 
   const getMethodIcon = (method: string) => {
     return method === 'email' ? (
