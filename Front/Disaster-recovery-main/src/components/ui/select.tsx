@@ -157,3 +157,109 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 }
+
+
+
+// import React from 'react';
+// import * as SelectPrimitive from '@radix-ui/react-select';
+// import {
+//   CheckIcon,
+//   ChevronDownIcon,
+//   ChevronUpIcon
+// } from '@radix-ui/react-icons';
+// import { cn } from '../../lib/utils';
+
+// export const Select = SelectPrimitive.Root;
+// export const SelectGroup = SelectPrimitive.Group;
+// export const SelectValue = SelectPrimitive.Value;
+
+// export const SelectTrigger = React.forwardRef<
+//   React.ElementRef<typeof SelectPrimitive.Trigger>,
+//   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
+// >(({ className, children, ...props }, ref) => (
+//   <SelectPrimitive.Trigger
+//     ref={ref}
+//     className={cn(
+//       'flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+//       className
+//     )}
+//     {...props}
+//   >
+//     {children}
+//     <SelectPrimitive.Icon asChild>
+//       <ChevronDownIcon className="h-4 w-4 opacity-50" />
+//     </SelectPrimitive.Icon>
+//   </SelectPrimitive.Trigger>
+// ));
+
+
+// export const SelectContent = React.forwardRef<
+//   HTMLDivElement,
+//   SelectPrimitive.SelectContentProps
+// >(({ className, children, ...props }, ref) => (
+//   <SelectPrimitive.Portal>
+//     <SelectPrimitive.Content
+//       ref={ref}
+//       className={`bg-white border rounded-md shadow-lg ${className}`}
+//       {...props}
+//     >
+//       <SelectPrimitive.Viewport className="p-2">
+//         {children}
+//       </SelectPrimitive.Viewport>
+//     </SelectPrimitive.Content>
+//   </SelectPrimitive.Portal>
+// ));
+
+// // export const SelectItem = React.forwardRef<
+// //   HTMLDivElement,
+// //   SelectPrimitive.SelectItemProps
+// // >(({ className, children, ...props }, ref) => {
+// //   // Validate value prop
+// //   if (!props.value || typeof props.value !== 'string') {
+// //     console.error('Select.Item must have a valid string value prop');
+// //     return null;
+// //   }
+
+// // Update SelectItem component with better validation
+// export const SelectItem = React.forwardRef<
+//   React.ElementRef<typeof SelectPrimitive.Item>,
+//   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
+// >(({ className, children, value, ...props }, ref) => {
+//   if (!value || typeof value !== 'string') {
+//     console.error('SelectItem requires a valid string value');
+//     return null;
+//   }
+
+
+
+//   return (
+//     <SelectPrimitive.Item
+//       ref={ref}
+//       className={`flex items-center p-2 text-sm cursor-pointer hover:bg-gray-100 ${className}`}
+//       value={value}
+//       {...props}
+//     >
+//       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+//       <SelectPrimitive.ItemIndicator className="ml-auto">
+//         <CheckIcon className="h-4 w-4" />
+//       </SelectPrimitive.ItemIndicator>
+//     </SelectPrimitive.Item>
+//   );
+// });
+
+// export const SelectSeparator = SelectPrimitive.Separator;
+// export const SelectScrollUpButton = SelectPrimitive.ScrollUpButton;
+// export const SelectScrollDownButton = SelectPrimitive.ScrollDownButton;
+
+// // Type exports for better TS support
+// export type SelectProps = SelectPrimitive.SelectProps;
+// export type SelectTriggerProps = SelectPrimitive.SelectTriggerProps;
+// export type SelectValueProps = SelectPrimitive.SelectValueProps;
+// export type SelectItemProps = SelectPrimitive.SelectItemProps;
+
+// export {
+//   SelectPrimitive as BaseSelect,
+//   CheckIcon as SelectCheckIcon,
+//   ChevronDownIcon as SelectChevronDownIcon,
+//   ChevronUpIcon as SelectChevronUpIcon
+// };

@@ -41,7 +41,7 @@ const ContactUs: React.FC = () => {
 
     try {
       await axios.post("http://localhost:3000/subscriptions/send-email", {
-        to: "fmas@gmail.com",
+        to: "shikukudenno@gmail.com",
         subject: `New Contact Form Submission: ${formData.subject}`,
         text: `
           Name: ${formData.name}
