@@ -137,7 +137,7 @@ useEffect(() => {
 
       try {
         const response = await axios.get(
-          `http://localhost:3000/subscriptions/filter/location?location=${encodeURIComponent(selectedLocation)}`
+          `http://localhost:3000/subscriptions/by-location?location=${encodeURIComponent(selectedLocation)}`
         );
         setFilteredSubscriptions(response.data);
       } catch (err) {
@@ -170,8 +170,23 @@ useEffect(() => {
             onChange={(e) => setSelectedMonth(e.target.value)}
           />
         </div>
-        
-        <div className="w-64">
+                <div className="w-64">
+                  <label className="block text-sm font-medium mb-2">Filter by Location</label>
+                  <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                    <SelectTrigger className="your-custom-class">
+                      <SelectValue placeholder="Select location" />
+                    </SelectTrigger>
+          
+                    <SelectContent>
+                      {locations.map(location => (
+                        <SelectItem key={location} value={location}>
+                          {location}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+        {/* <div className="w-64">
           <label className="block text-sm font-medium mb-2">Filter by Location</label>
           <Select 
             value={selectedLocation} 
@@ -196,7 +211,7 @@ useEffect(() => {
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
               
 
               <div className="w-64">

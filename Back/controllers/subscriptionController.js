@@ -99,49 +99,10 @@ const getAllSubscriptions = async (req, res) => {
 
 // Get subscriptions grouped by location
 
-const getSubscriptionsByLocation = async (req, res) => {
-    try {
-        const location = decodeURIComponent(req.query.location);
-
-        if (!location) {
-            return res.status(400).json({
-                success: false,
-                message: "Location query parameter is required"
-            });
-        }
-
-        const results = await Subscription.findAll({
-            where: {
-                locations: {
-                    [Op.contains]: [location]
-                }
-            }
-        });
-
-        res.status(200).json({
-            success: true,
-            count: results.length,
-            data: results
-        });
-
-    } catch (error) {
-        console.error('Location filter error:', error);
-        res.status(500).json({
-            success: false,
-            message: "Server error",
-            error: error.message
-        });
-    }
-};
 // const getSubscriptionsByLocation = async (req, res) => {
 //     try {
 //         const { location } = req.query;
-
-//         if (!location) {
-//             return res.status(400).json({ error: 'Location parameter is required' });
-//         }
-
-//         const subscriptions = await Subscription.findAll({
+//         const reports = await Subscription.findAll({
 //             where: {
 //                 locations: {
 //                     [Sequelize.Op.contains]: [location]
@@ -151,13 +112,38 @@ const getSubscriptionsByLocation = async (req, res) => {
 
 //         res.status(200).json(subscriptions);
 //     } catch (error) {
-//         console.error('Location filter error:', error);
-//         res.status(500).json({
-//             message: "Error filtering by location",
-//             error: error.message
-//         });
+//         res.status(500).json({ error: error.message });
 //     }
 // };
+
+const getSubscriptionsByLocation = async (req, res) => {
+    try {
+        const { location } = req.query;
+
+        if (!location) {
+            return res.status(400).json({ error: 'Location parameter is required' });
+        }
+
+        const subscriptions = await Subscription.findAll({
+            where: Sequelize.where(
+                Sequelize.fn('JSON_CONTAINS',
+                    Sequelize.col('locations'),
+                    Sequelize.literal('?')
+                ),
+                1
+            ),
+            replacements: [JSON.stringify(location)],
+        });
+
+        res.status(200).json(subscriptions);
+    } catch (error) {
+        console.error('Location filter error:', error);
+        res.status(500).json({
+            message: "Error filtering by location",
+            error: error.message
+        });
+    }
+};
 
 // Update a subscription
 const updateSubscription = async (req, res) => {

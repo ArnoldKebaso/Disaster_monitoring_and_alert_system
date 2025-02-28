@@ -175,18 +175,18 @@ const handleDownloadPDF = async () => {
         <div className="w-64">
           <label className="block text-sm font-medium mb-2">Filter by Location</label>
           <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-  <SelectTrigger className="your-custom-class">
-    <SelectValue placeholder="Select location" />
-  </SelectTrigger>
+            <SelectTrigger className="your-custom-class">
+              <SelectValue placeholder="Select location" />
+            </SelectTrigger>
   
-  <SelectContent>
-    {locations.map(location => (
-      <SelectItem key={location} value={location}>
-        {location}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+            <SelectContent>
+              {locations.map(location => (
+                <SelectItem key={location} value={location}>
+                  {location}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
     <div className="w-64">
           <button 
