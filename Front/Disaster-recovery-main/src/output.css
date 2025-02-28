@@ -962,6 +962,10 @@ body {
   height: 1px;
 }
 
+.h-screen {
+  height: 100vh;
+}
+
 .max-h-96 {
   max-height: 24rem;
 }
@@ -1095,10 +1099,6 @@ body {
   max-width: 24rem;
 }
 
-.max-w-xs {
-  max-width: 20rem;
-}
-
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -1154,6 +1154,10 @@ body {
 
 .cursor-default {
   cursor: default;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
 }
 
 .cursor-pointer {

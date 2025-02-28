@@ -8,6 +8,7 @@ const {
     sendEmailAlert,
     getSubscriptionLocationCounts,
     getSubscriptionMethodCounts,
+    getSubscriptionsByMonth
 } = require("../controllers/subscriptionController.js");
 
 const router = express.Router();
@@ -219,7 +220,7 @@ router.get('/analytics/method-counts', getSubscriptionMethodCounts);
  *                     type: number
  */
 router.get('/analytics/location-counts', getSubscriptionLocationCounts);
-
+router.get('/filter/month', getSubscriptionsByMonth);
 
 
 module.exports = router;

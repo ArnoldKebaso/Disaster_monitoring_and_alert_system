@@ -23,8 +23,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/shared/*": ["./src/shared/*"],
-      "@/lib/utils": ["./src/lib/utils.ts"],
-      
+      "@/lib/utils": ["./src/lib/utils.ts"]
     },
     "downlevelIteration": true
   },
