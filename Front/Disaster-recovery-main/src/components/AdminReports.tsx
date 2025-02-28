@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 //import { Select } from './ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
 
 import {
   Select,
@@ -38,6 +41,34 @@ const AdminReportsDashboard: React.FC = () => {
   const [frequentLocations, setFrequentLocations] = useState<AnalyticsData[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  const pdfRef = useRef<HTMLDivElement>(null);
+
+const handleDownloadPDF = async () => {
+  const element = pdfRef.current;
+  if (!element) return;
+
+  try {
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+    } as any);
+    
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgWidth = 190; // A4 width in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+    pdf.save(`subscription-report-${new Date().toISOString()}.pdf`);
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    alert('Failed to generate PDF. Please try again.');
+  }
+};
+
+
+
 
   // Fetch initial analytics data
   useEffect(() => {
@@ -157,8 +188,16 @@ const AdminReportsDashboard: React.FC = () => {
   </SelectContent>
 </Select>
         </div>
+    <div className="w-64">
+          <button 
+            onClick={handleDownloadPDF}
+            className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Download PDF Report
+          </button>
+        </div>
       </div>
-
+      <div ref={pdfRef} className="p-6 space-y-6">
       {/* Analytics Charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
@@ -224,7 +263,8 @@ const AdminReportsDashboard: React.FC = () => {
           </Table>
         </CardContent>
       </Card>
-    </div>
+      </div>
+      </div>
   );
 };
 
