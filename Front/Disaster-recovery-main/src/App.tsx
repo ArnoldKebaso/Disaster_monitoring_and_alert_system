@@ -40,7 +40,8 @@ const App: React.FC = () => {
       <Routes>
         {/* Public routes without layout */}
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactUS />} />
         <Route path="/disasterinfo" element={<DisasterInfo />} />
@@ -55,7 +56,6 @@ const App: React.FC = () => {
           <Route path="/maps" element={<SafetyMaps />} />
           <Route path="/disaster/:id" element={<DisasterDetails />} />
           <Route path="/agencies" element={<Agencies />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
 
           {/* Admin protected routes */}
