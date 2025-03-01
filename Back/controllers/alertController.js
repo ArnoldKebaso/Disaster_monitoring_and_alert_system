@@ -3,12 +3,9 @@ const { Sequelize } = require('sequelize');
 // Get all alerts
 const getAllAlerts = async (req, res) => {
   try {
-    const where = {};
+    const where = req.query.includeArchived ? {} : { status: ['active', 'resolved'] };
 
-    // Add location filter if provided
-    if (req.query.location) {
-      where.location = req.query.location;
-    }
+    if (req.query.location) where.location = req.query.location;
 
     const alerts = await Alert.findAll({ where });
     res.status(200).json(alerts);
@@ -16,7 +13,6 @@ const getAllAlerts = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 // Get alert by ID
 const getAlertById = async (req, res) => {
   try {
@@ -110,10 +106,19 @@ const getUniqueLocations = async (req, res) => {
   }
 };
 
+const archiveAlert = async (req, res) => {
+  try {
+    const alert = await Alert.findByPk(req.params.id);
+    if (!alert) return res.status(404).json({ error: 'Alert not found' });
+
+    const updatedAlert = await alert.update({ status: 'archived' });
+    res.status(200).json(updatedAlert);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 
 
-// Modify getAllAlerts to support filtering
 
-
-module.exports = { getAllAlerts, getAlertById, createAlert, updateAlert, deleteAlert, getUniqueLocations };
+module.exports = { getAllAlerts, getAlertById, createAlert, updateAlert, deleteAlert, getUniqueLocations, archiveAlert };
