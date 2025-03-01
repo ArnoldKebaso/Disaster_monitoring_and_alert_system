@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getAllAlerts, getAlertById, createAlert, updateAlert, deleteAlert } = require('../controllers/alertController');
+const { getAllAlerts, getAlertById, createAlert, updateAlert, deleteAlert, getUniqueLocations } = require('../controllers/alertController');
 const authMiddleware = require('../middleware/auth');
 
+
+
+
+router.get('/locales', getUniqueLocations);
 /**
  * @swagger
  * /alerts:
@@ -140,6 +144,7 @@ router.get('/:id', getAlertById);
  */
 router.post('/', createAlert);
 
+
 /**
  * @swagger
  * /alerts/{id}:
@@ -206,5 +211,6 @@ router.put('/:id', updateAlert);
  *         description: Alert not found
  */
 router.delete('/:id', deleteAlert);
+
 
 module.exports = router;

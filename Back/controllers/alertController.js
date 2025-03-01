@@ -1,5 +1,5 @@
 const Alert = require('../models/alert');
-
+const { Sequelize } = require('sequelize');
 // Get all alerts
 const getAllAlerts = async (req, res) => {
   try {
@@ -81,4 +81,32 @@ const deleteAlert = async (req, res) => {
   }
 };
 
-module.exports = { getAllAlerts, getAlertById, createAlert, updateAlert, deleteAlert };
+// In alertController.js
+
+const getUniqueLocations = async (req, res) => {
+  try {
+    const locations = await Alert.findAll({
+      attributes: [
+        [Alert.sequelize.fn('DISTINCT', Alert.sequelize.col('location')), 'location']
+      ],
+      order: [[Alert.sequelize.col('location'), 'ASC']]
+    });
+
+    // Extract locations using dataValues
+    const locationList = locations.map(item => item.dataValues.location).filter(Boolean);
+
+    console.log('Locations found:', locationList);  // Debug log
+    res.status(200).json(locationList);
+  } catch (error) {
+    console.error('Error fetching locations:', error);
+    res.status(500).json([]);
+  }
+};
+
+
+
+
+// Modify getAllAlerts to support filtering
+
+
+module.exports = { getAllAlerts, getAlertById, createAlert, updateAlert, deleteAlert, getUniqueLocations };

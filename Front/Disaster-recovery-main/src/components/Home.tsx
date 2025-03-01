@@ -91,33 +91,6 @@ const Home: React.FC = () => {
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
         <Navbar />
-
-{/* Hero Section */}
-{/* <section className="relative h-[600px] flex flex-col justify-center items-center text-center text-white">
-  <img src={HeroUrl} alt="Hero" className="absolute inset-0 w-full h-full object-cover" />
-  <div className="bg-black bg-opacity-50 p-8 rounded-md z-10 w-full max-w-7xl mx-auto">
-    <h1 className="text-5xl lg:text-7xl font-bold leading-tight mb-4">
-      {t("hero.title")}
-    </h1>
-    <p className="text-2xl lg:text-3xl mb-6">
-      {t("hero.description")}
-    </p>
-    <div className="flex gap-4 justify-center">
-      <Link
-        to="/donate"
-        className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
-      >
-        {t("navbar.donate")}
-      </Link>
-      <Link
-        to="/alerts"
-        className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 px-6 rounded-md text-lg transition-all duration-200"
-      >
-        {t("navbar.alerts")}
-      </Link>
-    </div>
-  </div>
-</section> */}
    <motion.section 
         initial="hidden"
         animate="visible"
@@ -246,7 +219,9 @@ const Home: React.FC = () => {
           }}
         />
       </div>
-
+            
+            
+      
       {/* Submit Button */}
       <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -304,6 +279,7 @@ const Home: React.FC = () => {
   </div>
 </section>
 
+      
       {/* Report Now Section */}
 <section className="relative py-32 overflow-hidden">
         <img 
