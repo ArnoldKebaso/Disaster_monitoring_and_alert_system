@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllAlerts, getAlertById, createAlert, updateAlert, deleteAlert, getUniqueLocations } = require('../controllers/alertController');
+const { getAllAlerts, getAlertById, createAlert, updateAlert, deleteAlert, getUniqueLocations, archiveAlert } = require('../controllers/alertController');
 const authMiddleware = require('../middleware/auth');
 
 
@@ -191,6 +191,7 @@ router.post('/', createAlert);
  */
 router.put('/:id', updateAlert);
 
+router.put('/:id/archive', archiveAlert);
 /**
  * @swagger
  * /alerts/{id}:
