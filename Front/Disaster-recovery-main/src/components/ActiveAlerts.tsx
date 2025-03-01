@@ -86,23 +86,26 @@ const fetchLocations = async () => {
 
 
   useEffect(() => {
-    const fetchAlerts = async () => {
-      try {
-        const url = selectedLocation 
-          ? `http://localhost:3000/alerts?location=${encodeURIComponent(selectedLocation)}`
-          : 'http://localhost:3000/alerts';
-        
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Failed to fetch alerts');
-        const data = await response.json();
-        setAlerts(data);
-      } catch (error) {
-        console.error('Error fetching alerts:', error);
+  const fetchAlerts = async () => {
+    try {
+      let url = 'http://localhost:3000/alerts';
+      
+      // Add location filter if selected
+      if (selectedLocation) {
+        url += `?location=${encodeURIComponent(selectedLocation)}`;
       }
-    };
 
-    if (selectedLocation) fetchAlerts();
-  }, [selectedLocation]);
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch alerts');
+      const data = await response.json();
+      setAlerts(data);
+    } catch (error) {
+      console.error('Error fetching alerts:', error);
+    }
+  };
+
+  fetchAlerts();
+}, [selectedLocation]);
 
   const formatDate = (timestamp: string) => {
     return new Date(timestamp).toLocaleString();
@@ -183,12 +186,17 @@ const fetchLocations = async () => {
             Alerts for {selectedLocation}
           </h1>
           <Button 
-            onClick={() => setSelectedLocation(null)}
-            variant="outline"
-            className="gap-2"
-          >
-            <X className="h-4 w-4" /> Back to Locations
-          </Button>
+              onClick={() => {
+                setSelectedLocation(null);
+                setSearchQuery('');
+                setActiveType('All Types');
+                setActiveSeverity('All Severities');
+              }}
+              variant="outline"
+              className="gap-2"
+            >
+              <X className="h-4 w-4" /> Back to Locations
+            </Button>
         </div>
 
         {/* Filters Section */}
