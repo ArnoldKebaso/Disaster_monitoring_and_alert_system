@@ -28,6 +28,7 @@ import SmsAlertForm from './components/SmsAlertForm';
 import { AuthProvider } from './context/AuthContext';
 import  AdminReportsDashboard from './components/AdminReports';
 import Resources from './components/UserResources';
+import AdminAlert from './components/AdminAlerts';
 
 import SubscriptionReportsDashboard from './components/SubscriptionReport';
 const App: React.FC = () => {
@@ -66,6 +67,7 @@ const App: React.FC = () => {
             <Route path="/healthcare" element={<HealthcareComponent />} />
             <Route path="/floods" element={<FloodComponent />} />
             <Route path="/createAlert" element={<CreateAlert />} />
+            <Route path="/adminAlerts" element={<AdminAlert />} />
             <Route path="/email" element={<EmailForm />} />
             <Route path="/subscriptions" element={<SubscriptionList />} />
             <Route path="/sms" element={<SmsAlertForm />} />

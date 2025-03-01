@@ -32,6 +32,7 @@ const Layout: React.FC = () => {
     { label: 'Subscription', path: '/subscriptions' },
     { label: 'Agencies', path: '/agencies' },
     { label: 'Register', path: '/register' },
+    { label: 'Modify Alerts', path: '/adminAlerts' },
     { label: 'Create Alert', path: '/createAlert' },
     { label: 'Send Email', path: '/email' },
     { label: 'Home', path: '/' },
