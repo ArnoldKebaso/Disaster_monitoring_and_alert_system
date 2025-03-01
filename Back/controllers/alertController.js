@@ -3,7 +3,14 @@ const { Sequelize } = require('sequelize');
 // Get all alerts
 const getAllAlerts = async (req, res) => {
   try {
-    const alerts = await Alert.findAll();
+    const where = {};
+
+    // Add location filter if provided
+    if (req.query.location) {
+      where.location = req.query.location;
+    }
+
+    const alerts = await Alert.findAll({ where });
     res.status(200).json(alerts);
   } catch (error) {
     res.status(500).json({ error: error.message });
