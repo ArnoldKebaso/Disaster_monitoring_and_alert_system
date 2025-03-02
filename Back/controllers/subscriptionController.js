@@ -116,34 +116,62 @@ const getAllSubscriptions = async (req, res) => {
 //     }
 // };
 
+// const getSubscriptionsByLocation = async (req, res) => {
+//     try {
+//         const { location } = req.query;
+
+//         if (!location) {
+//             return res.status(400).json({ error: 'Location parameter is required' });
+//         }
+
+//         const subscriptions = await Subscription.findAll({
+//             where: Sequelize.where(
+//                 Sequelize.fn('JSON_CONTAINS',
+//                     Sequelize.col('locations'),
+//                     Sequelize.literal('?')
+//                 ),
+//                 1
+//             ),
+//             replacements: [JSON.stringify(location)],
+//         });
+
+//         res.status(200).json(subscriptions);
+//     } catch (error) {
+//         console.error('Location filter error:', error);
+//         res.status(500).json({
+//             message: "Error filtering by location",
+//             error: error.message
+//         });
+//     }
+// };
+
 const getSubscriptionsByLocation = async (req, res) => {
     try {
-        const { location } = req.query;
+        const subscriptions = await Subscription.findAll();
 
-        if (!location) {
-            return res.status(400).json({ error: 'Location parameter is required' });
-        }
+        // Group subscriptions by location
+        const groupedSubscriptions = subscriptions.reduce((acc, subscription) => {
+            subscription.locations.forEach((location) => {
+                if (!acc[location]) {
+                    acc[location] = [];
+                }
+                acc[location].push({
+                    id: subscription.id,
+                    method: subscription.method,
+                    contact: subscription.contact,
+                });
+            });
+            return acc;
+        }, {});
 
-        const subscriptions = await Subscription.findAll({
-            where: Sequelize.where(
-                Sequelize.fn('JSON_CONTAINS',
-                    Sequelize.col('locations'),
-                    Sequelize.literal('?')
-                ),
-                1
-            ),
-            replacements: [JSON.stringify(location)],
-        });
-
-        res.status(200).json(subscriptions);
+        res.status(200).json(groupedSubscriptions);
     } catch (error) {
-        console.error('Location filter error:', error);
-        res.status(500).json({
-            message: "Error filtering by location",
-            error: error.message
-        });
+        res.status(500).json({ message: "Error fetching subscriptions", error });
     }
 };
+
+
+
 
 // Update a subscription
 const updateSubscription = async (req, res) => {
