@@ -43,7 +43,7 @@ const Alert = sequelize.define('Alert', {
         allowNull: false,
     },
     status: {
-        type: DataTypes.ENUM('active', 'resolved'),
+        type: DataTypes.ENUM('active', 'resolved', 'archived'),
         defaultValue: 'active',
     },
     createdAt: DataTypes.DATE,

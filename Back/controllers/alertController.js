@@ -111,10 +111,19 @@ const archiveAlert = async (req, res) => {
     const alert = await Alert.findByPk(req.params.id);
     if (!alert) return res.status(404).json({ error: 'Alert not found' });
 
-    const updatedAlert = await alert.update({ status: 'archived' });
+    // Update status to archived
+    const updatedAlert = await alert.update({
+      status: 'archived',
+      updatedAt: new Date()  // Explicitly set updatedAt
+    });
+
     res.status(200).json(updatedAlert);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Archive error:', error);
+    res.status(500).json({
+      error: 'Failed to archive alert',
+      details: error.message
+    });
   }
 };
 
