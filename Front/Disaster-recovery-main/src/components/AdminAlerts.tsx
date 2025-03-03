@@ -91,20 +91,42 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     '7d': 7 * 24 * 60 * 60 * 1000,
   };
 
-  const filteredAlerts = alerts.filter(alert => {
-    const matchesSearch = alert.location.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = activeType === 'All Types' || alert.alert_type === activeType;
-    const matchesSeverity = activeSeverity === 'All Severities' || alert.severity === activeSeverity;
-    const alertDate = new Date(alert.createdAt);
-    const matchesMonth = selectedMonth === 'All Months' || 
-      alertDate.toLocaleString('default', { month: 'long' }) === selectedMonth;
-    const timeDiff = Date.now() - alertDate.getTime();
-    const matchesTime = selectedTime === 'All Time' || 
-      (timeFilterMap[selectedTime as keyof typeof timeFilterMap] && 
-       timeDiff <= timeFilterMap[selectedTime as keyof typeof timeFilterMap]);
+  // const filteredAlerts = alerts.filter(alert => {
+  //   const matchesSearch = alert.location.toLowerCase().includes(searchQuery.toLowerCase());
+  //   const matchesType = activeType === 'All Types' || alert.alert_type === activeType;
+  //   const matchesSeverity = activeSeverity === 'All Severities' || alert.severity === activeSeverity;
+  //   const alertDate = new Date(alert.createdAt);
+  //   const matchesMonth = selectedMonth === 'All Months' || 
+  //     alertDate.toLocaleString('default', { month: 'long' }) === selectedMonth;
+  //   const timeDiff = Date.now() - alertDate.getTime();
+  //   const matchesTime = selectedTime === 'All Time' || 
+  //     (timeFilterMap[selectedTime as keyof typeof timeFilterMap] && 
+  //      timeDiff <= timeFilterMap[selectedTime as keyof typeof timeFilterMap]);
 
-    return matchesSearch && matchesType && matchesSeverity && matchesMonth && matchesTime;
-  });
+  //   return matchesSearch && matchesType && matchesSeverity && matchesMonth && matchesTime;
+  // });
+
+const filteredAlerts = alerts.filter(alert => {
+  // Add null checks for alert.location
+  const location = alert.location?.toLowerCase() || '';
+  const search = searchQuery.toLowerCase();
+  
+  const matchesSearch = location.includes(search);
+  const matchesType = activeType === 'All Types' || alert.alert_type === activeType;
+  const matchesSeverity = activeSeverity === 'All Severities' || alert.severity === activeSeverity;
+  
+  const alertDate = new Date(alert.createdAt);
+  const matchesMonth = selectedMonth === 'All Months' || 
+    alertDate.toLocaleString('default', { month: 'long' }) === selectedMonth;
+  
+  const timeDiff = Date.now() - alertDate.getTime();
+  const matchesTime = selectedTime === 'All Time' || 
+    (timeFilterMap[selectedTime as keyof typeof timeFilterMap] && 
+    timeDiff <= timeFilterMap[selectedTime as keyof typeof timeFilterMap]);
+
+  return matchesSearch && matchesType && matchesSeverity && matchesMonth && matchesTime;
+});
+
 
   const handleDelete = async (alertId: number) => {
     try {
@@ -116,15 +138,26 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
   };
 
   const handleArchive = async (alertId: number) => {
-    try {
-      const response = await fetch(`http://localhost:3000/alerts/${alertId}/archive`, { method: 'PUT' });
-      const updatedAlert = await response.json();
-      setAlerts(alerts.map(a => a.alert_id === alertId ? updatedAlert : a));
-    } catch (error) {
-      console.error('Archive failed:', error);
-    }
-  };
+  try {
+    const response = await fetch(`http://localhost:3000/alerts/${alertId}/archive`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to archive alert');
+    }
+
+    const updatedAlert = await response.json();
+    setAlerts(alerts.map(a => a.alert_id === alertId ? updatedAlert : a));
+  } catch (error) {
+    console.error('Archive failed:', error);
+    alert(error.message); // Or use a better error display
+  }
+};
   const handleUpdate = async (updatedAlert: Alert) => {
     try {
       const response = await fetch(`http://localhost:3000/alerts/${updatedAlert.alert_id}`, {
@@ -140,6 +173,9 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     }
   };
 
+
+
+  
   if (locationsLoading || loading) {
     return <div className="text-center text-gray-500 p-6">Loading data...</div>;
   }

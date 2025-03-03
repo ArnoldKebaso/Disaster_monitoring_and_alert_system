@@ -116,34 +116,34 @@ const getAllSubscriptions = async (req, res) => {
 //     }
 // };
 
-// const getSubscriptionsByLocation = async (req, res) => {
-//     try {
-//         const { location } = req.query;
+const getSubscriptionsByLocations = async (req, res) => {
+    try {
+        const { location } = req.query;
 
-//         if (!location) {
-//             return res.status(400).json({ error: 'Location parameter is required' });
-//         }
+        if (!location) {
+            return res.status(400).json({ error: 'Location parameter is required' });
+        }
 
-//         const subscriptions = await Subscription.findAll({
-//             where: Sequelize.where(
-//                 Sequelize.fn('JSON_CONTAINS',
-//                     Sequelize.col('locations'),
-//                     Sequelize.literal('?')
-//                 ),
-//                 1
-//             ),
-//             replacements: [JSON.stringify(location)],
-//         });
+        const subscriptions = await Subscription.findAll({
+            where: Sequelize.where(
+                Sequelize.fn('JSON_CONTAINS',
+                    Sequelize.col('locations'),
+                    Sequelize.literal('?')
+                ),
+                1
+            ),
+            replacements: [JSON.stringify(location)],
+        });
 
-//         res.status(200).json(subscriptions);
-//     } catch (error) {
-//         console.error('Location filter error:', error);
-//         res.status(500).json({
-//             message: "Error filtering by location",
-//             error: error.message
-//         });
-//     }
-// };
+        res.status(200).json(subscriptions);
+    } catch (error) {
+        console.error('Location filter error:', error);
+        res.status(500).json({
+            message: "Error filtering by location",
+            error: error.message
+        });
+    }
+};
 
 const getSubscriptionsByLocation = async (req, res) => {
     try {
@@ -278,4 +278,4 @@ const getSubscriptionLocationCounts = async (req, res) => {
     }
 };
 
-module.exports = { subscribeUser, getAllSubscriptions, getSubscriptionsByMonth, updateSubscription, deleteSubscription, getSubscriptionsByLocation, sendEmailAlert, getSubscriptionMethodCounts, getSubscriptionLocationCounts };
+module.exports = { subscribeUser, getAllSubscriptions, getSubscriptionsByMonth, updateSubscription, deleteSubscription, getSubscriptionsByLocation, sendEmailAlert, getSubscriptionMethodCounts, getSubscriptionLocationCounts, getSubscriptionsByLocations };

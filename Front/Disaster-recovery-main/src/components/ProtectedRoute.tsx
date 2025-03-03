@@ -1,6 +1,7 @@
 // components/ProtectedRoute.tsx
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useEffect, useState } from 'react';
 
 type ProtectedRouteProps = {
   allowedRoles?: ('admin' | 'viewer' | 'reporter')[];
@@ -9,14 +10,26 @@ type ProtectedRouteProps = {
 const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
   const { user } = useAuth();
   const location = useLocation();
-  const token = localStorage.getItem('token');
+  const [isChecking, setIsChecking] = useState(true);
 
-  if (!token) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsChecking(false);
+    }, 2000); // 2 second timeout
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isChecking) {
+    return <div>Verifying session...</div>;
+  }
+
+  if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user?.role!)) {
-    return <Navigate to="/dashboard" replace />;
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return <Outlet />;

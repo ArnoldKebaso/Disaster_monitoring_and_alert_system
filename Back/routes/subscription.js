@@ -8,7 +8,8 @@ const {
     sendEmailAlert,
     getSubscriptionLocationCounts,
     getSubscriptionMethodCounts,
-    getSubscriptionsByMonth
+    getSubscriptionsByMonth,
+    getSubscriptionsByLocations
 } = require("../controllers/subscriptionController.js");
 
 const router = express.Router();
@@ -146,7 +147,7 @@ router.put("/:id", updateSubscription); // Fixed: Removed "/subscriptions"
  *       500:
  *         description: Internal server error
  */
-router.get('/by-location', getSubscriptionsByLocation); // Fixed: No change needed
+router.get('/by-location', getSubscriptionsByLocations); 
 
 /**
  * @swagger
@@ -169,7 +170,7 @@ router.get('/by-location', getSubscriptionsByLocation); // Fixed: No change need
  *       500:
  *         description: Internal server error
  */
-router.delete("/:id", deleteSubscription); 
+router.delete("/:id", deleteSubscription);
 router.post('/send-email', sendEmailAlert);
 
 
