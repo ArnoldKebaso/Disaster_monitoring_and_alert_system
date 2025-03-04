@@ -192,7 +192,8 @@ router.post('/', createAlert);
 router.put('/:id', updateAlert);
 
 router.put('/:id/archive', archiveAlert);
-router.put('/alerts:id/unarchive', unarchiveAlert);
+router.put('/:id/unarchive', unarchiveAlert);
+
 /**
  * @swagger
  * /alerts/{id}:
