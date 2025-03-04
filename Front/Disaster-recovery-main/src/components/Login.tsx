@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation  } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
@@ -7,20 +7,21 @@ import Footer from '../components/Footer';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
+  const location = useLocation();
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/login', { email, password });
-      login(response.data.token);
-      setMessage('Login successful');
-      navigate('/dashboard');
-    } catch (error: any) {
-      setMessage(error.response?.data?.error || 'An error occurred during login.');
+      await login(email, password);
+      const to = (location.state as { from?: Location })?.from?.pathname || '/dashboard';
+      navigate(to);
+    } catch (error) {
+      setMessage('Login failed. Please check your credentials.');
     }
   };
 
@@ -33,7 +34,7 @@ const Login: React.FC = () => {
           <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
           {message && <p className="mb-4 text-red-500 text-center">{message}</p>}
           
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="email" className="block text-gray-700">Email</label>
               <input

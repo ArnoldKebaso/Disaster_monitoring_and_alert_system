@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllUsers, getUserById, createUser, updateUser, deleteUser } = require('../controllers/userController');
+const { getAllUsers, getUserById, createUser, updateUser, validateSession , deleteUser } = require('../controllers/userController');
 const authMiddleware = require('../middleware/auth');
 
 /**
@@ -122,6 +122,7 @@ router.get('/user:id', authMiddleware, getUserById);
  */
 router.post('/user', authMiddleware, createUser);
 
+router.get('/validate', authMiddleware, validateSession);
 /**
  * @swagger
  * /{id}:

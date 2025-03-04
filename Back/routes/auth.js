@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser } = require('../controllers/userController');
-
+const { registerUser, loginUser,validateSession  } = require('../controllers/userController');
+const authMiddleware = require('../middleware/auth');
 /**
  * @swagger
  * tags:
@@ -78,6 +78,8 @@ router.post('/register', registerUser);
  *       404:
  *         description: User not found
  */
+
+router.get('/validate', authMiddleware, validateSession);
 router.post('/login', loginUser);
 router.post('/logout', (req, res) => {
     // Clear the token or session (if using sessions)
