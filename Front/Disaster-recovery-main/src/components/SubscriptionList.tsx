@@ -31,7 +31,6 @@ interface Alert {
   updatedAt: string;
 }
 
-
 interface AlertLog {
   id: string; // Unique ID for each log
   method: "email" | "sms"; // Method used (email or SMS)
@@ -54,6 +53,7 @@ interface AlertLog {
   timeSent: string; // Timestamp when the alert was sent
   status: "success" | "failed"; // Status of the alert
 }
+
 const useAlertLogger = () => {
   const [logs, setLogs] = useState<AlertLog[]>([]);
 
@@ -128,101 +128,27 @@ const SubscriptionList: React.FC = () => {
       Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
     `;
 
-
     const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'email');
     for (const subscription of subscriptions) {
-        try {
-            await axios.post('http://localhost:3000/subscriptions/send-email', {
-                to: subscription.contact,
-                subject,
-                text,
-                alertType: alertData.alert_type,
-                location: alertData.location,
-                description: alertData.description,
-                severity: alertData.severity,
-                water_levels: alertData.water_levels,
-                evacuation_routes: alertData.evacuation_routes,
-                emergency_contacts: alertData.emergency_contacts,
-                precautionary_measures: alertData.precautionary_measures,
-                weather_forecast: alertData.weather_forecast,
-            });
-
-            // Log the email alert
-            logAlert({
-                method: "email",
-                contact: subscription.contact,
-                alertType: alertData.alert_type,
-                location: alertData.location,
-                description: alertData.description,
-                severity: alertData.severity,
-                water_levels: alertData.water_levels,
-                evacuation_routes: alertData.evacuation_routes,
-                emergency_contacts: alertData.emergency_contacts,
-                precautionary_measures: alertData.precautionary_measures,
-                weather_forecast: alertData.weather_forecast,
-                timeSent: new Date().toISOString(),
-                status: "success",
-            });
-        } catch (error) {
-            console.error('Error sending email alerts:', error);
-
-            // Log the failed email alert
-            logAlert({
-                method: "email",
-                contact: subscription.contact,
-                alertType: alertData.alert_type,
-                location: alertData.location,
-                description: alertData.description,
-                severity: alertData.severity,
-                water_levels: alertData.water_levels,
-                evacuation_routes: alertData.evacuation_routes,
-                emergency_contacts: alertData.emergency_contacts,
-                precautionary_measures: alertData.precautionary_measures,
-                weather_forecast: alertData.weather_forecast,
-                timeSent: new Date().toISOString(),
-                status: "failed",
-            });
-        }
-    }
-
-    setIsEmailLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
-    alert(`Email alerts sent successfully for ${location}!`);
-  };
-
-  // Send SMS alerts with logging
-  const handleSendSmsAlert = async (location: string) => {
-    setIsSmsLoading((prev) => ({ ...prev, [location]: true })); // Set loading state
-
-    const alertData = await fetchAlertData(location);
-    if (!alertData) {
-      alert(`No active alert found for ${location}.`);
-      setIsSmsLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
-      return;
-    }
-
-    const message = `
-      Flood Alert for ${location}:
-      Type: ${alertData.alert_type}
-      Severity: ${alertData.severity}
-      Description: ${alertData.description}
-      Water Levels: Current - ${alertData.water_levels.current}, Predicted - ${alertData.water_levels.predicted}
-      Evacuation Routes: ${alertData.evacuation_routes.join(', ')}
-      Emergency Contacts: ${alertData.emergency_contacts.join(', ')}
-      Precautionary Measures: ${alertData.precautionary_measures.join(', ')}
-      Weather Forecast: Next 24 Hours - ${alertData.weather_forecast.next_24_hours}, Next 48 Hours - ${alertData.weather_forecast.next_48_hours}
-      Status: ${alertData.status}
-      Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
-    `;
-
-    const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'sms');
-    for (const subscription of subscriptions) {
       try {
-        // Replace with your SMS API logic
-        console.log(`Sending SMS to ${subscription.contact}: ${message}`);
+        await axios.post('http://localhost:3000/subscriptions/send-email', {
+          to: subscription.contact,
+          subject,
+          text,
+          alertType: alertData.alert_type,
+          location: alertData.location,
+          description: alertData.description,
+          severity: alertData.severity,
+          water_levels: alertData.water_levels,
+          evacuation_routes: alertData.evacuation_routes,
+          emergency_contacts: alertData.emergency_contacts,
+          precautionary_measures: alertData.precautionary_measures,
+          weather_forecast: alertData.weather_forecast,
+        });
 
-        // Log the SMS alert
+        // Log the email alert
         logAlert({
-          method: "sms",
+          method: "email",
           contact: subscription.contact,
           alertType: alertData.alert_type,
           location: alertData.location,
@@ -237,11 +163,11 @@ const SubscriptionList: React.FC = () => {
           status: "success",
         });
       } catch (error) {
-        console.error('Error sending SMS alerts:', error);
+        console.error('Error sending email alerts:', error);
 
-        // Log the failed SMS alert
+        // Log the failed email alert
         logAlert({
-          method: "sms",
+          method: "email",
           contact: subscription.contact,
           alertType: alertData.alert_type,
           location: alertData.location,
@@ -258,10 +184,103 @@ const SubscriptionList: React.FC = () => {
       }
     }
 
-    setIsSmsLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
-    alert(`SMS alerts sent successfully for ${location}!`);
+    setIsEmailLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
+    alert(`Email alerts sent successfully for ${location}!`);
   };
 
+  // Send SMS alerts with logging
+ const handleSendSmsAlert = async (location: string) => {
+  setIsSmsLoading((prev) => ({ ...prev, [location]: true })); // Set loading state
+
+  const alertData = await fetchAlertData(location);
+  if (!alertData) {
+    alert(`No active alert found for ${location}.`);
+    setIsSmsLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
+    return;
+  }
+
+  // Updated message formatting
+  const message = `
+🚨 *Flood Alert for ${location}* 🚨
+
+*Type:* ${alertData.alert_type}
+*Severity:* ${alertData.severity}
+*Location:* ${alertData.location}
+
+*Description:*
+${alertData.description}
+
+*Water Levels:*
+- Current: ${alertData.water_levels.current}
+- Predicted (24h): ${alertData.water_levels.predicted}
+
+*Evacuation Routes:*
+${alertData.evacuation_routes.join('\n')}
+
+*Emergency Contacts:*
+${alertData.emergency_contacts.join('\n')}
+
+*Precautionary Measures:*
+${alertData.precautionary_measures.join('\n')}
+
+*Weather Forecast:*
+- Next 24 Hours: ${alertData.weather_forecast.next_24_hours}
+- Next 48 Hours: ${alertData.weather_forecast.next_48_hours}
+
+*Status:* ${alertData.status}
+*Last Updated:* ${new Date(alertData.updatedAt).toLocaleString()}
+`;
+
+  const subscriptions = subscriptionsByLocation[location].filter((sub) => sub.method === 'sms');
+  for (const subscription of subscriptions) {
+    try {
+      // Send SMS using the TextSMS API
+      const response = await axios.post('http://localhost:3000/api/send-sms', {
+        to: subscription.contact,
+        message: message,
+      });
+
+      // Log the SMS alert
+      logAlert({
+        method: "sms",
+        contact: subscription.contact,
+        alertType: alertData.alert_type,
+        location: alertData.location,
+        description: alertData.description,
+        severity: alertData.severity,
+        water_levels: alertData.water_levels,
+        evacuation_routes: alertData.evacuation_routes,
+        emergency_contacts: alertData.emergency_contacts,
+        precautionary_measures: alertData.precautionary_measures,
+        weather_forecast: alertData.weather_forecast,
+        timeSent: new Date().toISOString(),
+        status: "success",
+      });
+    } catch (error) {
+      console.error('Error sending SMS alerts:', error);
+
+      // Log the failed SMS alert
+      logAlert({
+        method: "sms",
+        contact: subscription.contact,
+        alertType: alertData.alert_type,
+        location: alertData.location,
+        description: alertData.description,
+        severity: alertData.severity,
+        water_levels: alertData.water_levels,
+        evacuation_routes: alertData.evacuation_routes,
+        emergency_contacts: alertData.emergency_contacts,
+        precautionary_measures: alertData.precautionary_measures,
+        weather_forecast: alertData.weather_forecast,
+        timeSent: new Date().toISOString(),
+        status: "failed",
+      });
+    }
+  }
+
+  setIsSmsLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
+  alert(`SMS alerts sent successfully for ${location}!`);
+};
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -375,45 +394,6 @@ const SubscriptionList: React.FC = () => {
             </div>
           );
         })}
-      </div>
-
-      {/* Display Logs */}
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Alert Logs</h2>
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Method</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Contact</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Alert Type</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Location</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Time Sent</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {logs.map((log) => (
-                <tr key={log.id} className="border-b border-gray-200 hover:bg-gray-50 transition duration-200">
-                  <td className="px-4 py-3 text-sm text-gray-700">{log.method}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{log.contact}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{log.alertType}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{log.location}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{new Date(log.timeSent).toLocaleString()}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        log.status === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {log.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./user');
 
+
 const CommunityReport = sequelize.define('CommunityReport', {
   report_id: {
     type: DataTypes.INTEGER,
@@ -51,7 +52,7 @@ const CommunityReport = sequelize.define('CommunityReport', {
     comment: 'Timestamp for when the report was last updated',
   },
 });
-
+module.exports = CommunityReport;
 // Define relationships
 CommunityReport.belongsTo(User, {
   foreignKey: 'user_id',
@@ -60,4 +61,4 @@ CommunityReport.belongsTo(User, {
   comment: 'The user who submitted the report (optional)',
 });
 
-module.exports = CommunityReport;
+

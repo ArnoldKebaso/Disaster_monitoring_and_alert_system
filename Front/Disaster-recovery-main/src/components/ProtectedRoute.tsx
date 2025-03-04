@@ -1,19 +1,19 @@
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-interface ProtectedRouteProps {
-  requiredRole: 'admin' | 'viewer' | 'reporter';
-}
+const ProtectedRoute = ({ allowedRoles }: { allowedRoles?: string[] }) => {
+  const { user } = useAuth();
+  const location = useLocation();
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) => {
-  const token = localStorage.getItem('token');
-  const role = token ? JSON.parse(atob(token.split('.')[1])).role : 'viewer';
-
-  if (role !== requiredRole) {
-    return <Navigate to="/login" />;
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return <Outlet />; // Use Outlet to render nested routes
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

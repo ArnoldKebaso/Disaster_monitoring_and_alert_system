@@ -19,7 +19,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/lib/utils": ["./src/lib/utils.ts"]
+    },
+    "downlevelIteration": true
   },
   "include": [
     "src"

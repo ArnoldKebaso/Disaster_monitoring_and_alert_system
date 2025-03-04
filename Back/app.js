@@ -1,14 +1,17 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const session = require('express-session');
 var logger = require('morgan');
 //const cors = require('cors');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 var cookieParser = require('cookie-parser');
 const sequelize = require('./config/database');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require('./swagger');
 const authMiddleware = require('./middleware/auth');
 require('dotenv').config();
+const bcrypt = require('bcrypt');
 
 const app = express();
 const userRoutes = require('./routes/user');
@@ -27,10 +30,32 @@ const healthcareRouter = require('./routes/healthcare');
 const floodRouter = require('./routes/flood');
 const emailRouter = require('./routes/emailRoutes');
 const logRoutes = require('./routes/logRoutes');
+const smsRoutes = require('./routes/smsRoutes');
+// const ussdRoutes = require('./routes/ussdRoutes');
+// const mpesaRoutes = require('./routes/mpesaRoutes');
 
 require('dotenv').config();
 
 const cors = require('cors');
+app.use(express.json());
+app.use(cookieParser());
+app.use(session({
+  secret: process.env.JWT_SECRET || 'your-secret-key', // set this in your .env file
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Sync the session store
+const store = new SequelizeStore({ db: sequelize });
+store.sync();
+
+
 app.use(cors({
   origin: 'http://localhost:3001',
   credentials: true
@@ -41,8 +66,7 @@ app.post('/logout', (req, res) => {
   res.status(200).json({ message: 'Logged out successfully' });
 });
 
-app.use(express.json());
-app.use(cookieParser());
+
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 // app.use(cors({
@@ -85,6 +109,10 @@ app.use('/floods', floodRouter);
 app.use('/subscriptions', subscriptionRouter);
 app.use('/send', emailRouter);
 app.use('/logs', logRoutes);
+app.use('/api', smsRoutes);
+// app.use('/ussd', ussdRoutes);
+// app.use('/stkpush', mpesaRoutes);
+
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');

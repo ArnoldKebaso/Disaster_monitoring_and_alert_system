@@ -17,51 +17,68 @@ import DisasterInfo from './components/Infomation';
 import Donate from './components/DonateComponent';
 import ContactUS from './components/ContactUS';
 import Agencies from './components/Agencies';
-import AboutUs from './components/AboutUs';
+  import AboutUs from './components/AboutUs';
 import Home from './components/Home';
 import CreateAlert from './components/CreateAlert';
 import EmailForm from './components/EmailForm';
 import SubscriptionList from './components/SubscriptionList';
 import ProtectedRoute from './components/ProtectedRoute';
 import { decodeToken } from './utils/decodeToken';
+import SmsAlertForm from './components/SmsAlertForm';
+import { AuthProvider } from './context/AuthContext';
+import  AdminReportsDashboard from './components/AdminReports';
+import Resources from './components/UserResources';
+import AdminAlert from './components/AdminAlerts';
 
+import SubscriptionReportsDashboard from './components/SubscriptionReport';
 const App: React.FC = () => {
   const token = localStorage.getItem('token');
-  const role = token ? decodeToken(token) : 'viewer'; // Decode the token to get the role
+  const role = token ? decodeToken(token) : 'viewer';
 
   return (
+    <AuthProvider>
     <Router>
-      <Layout role={role}>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/register" element={<Register />} />
+      <Routes>
+        {/* Public routes without layout */}
+        <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<ContactUS />} />
+        <Route path="/disasterinfo" element={<DisasterInfo />} />
+        <Route path="/donate" element={<Donate />} />
+        <Route path="/userReSources" element={<Resources />} />
+
+        {/* Dashboard routes with layout */}
+        <Route element={<Layout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/alerts" element={<ActiveAlerts />} />
           <Route path="/report" element={<CommunityReporting />} />
           <Route path="/maps" element={<SafetyMaps />} />
           <Route path="/disaster/:id" element={<DisasterDetails />} />
-          <Route path="/disasterinfo" element={<DisasterInfo />} />
-          <Route path="/donate" element={<Donate />} />
-          <Route path="/contact" element={<ContactUS />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/home" element={<Home />} />
           <Route path="/agencies" element={<Agencies />} />
+          <Route path="/home" element={<Home />} />
 
-          {/* Admin-Only Routes */}
-          <Route element={<ProtectedRoute requiredRole="admin" />}>
+          {/* Admin protected routes */}
+          <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
             <Route path="/locations" element={<Location />} />
             <Route path="/resources" element={<ResourceComponent />} />
             <Route path="/demographics" element={<DemographicComponent />} />
             <Route path="/healthcare" element={<HealthcareComponent />} />
             <Route path="/floods" element={<FloodComponent />} />
             <Route path="/createAlert" element={<CreateAlert />} />
+            <Route path="/adminAlerts" element={<AdminAlert />} />
             <Route path="/email" element={<EmailForm />} />
             <Route path="/subscriptions" element={<SubscriptionList />} />
+            <Route path="/sms" element={<SmsAlertForm />} />
+            <Route path="/adminReport" element={<AdminReportsDashboard />} />
+              <Route path="/subscriptionReport" element={<SubscriptionReportsDashboard />} />
           </Route>
-        </Routes>
-      </Layout>
-    </Router>
+        </Route>
+        {/* <Route path="*" element={<NotFound />} /> */}
+      </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 

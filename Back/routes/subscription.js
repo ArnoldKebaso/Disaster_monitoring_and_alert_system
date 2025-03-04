@@ -6,6 +6,10 @@ const {
     deleteSubscription,
     getSubscriptionsByLocation,
     sendEmailAlert,
+    getSubscriptionLocationCounts,
+    getSubscriptionMethodCounts,
+    getSubscriptionsByMonth,
+    getSubscriptionsByLocations
 } = require("../controllers/subscriptionController.js");
 
 const router = express.Router();
@@ -143,7 +147,7 @@ router.put("/:id", updateSubscription); // Fixed: Removed "/subscriptions"
  *       500:
  *         description: Internal server error
  */
-router.get('/by-location', getSubscriptionsByLocation); // Fixed: No change needed
+router.get('/by-location', getSubscriptionsByLocations); 
 
 /**
  * @swagger
@@ -166,7 +170,58 @@ router.get('/by-location', getSubscriptionsByLocation); // Fixed: No change need
  *       500:
  *         description: Internal server error
  */
-router.delete("/:id", deleteSubscription); 
+router.delete("/:id", deleteSubscription);
 router.post('/send-email', sendEmailAlert);
+
+
+
+/**
+ * @swagger
+ * /subscriptions/analytics/method-counts:
+ *   get:
+ *     summary: Get subscription counts by method
+ *     tags: [Subscriptions]
+ *     responses:
+ *       200:
+ *         description: Method distribution data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   label:
+ *                     type: string
+ *                   count:
+ *                     type: number
+*/
+router.get('/analytics/method-counts', getSubscriptionMethodCounts);
+
+
+/**
+ * @swagger
+ * /subscriptions/analytics/location-counts:
+ *   get:
+ *     summary: Get subscription counts by location
+ *     tags: [Subscriptions]
+ *     responses:
+ *       200:
+ *         description: Location distribution data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   label:
+ *                     type: string
+ *                   count:
+ *                     type: number
+ */
+router.get('/analytics/location-counts', getSubscriptionLocationCounts);
+router.get('/filter/month', getSubscriptionsByMonth);
+
 
 module.exports = router;

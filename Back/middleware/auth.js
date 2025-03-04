@@ -1,28 +1,24 @@
 const jwt = require('jsonwebtoken');
 
-
-// Middleware to check for JWT in the HTTP-only cookie
 const authMiddleware = (req, res, next) => {
   try {
-    // Retrieve the token from the HTTP-only cookie
-    const token = req.cookies?.token;
-
-    // If no token, return unauthorized error
+    const token = req.cookies.token;
+    console.log('Auth Middleware - Received Token:', token); // Debug log
+    
     if (!token) {
-      return res.status(401).json({ error: 'Unauthorized: No token provided' });
+      console.log('No token found');
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Attach the decoded user info to the request object
+    console.log('Decoded Token:', decoded); // Debug log
+    
     req.user = decoded;
-
-    // Call the next middleware or route handler
     next();
   } catch (error) {
-    // Handle token verification errors
-    return res.status(401).json({ error: 'Unauthorized: Invalid token' });
+    console.error('Auth Error:', error.message);
+    res.clearCookie('token');
+    return res.status(401).json({ error: 'Invalid session' });
   }
 };
 

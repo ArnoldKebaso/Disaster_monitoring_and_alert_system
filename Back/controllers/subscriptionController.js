@@ -1,6 +1,9 @@
 const Subscription = require("../models/subscription.js");
 const { sendEmail } = require('../config/mail.js');
 const Log = require("../models/log.js");
+const AlertLog = require("../models/alertLog.js");
+const { Sequelize } = require('sequelize');
+const db = require('../config/database');
 // Subscribe a user
 const subscribeUser = async (req, res) => {
     try {
@@ -23,7 +26,20 @@ const subscribeUser = async (req, res) => {
 };
 
 const sendEmailAlert = async (req, res) => {
-    const { to, subject, text, alertType, location } = req.body;
+    const {
+        to,
+        subject,
+        text,
+        alertType,
+        location,
+        description = "", // Default to empty string if not provided
+        severity = "", // Default to empty string if not provided
+        water_levels = {}, // Default to empty object if not provided
+        evacuation_routes = [], // Default to empty array if not provided
+        emergency_contacts = [], // Default to empty array if not provided
+        precautionary_measures = [], // Default to empty array if not provided
+        weather_forecast = {}, // Default to empty object if not provided
+    } = req.body;
 
     try {
         await sendEmail(to, subject, text);
@@ -70,6 +86,7 @@ const sendEmailAlert = async (req, res) => {
     }
 };
 
+
 // Get all subscriptions
 const getAllSubscriptions = async (req, res) => {
     try {
@@ -81,6 +98,53 @@ const getAllSubscriptions = async (req, res) => {
 };
 
 // Get subscriptions grouped by location
+
+// const getSubscriptionsByLocation = async (req, res) => {
+//     try {
+//         const { location } = req.query;
+//         const reports = await Subscription.findAll({
+//             where: {
+//                 locations: {
+//                     [Sequelize.Op.contains]: [location]
+//                 }
+//             }
+//         });
+
+//         res.status(200).json(subscriptions);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
+
+const getSubscriptionsByLocations = async (req, res) => {
+    try {
+        const { location } = req.query;
+
+        if (!location) {
+            return res.status(400).json({ error: 'Location parameter is required' });
+        }
+
+        const subscriptions = await Subscription.findAll({
+            where: Sequelize.where(
+                Sequelize.fn('JSON_CONTAINS',
+                    Sequelize.col('locations'),
+                    Sequelize.literal('?')
+                ),
+                1
+            ),
+            replacements: [JSON.stringify(location)],
+        });
+
+        res.status(200).json(subscriptions);
+    } catch (error) {
+        console.error('Location filter error:', error);
+        res.status(500).json({
+            message: "Error filtering by location",
+            error: error.message
+        });
+    }
+};
+
 const getSubscriptionsByLocation = async (req, res) => {
     try {
         const subscriptions = await Subscription.findAll();
@@ -105,6 +169,9 @@ const getSubscriptionsByLocation = async (req, res) => {
         res.status(500).json({ message: "Error fetching subscriptions", error });
     }
 };
+
+
+
 
 // Update a subscription
 const updateSubscription = async (req, res) => {
@@ -144,20 +211,71 @@ const deleteSubscription = async (req, res) => {
         res.status(500).json({ message: "Error deleting subscription", error });
     }
 };
+const getSubscriptionsByMonth = async (req, res) => {
+    try {
+        const { year, month } = req.query;
+        const startDate = new Date(year, month - 1, 1);
+        const endDate = new Date(year, month, 0);
+
+        const subscriptions = await Subscription.findAll({
+            where: {
+                createdAt: {
+                    [Sequelize.Op.between]: [startDate, endDate]
+                }
+            }
+        });
+
+        res.status(200).json(subscriptions);
+    } catch (error) {
+        res.status(500).json({ message: "Error filtering by month", error });
+    }
+};
 
 
-// Send email alert
-// const sendEmailAlert = async (req, res) => {
-//     const { to, subject, text } = req.body;
+// Fix method-counts endpoint
+const getSubscriptionMethodCounts = async (req, res) => {
+    try {
+        const methods = await Subscription.findAll({
+            attributes: [
+                'method',
+                [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']
+            ],
+            group: ['method'],
+            raw: true
+        });
 
-//     try {
-//         await sendEmail(to, subject, text);
-//         res.status(200).json({ message: 'Email sent successfully!' });
-//     } catch (error) {
-//         res.status(500).json({ error: 'Failed to send email' });
-//     }
-// };
+        res.json(methods.map(m => ({ label: m.method, count: m.count })));
+    } catch (error) {
+        console.error('Method counts error:', error);
+        res.status(500).json({ error: 'Failed to load method counts' });
+    }
+};
 
+// Fix location-counts endpoint
+const getSubscriptionLocationCounts = async (req, res) => {
+    try {
+        const subscriptions = await Subscription.findAll();
+        const locationCounts = subscriptions.reduce((acc, sub) => {
+            sub.locations.forEach(location => {
+                if (location && location.trim()) { // Validate location
+                    acc[location] = (acc[location] || 0) + 1;
+                }
+            });
+            return acc;
+        }, {});
 
+        const formatted = Object.entries(locationCounts)
+            .filter(([location]) => location) // Filter empty locations
+            .map(([label, count]) => ({ label, count }));
 
-module.exports = { subscribeUser, getAllSubscriptions, updateSubscription, deleteSubscription, getSubscriptionsByLocation, sendEmailAlert };
+        res.status(200).json(formatted);
+    } catch (error) {
+        console.error('Error fetching location counts:', error);
+        res.status(500).json({
+            message: "Error fetching location counts",
+            error: error.message
+        });
+    }
+};
+
+module.exports = { subscribeUser, getAllSubscriptions, getSubscriptionsByMonth, updateSubscription, deleteSubscription, getSubscriptionsByLocation, sendEmailAlert, getSubscriptionMethodCounts, getSubscriptionLocationCounts, getSubscriptionsByLocations };

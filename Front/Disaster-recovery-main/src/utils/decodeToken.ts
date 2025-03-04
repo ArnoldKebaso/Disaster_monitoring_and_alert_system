@@ -1,9 +1,11 @@
-export const decodeToken = (token: string) => {
+export const decodeToken = (token: string): 'admin' | 'viewer' | 'reporter' => {
   try {
-    const payload = JSON.parse(atob(token.split('.')[1])); // Decode the token payload
-    return payload.role; // Return the role
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const decoded = JSON.parse(atob(base64));
+    return decoded.role || 'viewer';
   } catch (error) {
-    console.error('Failed to decode token:', error);
-    return null;
+    console.error('Error decoding token:', error);
+    return 'viewer';
   }
 };
