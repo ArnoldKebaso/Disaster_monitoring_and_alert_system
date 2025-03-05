@@ -59,56 +59,84 @@ const CommunityReporting: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('All');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3000/community-reports')
-      .then((response) => setReports(response.data))
-      .catch((error) => toast.error("Error loading reports", {
-        description: error.message
-      }));
+    const fetchReports = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/community-reports');
+        setReports(response.data);
+      } catch (error) {
+        toast.error("Error loading reports", {
+          description: axios.isAxiosError(error) ? error.message : "Failed to fetch reports"
+        });
+      }
+    };
+    fetchReports();
   }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
-    
-    if (!reportType || !selectedLocation || !description) {
-      toast.warning("Missing Information", {
-        description: "Please fill in all required fields"
+
+    // Validate all required fields
+    const missingFields = [];
+    if (!reportType) missingFields.push('Flood Type');
+    if (!selectedLocation) missingFields.push('Location');
+    if (!description.trim()) missingFields.push('Description');
+    if (!image) missingFields.push('Evidence Image');
+
+    if (missingFields.length > 0) {
+      toast.warning("Missing Required Fields", {
+        description: (
+          <div className="flex flex-col gap-1">
+            {missingFields.map((field, index) => (
+              <div key={index}>• {field}</div>
+            ))}
+          </div>
+        ),
+        action: { label: "Dismiss", onClick: () => console.log("Dismissed") }
       });
       setIsSubmitting(false);
       return;
     }
 
-    const payload = {
-      report_type: reportType,
-      location: selectedLocation.value,
-      description,
-      image_url: image ? URL.createObjectURL(image) : null,
-      status: "pending",
-    };
-
     try {
-      await axios.post('http://localhost:3000/community-reports', payload);
-      
-      toast.success("Report Submitted", {
-        description: "Your flood report has been received",
-        action: {
-          label: "Dismiss",
-          onClick: () => console.log("Dismissed"),
-        },
-      });
+      const formData = new FormData();
+      formData.append('report_type', reportType);
+      formData.append('location', selectedLocation.value);
+      formData.append('description', description);
+      formData.append('status', 'pending');
+      if (image) formData.append('image', image);
 
-      setReportType("");
-      setSelectedLocation(null);
-      setDescription("");
-      setImage(null);
-      setImagePreview(null);
+      const response = await axios.post(
+        'http://localhost:3000/community-reports',
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
 
-      const response = await axios.get('http://localhost:3000/community-reports');
-      setReports(response.data);
+      if (response.status === 201) {
+        toast.success("Report Submitted", {
+          description: "Your flood report has been received",
+          action: { label: "Dismiss", onClick: () => console.log("Dismissed") }
+        });
+
+        // Reset form
+        setReportType("");
+        setSelectedLocation(null);
+        setDescription("");
+        setImage(null);
+        setImagePreview(null);
+
+        // Refresh reports
+        const updatedResponse = await axios.get('http://localhost:3000/community-reports');
+        setReports(updatedResponse.data);
+      }
     } catch (error) {
+      let errorMessage = "Failed to submit report";
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || error.message;
+      }
       toast.error("Submission Failed", {
-        description: error.message
+        description: errorMessage,
+        action: { label: "Dismiss", onClick: () => console.log("Dismissed") }
       });
     } finally {
       setIsSubmitting(false);
@@ -116,11 +144,29 @@ const CommunityReporting: React.FC = () => {
   };
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.[0]) {
-      const file = event.target.files[0];
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
+    const file = event.target.files?.[0];
+    if (!file) {
+      setImage(null);
+      setImagePreview(null);
+      return;
     }
+
+    if (!file.type.startsWith('image/')) {
+      toast.error("Invalid File Type", {
+        description: "Please upload an image file (JPEG, PNG, GIF)"
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File Too Large", {
+        description: "Maximum file size is 5MB"
+      });
+      return;
+    }
+
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   const formatDate = (timestamp: string) => {
@@ -131,11 +177,8 @@ const CommunityReporting: React.FC = () => {
   return (
     <div className="p-6 bg-muted/40 min-h-screen">
       <div className="max-w-7xl mx-auto space-y-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-2"
-        >
+        {/* Header */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
           <h1 className="text-3xl font-bold text-gradient bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
             Community Flood Reporting
           </h1>
@@ -144,6 +187,7 @@ const CommunityReporting: React.FC = () => {
           </p>
         </motion.div>
 
+        {/* Active Alert Banner */}
         {reports.some(r => r.status === 'Critical') && (
           <div className="bg-red-100/90 border border-red-200 p-4 rounded-lg flex items-center gap-3">
             <AlertTriangle className="w-6 h-6 text-red-600" />
@@ -158,11 +202,7 @@ const CommunityReporting: React.FC = () => {
 
         <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
           {/* Report Form */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
             <Card className="h-fit">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -172,13 +212,14 @@ const CommunityReporting: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Flood Type Select */}
                   <div>
                     <label className="block text-sm font-medium mb-2 text-foreground">
-                      Flood Type
+                      Flood Type *
                     </label>
                     <Select
-                      value={hazardTypes.find((hazard) => hazard.value === reportType)}
-                      onChange={(selectedOption) => setReportType(selectedOption?.value || "")}
+                      value={hazardTypes.find(h => h.value === reportType)}
+                      onChange={(option) => setReportType(option?.value || "")}
                       options={hazardTypes}
                       formatOptionLabel={(option) => (
                         <div className="flex items-center gap-2">
@@ -186,7 +227,6 @@ const CommunityReporting: React.FC = () => {
                           <span className="text-muted-foreground">{option.description}</span>
                         </div>
                       )}
-                      getOptionValue={(option) => option.value}
                       styles={{
                         control: (base) => ({
                           ...base,
@@ -194,26 +234,21 @@ const CommunityReporting: React.FC = () => {
                           padding: '6px',
                           borderColor: '#e2e8f0',
                           '&:hover': { borderColor: '#cbd5e1' }
-                        }),
-                        option: (base, { isFocused }) => ({
-                          ...base,
-                          backgroundColor: isFocused ? '#f0f9ff' : 'white',
-                          color: '#0f172a',
-                          padding: '8px 12px'
                         })
                       }}
                     />
                   </div>
 
+                  {/* Location Select */}
                   <div>
                     <label className="block text-sm font-medium mb-2 text-foreground">
-                      Location
+                      Location *
                     </label>
                     <div className="flex items-center gap-2">
                       <Select
                         options={locationOptions}
                         value={selectedLocation}
-                        onChange={(selectedOption) => setSelectedLocation(selectedOption)}
+                        onChange={setSelectedLocation}
                         className="flex-1"
                         styles={{
                           control: (base) => ({
@@ -236,9 +271,7 @@ const CommunityReporting: React.FC = () => {
                                 lat: position.coords.latitude,
                                 lon: position.coords.longitude
                               });
-                              toast.info("Location Detected", {
-                                description: "Your location has been captured"
-                              });
+                              toast.info("Location Detected");
                             },
                             (error) => toast.error("Location Error", {
                               description: error.message
@@ -252,9 +285,10 @@ const CommunityReporting: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Description */}
                   <div>
                     <label className="block text-sm font-medium mb-2 text-foreground">
-                      Description
+                      Description *
                     </label>
                     <Textarea
                       value={description}
@@ -265,22 +299,28 @@ const CommunityReporting: React.FC = () => {
                     />
                   </div>
 
+                  {/* Image Upload */}
                   <div>
                     <label className="block text-sm font-medium mb-2 text-foreground">
-                      Upload Evidence
+                      Upload Evidence *
                     </label>
                     <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-muted-foreground/20 rounded-lg cursor-pointer hover:border-blue-500 transition-colors relative overflow-hidden">
                       {imagePreview ? (
-                        <img 
-                          src={imagePreview} 
-                          alt="Preview" 
-                          className="w-full h-full object-cover absolute inset-0"
-                        />
+                        <>
+                          <img 
+                            src={imagePreview} 
+                            alt="Preview" 
+                            className="w-full h-full object-cover absolute inset-0"
+                          />
+                          <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2 text-sm">
+                            Click to change image
+                          </div>
+                        </>
                       ) : (
                         <>
                           <UploadCloud className="w-8 h-8 text-muted-foreground mb-2" />
                           <span className="text-sm text-muted-foreground">
-                            Click to upload image
+                            Click to upload image (max 5MB)
                           </span>
                         </>
                       )}
@@ -293,6 +333,7 @@ const CommunityReporting: React.FC = () => {
                     </label>
                   </div>
 
+                  {/* Submit Button */}
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
@@ -312,7 +353,7 @@ const CommunityReporting: React.FC = () => {
             </Card>
           </motion.div>
 
-          {/* Recent Reports */}
+          {/* Recent Reports List */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -326,27 +367,16 @@ const CommunityReporting: React.FC = () => {
                     Recent Reports
                   </CardTitle>
                   <div className="flex gap-1">
-                    <Button
-                      variant={statusFilter === 'All' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setStatusFilter('All')}
-                    >
-                      All
-                    </Button>
-                    <Button
-                      variant={statusFilter === 'Verified' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setStatusFilter('Verified')}
-                    >
-                      Verified
-                    </Button>
-                    <Button
-                      variant={statusFilter === 'Pending' ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setStatusFilter('Pending')}
-                    >
-                      Pending
-                    </Button>
+                    {['All', 'Verified', 'Pending'].map((filter) => (
+                      <Button
+                        key={filter}
+                        variant={statusFilter === filter ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setStatusFilter(filter)}
+                      >
+                        {filter}
+                      </Button>
+                    ))}
                   </div>
                 </div>
               </CardHeader>
@@ -371,8 +401,8 @@ const CommunityReporting: React.FC = () => {
                                   <span className={cn(
                                     "text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1 w-fit",
                                     report.status === 'Verified' 
-                                      ? 'bg-green-100/80 text-green-800 dark:bg-green-900/20' 
-                                      : 'bg-yellow-100/80 text-yellow-800 dark:bg-yellow-900/20'
+                                      ? 'bg-green-100/80 text-green-800' 
+                                      : 'bg-yellow-100/80 text-yellow-800'
                                   )}>
                                     {report.status === 'Verified' ? (
                                       <CheckCircle className="w-3.5 h-3.5" />

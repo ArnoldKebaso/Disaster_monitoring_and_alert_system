@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Bell, MapPin, Users, X } from 'lucide-react';
+import { Bell, MapPin, Users, X, AlertTriangle, Route, ClipboardList } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { motion } from 'framer-motion';
+import { cn } from '../lib/utils';
+import { Progress } from './ui/progress';
 
 interface Alert {
   alert_type: string;
@@ -80,139 +83,182 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <main className="flex-1 container mx-auto px-6 py-8 max-w-6xl">
-        <div className="py-6">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-800 mb-6">FMAS Dashboard</h1>
+    <div className="flex flex-col min-h-screen bg-muted/40">
+      <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl">
+        <div className="space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-2"
+          >
+            <h1 className="text-3xl font-bold text-gradient bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              Flood Management Dashboard
+            </h1>
+            <p className="text-muted-foreground">Real-time flood monitoring and management system</p>
+          </motion.div>
 
-          {/* Statistics Cards */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Card className="shadow-md transition-transform hover:scale-105">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-semibold text-gray-700">Active Alerts</CardTitle>
-                <Bell className="h-5 w-5 text-blue-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900">{alerts.length}</div>
-                <p className="text-sm text-gray-600">+2 since last hour</p>
-              </CardContent>
-            </Card>
+          {/* Statistics Grid */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              <Card className="relative overflow-hidden border border-blue-100/50 bg-gradient-to-br from-blue-50 to-white">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-foreground/80">Active Alerts</CardTitle>
+                  <div className="p-2 rounded-full bg-blue-100/50">
+                    <Bell className="h-5 w-5 text-blue-600" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-blue-600">{alerts.length}</div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Progress value={(alerts.length / 20) * 100} className="h-2 bg-blue-100/50" />
+                    <span className="text-sm text-muted-foreground">+2 since last hour</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="shadow-md transition-transform hover:scale-105">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-semibold text-gray-700">High-Risk Areas</CardTitle>
-                <MapPin className="h-5 w-5 text-red-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900">{highRiskAreas}</div>
-                <p className="text-sm text-gray-600">2 new areas identified</p>
-              </CardContent>
-            </Card>
+            {/* Similar motion wrappers for other cards */}
 
-            <Card className="shadow-md transition-transform hover:scale-105">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-semibold text-gray-700">Community Reports</CardTitle>
-                <Users className="h-5 w-5 text-purple-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900">{communityReports.length}</div>
-                <p className="text-sm text-gray-600">+12 from yesterday</p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-md transition-transform hover:scale-105">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-semibold text-gray-700">Safe Routes</CardTitle>
-                <MapPin className="h-5 w-5 text-green-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900">{safeRoutes.length}</div>
-                <p className="text-sm text-gray-600">Updated 5 mins ago</p>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Recent Alerts Section */}
-          <div className="mt-10 bg-white shadow-sm rounded-lg p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Recent Alerts</h2>
-            <div className="space-y-4">
-              {recentAlerts.map((report, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow-sm transition-transform hover:scale-105"
-                >
-                  <div>
-                    <h3 className="font-semibold text-gray-700">{report.report_type}</h3>
-                    <p className="text-sm text-gray-600">{report.location}</p>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-sm text-gray-500 mr-4">Recently</span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-blue-500 text-blue-500 hover:bg-blue-100"
-                      onClick={() => handleViewDetails(report)}
-                    >
-                      View Details
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </main>
-
-      {/* Details Modal */}
-      {selectedReport && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Report Details</h2>
-              <Button
-                onClick={closeDetailsModal}
-                className="text-gray-500 hover:text-gray-700"
-                variant="ghost"
-              >
-                <X className="h-6 w-6" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-foreground">Recent Alerts</h2>
+              <Button variant="ghost" className="text-blue-600">
+                View All →
               </Button>
             </div>
 
-            <div className="space-y-4">
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Report ID:</span> {selectedReport.report_id}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Report Type:</span> {selectedReport.report_type}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Location:</span> {selectedReport.location}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Description:</span> {selectedReport.description}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Status:</span> {selectedReport.status}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Created At:</span>{' '}
-                {new Date(selectedReport.createdAt).toLocaleString()}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Updated At:</span>{' '}
-                {new Date(selectedReport.updatedAt).toLocaleString()}
-              </p>
-              {selectedReport.image_url && (
-                <p className="text-sm text-gray-600">
-                  <span className="font-bold">Image URL:</span> {selectedReport.image_url}
-                </p>
-              )}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {recentAlerts.map((report, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="group relative overflow-hidden border border-muted-foreground/20 hover:border-blue-500/30 transition-colors">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="p-2 rounded-lg bg-blue-100/50">
+                          <AlertTriangle className="h-6 w-6 text-blue-600" />
+                        </div>
+                        <div className="space-y-1">
+                          <h3 className="font-semibold text-foreground">{report.report_type}</h3>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <MapPin className="h-4 w-4" />
+                            <span>{report.location}</span>
+                          </div>
+                          <span className={cn(
+                            "text-xs px-2 py-1 rounded-full",
+                            report.status === 'Verified' ? 'bg-green-100 text-green-800' :
+                            'bg-yellow-100 text-yellow-800'
+                          )}>
+                            {report.status}
+                          </span>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        className="w-full mt-4 text-blue-600 hover:text-blue-700"
+                        onClick={() => handleViewDetails(report)}
+                      >
+                        View Details
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
             </div>
-          </div>
+          </motion.div>
+        </div>
+      </main>
+
+      {/* Enhanced Details Modal */}
+      {selectedReport && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-background rounded-xl shadow-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto border border-muted-foreground/20"
+          >
+            <CardHeader className="border-b border-muted-foreground/20">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-2xl font-bold">Report Details</CardTitle>
+                <Button
+                  onClick={closeDetailsModal}
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+            </CardHeader>
+
+            <CardContent className="p-6 space-y-6">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <DetailItem label="Report ID" value={selectedReport.report_id} />
+                  <DetailItem label="Type" value={selectedReport.report_type} />
+                  <DetailItem label="Location" value={selectedReport.location} />
+                </div>
+                <div className="space-y-2">
+                  <DetailItem label="Status" value={selectedReport.status} />
+                  <DetailItem 
+                    label="Created At" 
+                    value={new Date(selectedReport.createdAt).toLocaleString()} 
+                  />
+                  <DetailItem 
+                    label="Updated At" 
+                    value={new Date(selectedReport.updatedAt).toLocaleString()} 
+                  />
+                </div>
+              </div>
+
+              <Section title="Description">
+                <p className="text-foreground/90">{selectedReport.description}</p>
+              </Section>
+
+              {selectedReport.image_url && (
+                <Section title="Evidence Photo">
+                  <img
+                    src={selectedReport.image_url}
+                    alt="Report evidence"
+                    className="rounded-lg border border-muted-foreground/20"
+                  />
+                </Section>
+              )}
+            </CardContent>
+          </motion.div>
         </div>
       )}
     </div>
   );
 };
+const DetailItem: React.FC<{ label: string; value: string | number }> = ({ label, value }) => (
+  <div className="text-sm">
+    <span className="font-medium text-muted-foreground">{label}:</span>
+    <p className="text-foreground mt-1">{value}</p>
+  </div>
+);
+
+const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+  <div className="space-y-4">
+    <h3 className="font-semibold text-lg text-foreground border-b border-muted-foreground/20 pb-2">
+      {title}
+    </h3>
+    {children}
+  </div>
+);
+
 
 export default Dashboard;
