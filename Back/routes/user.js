@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
 const { getAllUsers, getUserById, createUser, updateUser, validateSession , deleteUser } = require('../controllers/userController');
-
 const authMiddleware = require('../middleware/auth');
 
 /**
@@ -122,8 +120,6 @@ router.get('/user:id', authMiddleware, getUserById);
  *       400:
  *         description: Bad request
  */
-router.get('/me', authMiddleware, getCurrentUser);
-router.post('/logout', authMiddleware, logoutUser);
 router.post('/user', authMiddleware, createUser);
 
 router.get('/validate', authMiddleware, validateSession);
