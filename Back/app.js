@@ -11,6 +11,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require('./swagger');
 const authMiddleware = require('./middleware/auth');
 require('dotenv').config();
+const bcrypt = require('bcrypt');
 
 const app = express();
 const userRoutes = require('./routes/user');
@@ -36,17 +37,18 @@ const smsRoutes = require('./routes/smsRoutes');
 require('dotenv').config();
 
 const cors = require('cors');
+app.use(express.json());
+app.use(cookieParser());
 app.use(session({
   secret: process.env.JWT_SECRET || 'your-secret-key', // set this in your .env file
-  store: new SequelizeStore({
-    db: sequelize,
-  }),
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // set to true if using HTTPS
-    maxAge: 3600000, // 1 hour
-  },
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
 // Sync the session store
@@ -64,8 +66,7 @@ app.post('/logout', (req, res) => {
   res.status(200).json({ message: 'Logged out successfully' });
 });
 
-app.use(express.json());
-app.use(cookieParser());
+
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 // app.use(cors({

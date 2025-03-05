@@ -44,6 +44,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
   const [editingAlert, setEditingAlert] = useState<Alert | null>(null);
   const [locationsLoading, setLocationsLoading] = useState(true);
 
+  // Fetch initial data for locations and alerts
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -65,6 +66,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     fetchInitialData();
   }, []);
 
+  // Fetch alerts on change of selected location or archived toggle
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
@@ -91,42 +93,21 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     '7d': 7 * 24 * 60 * 60 * 1000,
   };
 
-  // const filteredAlerts = alerts.filter(alert => {
-  //   const matchesSearch = alert.location.toLowerCase().includes(searchQuery.toLowerCase());
-  //   const matchesType = activeType === 'All Types' || alert.alert_type === activeType;
-  //   const matchesSeverity = activeSeverity === 'All Severities' || alert.severity === activeSeverity;
-  //   const alertDate = new Date(alert.createdAt);
-  //   const matchesMonth = selectedMonth === 'All Months' || 
-  //     alertDate.toLocaleString('default', { month: 'long' }) === selectedMonth;
-  //   const timeDiff = Date.now() - alertDate.getTime();
-  //   const matchesTime = selectedTime === 'All Time' || 
-  //     (timeFilterMap[selectedTime as keyof typeof timeFilterMap] && 
-  //      timeDiff <= timeFilterMap[selectedTime as keyof typeof timeFilterMap]);
-
-  //   return matchesSearch && matchesType && matchesSeverity && matchesMonth && matchesTime;
-  // });
-
-const filteredAlerts = alerts.filter(alert => {
-  // Add null checks for alert.location
-  const location = alert.location?.toLowerCase() || '';
-  const search = searchQuery.toLowerCase();
-  
-  const matchesSearch = location.includes(search);
-  const matchesType = activeType === 'All Types' || alert.alert_type === activeType;
-  const matchesSeverity = activeSeverity === 'All Severities' || alert.severity === activeSeverity;
-  
-  const alertDate = new Date(alert.createdAt);
-  const matchesMonth = selectedMonth === 'All Months' || 
-    alertDate.toLocaleString('default', { month: 'long' }) === selectedMonth;
-  
-  const timeDiff = Date.now() - alertDate.getTime();
-  const matchesTime = selectedTime === 'All Time' || 
-    (timeFilterMap[selectedTime as keyof typeof timeFilterMap] && 
-    timeDiff <= timeFilterMap[selectedTime as keyof typeof timeFilterMap]);
-
-  return matchesSearch && matchesType && matchesSeverity && matchesMonth && matchesTime;
-});
-
+  const filteredAlerts = alerts.filter(alert => {
+    const location = alert.location?.toLowerCase() || '';
+    const search = searchQuery.toLowerCase();
+    const matchesSearch = location.includes(search);
+    const matchesType = activeType === 'All Types' || alert.alert_type === activeType;
+    const matchesSeverity = activeSeverity === 'All Severities' || alert.severity === activeSeverity;
+    const alertDate = new Date(alert.createdAt);
+    const matchesMonth = selectedMonth === 'All Months' || 
+      alertDate.toLocaleString('default', { month: 'long' }) === selectedMonth;
+    const timeDiff = Date.now() - alertDate.getTime();
+    const matchesTime = selectedTime === 'All Time' || 
+      (timeFilterMap[selectedTime as keyof typeof timeFilterMap] && 
+       timeDiff <= timeFilterMap[selectedTime as keyof typeof timeFilterMap]);
+    return matchesSearch && matchesType && matchesSeverity && matchesMonth && matchesTime;
+  });
 
   const handleDelete = async (alertId: number) => {
     try {
@@ -138,26 +119,41 @@ const filteredAlerts = alerts.filter(alert => {
   };
 
   const handleArchive = async (alertId: number) => {
-  try {
-    const response = await fetch(`http://localhost:3000/alerts/${alertId}/archive`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
+    try {
+      const response = await fetch(`http://localhost:3000/alerts/${alertId}/archive`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to archive alert');
       }
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to archive alert');
+      const updatedAlert = await response.json();
+      setAlerts(alerts.map(a => a.alert_id === alertId ? updatedAlert : a));
+    } catch (error) {
+      console.error('Archive failed:', error);
+      alert(error.message);
     }
+  };
 
-    const updatedAlert = await response.json();
-    setAlerts(alerts.map(a => a.alert_id === alertId ? updatedAlert : a));
-  } catch (error) {
-    console.error('Archive failed:', error);
-    alert(error.message); // Or use a better error display
-  }
-};
+  const handleUnarchive = async (alertId: number) => {
+    try {
+      const response = await fetch(`http://localhost:3000/alerts/${alertId}/unarchive`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to unarchive alert');
+      }
+      const updatedAlert = await response.json();
+      setAlerts(alerts.map(a => a.alert_id === alertId ? updatedAlert : a));
+    } catch (error) {
+      console.error('Unarchive failed:', error);
+      alert(error.message);
+    }
+  };
+
   const handleUpdate = async (updatedAlert: Alert) => {
     try {
       const response = await fetch(`http://localhost:3000/alerts/${updatedAlert.alert_id}`, {
@@ -173,9 +169,6 @@ const filteredAlerts = alerts.filter(alert => {
     }
   };
 
-
-
-  
   if (locationsLoading || loading) {
     return <div className="text-center text-gray-500 p-6">Loading data...</div>;
   }
@@ -192,7 +185,6 @@ const filteredAlerts = alerts.filter(alert => {
               </Button>
             )}
           </div>
-
           <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
             {locations.map(location => (
               <Card key={location} onClick={() => setSelectedLocation(location)} className="cursor-pointer hover:shadow-lg">
@@ -289,6 +281,20 @@ const filteredAlerts = alerts.filter(alert => {
                 ))}
               </SelectContent>
             </Select>
+
+            {/* Clear Filters Button */}
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchQuery('');
+                setActiveType('All Types');
+                setActiveSeverity('All Severities');
+                setSelectedMonth('All Months');
+                setSelectedTime('All Time');
+              }}
+            >
+              Clear Filters
+            </Button>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -325,14 +331,16 @@ const filteredAlerts = alerts.filter(alert => {
                   Archived
                 </div>
               )}
-
               <CardContent className="p-4">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center">
                     <AlertTriangle
                       className={`mr-2 h-6 w-6 ${
-                        alert.severity === 'High' ? 'text-red-500' :
-                        alert.severity === 'Medium' ? 'text-yellow-500' : 'text-green-500'
+                        alert.severity === 'High'
+                          ? 'text-red-500'
+                          : alert.severity === 'Medium'
+                          ? 'text-yellow-500'
+                          : 'text-green-500'
                       }`}
                     />
                     <div>
@@ -340,16 +348,31 @@ const filteredAlerts = alerts.filter(alert => {
                       <p className="text-sm text-gray-600">{alert.location}</p>
                     </div>
                   </div>
-                  
                   {isAdmin && (
                     <div className="flex gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => setEditingAlert(alert)}>
+                      <Button variant="ghost" size="icon" onClick={() => setEditingAlert(alert)} title="Edit">
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleArchive(alert.alert_id)}>
-                        <Archive className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(alert.alert_id)}>
+                      {alert.status === 'archived' ? (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleUnarchive(alert.alert_id)}
+                          title="Unarchive"
+                        >
+                          <Archive className="h-4 w-4 rotate-180" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleArchive(alert.alert_id)}
+                          title="Archive"
+                        >
+                          <Archive className="h-4 w-4" />
+                        </Button>
+                      )}
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(alert.alert_id)} title="Delete">
                         <Trash2 className="h-4 w-4 text-red-500" />
                       </Button>
                     </div>
@@ -364,10 +387,7 @@ const filteredAlerts = alerts.filter(alert => {
                     <Clock className="mr-2 h-4 w-4 text-gray-400" />
                     {formatDate(alert.createdAt)}
                   </p>
-                  <Button
-                    className="w-full mt-4"
-                    onClick={() => setSelectedAlert(alert)}
-                  >
+                  <Button className="w-full mt-4" onClick={() => setSelectedAlert(alert)}>
                     View Details
                   </Button>
                 </div>
@@ -393,7 +413,7 @@ const filteredAlerts = alerts.filter(alert => {
                     <Label>Alert Type</Label>
                     <Select
                       value={editingAlert.alert_type}
-                      onValueChange={value => setEditingAlert({...editingAlert, alert_type: value})}
+                      onValueChange={value => setEditingAlert({ ...editingAlert, alert_type: value })}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select type" />
@@ -410,7 +430,7 @@ const filteredAlerts = alerts.filter(alert => {
                     <Label>Severity</Label>
                     <Select
                       value={editingAlert.severity}
-                      onValueChange={value => setEditingAlert({...editingAlert, severity: value})}
+                      onValueChange={value => setEditingAlert({ ...editingAlert, severity: value })}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select severity" />
@@ -427,7 +447,7 @@ const filteredAlerts = alerts.filter(alert => {
                     <Label>Location</Label>
                     <Input
                       value={editingAlert.location}
-                      onChange={e => setEditingAlert({...editingAlert, location: e.target.value})}
+                      onChange={e => setEditingAlert({ ...editingAlert, location: e.target.value })}
                     />
                   </div>
 
@@ -435,7 +455,7 @@ const filteredAlerts = alerts.filter(alert => {
                     <Label>Status</Label>
                     <Select
                       value={editingAlert.status}
-                      onValueChange={value => setEditingAlert({...editingAlert, status: value})}
+                      onValueChange={value => setEditingAlert({ ...editingAlert, status: value })}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select status" />
@@ -454,7 +474,7 @@ const filteredAlerts = alerts.filter(alert => {
                     <Label>Description</Label>
                     <Textarea
                       value={editingAlert.description}
-                      onChange={e => setEditingAlert({...editingAlert, description: e.target.value})}
+                      onChange={e => setEditingAlert({ ...editingAlert, description: e.target.value })}
                     />
                   </div>
 
@@ -464,7 +484,7 @@ const filteredAlerts = alerts.filter(alert => {
                       value={editingAlert.water_levels.current}
                       onChange={e => setEditingAlert({
                         ...editingAlert,
-                        water_levels: {...editingAlert.water_levels, current: e.target.value}
+                        water_levels: { ...editingAlert.water_levels, current: e.target.value }
                       })}
                     />
                   </div>
@@ -475,7 +495,7 @@ const filteredAlerts = alerts.filter(alert => {
                       value={editingAlert.water_levels.predicted}
                       onChange={e => setEditingAlert({
                         ...editingAlert,
-                        water_levels: {...editingAlert.water_levels, predicted: e.target.value}
+                        water_levels: { ...editingAlert.water_levels, predicted: e.target.value }
                       })}
                     />
                   </div>

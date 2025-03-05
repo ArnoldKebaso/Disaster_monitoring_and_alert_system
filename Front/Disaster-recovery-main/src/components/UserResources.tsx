@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
 import Navbar from './Navbar';
 import Footer from './Footer';
-import { BookOpen, Video, Download, AlertCircle, LifeBuoy, Map, FileText, Globe } from 'lucide-react';
+import { BookOpen, Video, Download, AlertCircle, LifeBuoy, Map, FileText, Globe, Youtube, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+
 
 const Resources: React.FC = () => {
   const fadeIn = {
@@ -13,23 +15,44 @@ const Resources: React.FC = () => {
     visible: { transition: { staggerChildren: 0.1 } },
   };
 
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const YT_PLAYLIST_ID = "PLigZgrpPbvnvB2Qn4GZVaiSjhsJJa3KXx"; // Replace with actual ID
+
   const resources = [
     {
       category: "Guides",
       items: [
-       { 
+        { 
           title: "Flood Preparedness Handbook", 
           icon: BookOpen,
-          link: "#",
+          link: "/pdfs/EmergencyPlan.pdf", // Public folder path
           type: "PDF",
-          difficulty: "Beginner"
+          difficulty: "Beginner",
+          action: 'download'
         },
         { 
-          title: "Emergency Response Protocols", 
+          title: "Emergency Plan Handbook", 
+          icon: BookOpen,
+          link: "/pdfs/subscriptionReport.pdf", // Public folder path
+          type: "PDF",
+          difficulty: "Beginner",
+          action: 'download'
+        },
+        { 
+          title: "Subscriprion Reports Handbook", 
+          icon: BookOpen,
+          link: "/pdfs/DisasterRiskReduction.pdf", // Public folder path
+          type: "PDF",
+          difficulty: "Beginner",
+          action: 'download'
+        },
+        { 
+          title: "Elnino Emergency Response Protocols", 
           icon: AlertCircle,
-          link: "#",
+          link: "https://reliefweb.int/report/kenya/kenya-el-nino-floods-2023-emergency-appeal-mdrke058",
           type: "Article",
-          difficulty: "Advanced"
+          difficulty: "Advanced",
+          action: 'external'
         }
       ]
     },
@@ -39,16 +62,32 @@ const Resources: React.FC = () => {
         { 
           title: "Flood Reporting Tutorial", 
           icon: Video,
-          link: "#",
+          link: "/videos/report-tutorial.mp4", // Public folder path
           type: "Video",
-          duration: "12:30"
+          duration: "12:30",
+          action: 'download'
         },
         { 
-          title: "Rescue Techniques Demo", 
+          title: "Elnino Preparedness report news", 
           icon: Video,
-          link: "#",
+          link: "https://www.youtube.com/embed/RggrefIckoY?enablejsapi=1&wmode=opaque",
           type: "Video",
-          duration: "8:45"
+          duration: "8:45",
+          action: 'external'
+        },{ 
+          title: "Flood Response in Budalangi", 
+          icon: Video,
+          link: "https://www.youtube.com/watch?v=i906ouUW-hw",
+          type: "Video",
+          duration: "8:45",
+          action: 'external'
+        },{ 
+          title: "Kenyas's rapid response to flooding report news", 
+          icon: Video,
+          link: "https://www.youtube.com/watch?v=YtCPEjHamHA&list=PLigZgrpPbvnvB2Qn4GZVaiSjhsJJa3KXx&index=4",
+          type: "Video",
+          duration: "8:45",
+          action: 'external'
         }
       ]
     },
@@ -58,18 +97,39 @@ const Resources: React.FC = () => {
         { 
           title: "Flood Risk Assessment Tool", 
           icon: Map,
-          link: "#",
-          type: "Web App"
+          link: "https://orbital.co.ke/use-of-gis-in-flood-hazard-assessment-and-mitigation-in-kenya/#:~:text=The%20flood%20hazard%20maps%20can,different%20levels%20of%20flood%20risks.",
+          type: "Web App",
+          action: 'external'
         },
         { 
           title: "Evacuation Route Planner", 
           icon: Globe,
-          link: "#",
-          type: "Interactive Map"
+          link: "https://www.floodmap.net/?ct=KE",
+          type: "Interactive Map",
+          action: 'external'
         }
       ]
     }
   ];
+
+  const essentialReadings = [
+    { title: "Flood First Aid Guide", url: "https://www.redcross.org/take-a-class/first-aid" },
+    { title: "Adult First Aid/CPR/AED course ", url: "https://www.redcross.org/take-a-class/classes/adult-first-aid%2Fcpr%2Faed/LP-00014200.html?csrmater=true" },
+    { title: "Evacuation Planning", url: "https://ready.gov/evacuation" }
+  ];
+
+  const handleResourceAction = (item: any) => {
+    if (item.action === 'download') {
+      const link = document.createElement('a');
+      link.href = item.link;
+      link.download = item.title;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else if (item.action === 'external') {
+      window.open(item.link, '_blank');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-cyan-50">
@@ -81,7 +141,7 @@ const Resources: React.FC = () => {
         variants={staggerChildren}
         className="px-6 md:px-16 py-20"
       >
-        {/* Hero Section */}
+        {/* Hero Section - Unchanged */}
         <motion.div
           variants={fadeIn}
           className="max-w-7xl mx-auto text-center mb-20"
@@ -94,28 +154,24 @@ const Resources: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Featured Video Section */}
+        {/* Featured Video Section - Enhanced */}
         <motion.div
           variants={fadeIn}
           className="max-w-7xl mx-auto mb-20 bg-white rounded-2xl shadow-xl overflow-hidden"
         >
-          <div className="aspect-video bg-gradient-to-r from-blue-400 to-cyan-400 flex items-center justify-center relative">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Video className="w-24 h-24 text-white opacity-20" />
-            </div>
-            <div className="relative z-10 text-center">
-              <button className="bg-white/20 backdrop-blur-sm rounded-full p-6 hover:scale-105 transition-transform">
-                <Video className="w-12 h-12 text-white" />
-              </button>
-              <h3 className="text-2xl font-bold text-white mt-4">
-                How to Report Flood Alerts
-              </h3>
-              <p className="text-blue-100">12:30 min tutorial</p>
-            </div>
+          <div className="aspect-video bg-gray-900 relative">
+            <video 
+              controls 
+              className="w-full h-full object-cover"
+              poster="/videos/thumbnail.jpg"
+            >
+              <source src="/videos/report-tutorial.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </motion.div>
 
-        {/* Resource Grid */}
+        {/* Resource Grid - Enhanced */}
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           {resources.map((section, index) => (
             <motion.div
@@ -123,24 +179,24 @@ const Resources: React.FC = () => {
               variants={fadeIn}
               className="bg-white rounded-xl shadow-lg p-6 border border-blue-50"
             >
-              {/*  Icon Conditional Rendering */}
-                    <h2 className="text-2xl font-bold text-blue-900 mb-6 flex items-center gap-2">
-                    {section.category === "Guides" ? (
-                        <FileText />
-                    ) : section.category === "Multimedia" ? (
-                        <Video />
-                    ) : (
-                        <LifeBuoy />
-                    )}
-                    {section.category}
-                    </h2>
+              <h2 className="text-2xl font-bold text-blue-900 mb-6 flex items-center gap-2">
+                {section.category === "Guides" ? (
+                  <FileText />
+                ) : section.category === "Multimedia" ? (
+                  <Video />
+                ) : (
+                  <LifeBuoy />
+                )}
+                {section.category}
+              </h2>
               
               <div className="space-y-4">
                 {section.items.map((item, itemIndex) => (
                   <motion.div
                     key={itemIndex}
                     whileHover={{ x: 5 }}
-                    className="p-4 rounded-lg hover:bg-blue-50 transition-colors"
+                    className="p-4 rounded-lg hover:bg-blue-50 transition-colors cursor-pointer"
+                    onClick={() => handleResourceAction(item)}
                   >
                     <div className="flex items-start gap-3">
                       <item.icon className="w-6 h-6 text-cyan-600 mt-1" />
@@ -164,7 +220,11 @@ const Resources: React.FC = () => {
                         </div>
                       </div>
                       <button className="text-blue-600 hover:text-cyan-600 p-2">
-                        <Download className="w-5 h-5" />
+                        {item.action === 'external' ? (
+                          <ExternalLink className="w-5 h-5" />
+                        ) : (
+                          <Download className="w-5 h-5" />
+                        )}
                       </button>
                     </div>
                   </motion.div>
@@ -174,19 +234,21 @@ const Resources: React.FC = () => {
           ))}
         </div>
 
-        {/* Learning Hub */}
+        {/* Learning Hub - Enhanced */}
         <motion.div
           variants={fadeIn}
           className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl p-10 mb-20"
         >
           <h2 className="text-3xl font-bold text-blue-900 mb-8">Interactive Learning Hub</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="aspect-video bg-gradient-to-r from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center">
-              <div className="text-center">
-                <Video className="w-12 h-12 text-white mb-4 mx-auto" />
-                <h3 className="text-xl font-semibold text-white">Video Library</h3>
-                <p className="text-blue-100">50+ educational videos</p>
-              </div>
+            <div className="aspect-video bg-gray-900 rounded-xl overflow-hidden">
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/videoseries?list=${YT_PLAYLIST_ID}`}
+                title="Educational Videos"
+                allowFullScreen
+              />
             </div>
             <div className="space-y-6">
               <div className="p-6 bg-blue-50 rounded-lg">
@@ -194,10 +256,20 @@ const Resources: React.FC = () => {
                   Essential Reading
                 </h3>
                 <ul className="space-y-2">
-                  {['Flood First Aid Guide', 'Home Protection Checklist', 'Evacuation Planning'].map((item, i) => (
-                    <li key={i} className="flex items-center gap-2 text-blue-800">
+                  {essentialReadings.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-center gap-2 text-blue-800 hover:text-blue-600 transition-colors"
+                    >
                       <BookOpen className="w-4 h-4" />
-                      {item}
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline"
+                      >
+                        {item.title}
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -208,9 +280,14 @@ const Resources: React.FC = () => {
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {['Risk Assessment', 'Flood Simulator', 'Preparation Quiz'].map((tool, i) => (
-                    <span key={i} className="px-3 py-1 bg-cyan-100 text-cyan-800 rounded-full text-sm">
+                    <motion.span
+                      key={i}
+                      whileHover={{ scale: 1.05 }}
+                      className="px-3 py-1 bg-cyan-100 text-cyan-800 rounded-full text-sm cursor-pointer"
+                      onClick={() => setSelectedTool(tool)}
+                    >
                       {tool}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
               </div>
@@ -218,7 +295,44 @@ const Resources: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Newsletter Section */}
+        {/* Tool Modal */}
+        {selectedTool && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
+            onClick={() => setSelectedTool(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              className="bg-white rounded-xl p-8 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-2xl font-bold mb-4">{selectedTool}</h3>
+              <p className="mb-4 text-gray-600">
+                {selectedTool === 'Risk Assessment' && 'Evaluate your current flood risk level based on location and historical data'}
+                {selectedTool === 'Flood Simulator' && 'Visualize potential flood scenarios in your area'}
+                {selectedTool === 'Preparation Quiz' && 'Test your flood preparedness knowledge'}
+              </p>
+              <button
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                onClick={() => {
+                  window.open(
+                    selectedTool === 'Risk Assessment' ? 'https://example.com/risk' :
+                    selectedTool === 'Flood Simulator' ? 'https://example.com/simulator' :
+                    'https://example.com/quiz',
+                    '_blank'
+                  );
+                }}
+              >
+                Launch Tool
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Newsletter Section - Unchanged */}
         <motion.div
           variants={fadeIn}
           className="max-w-4xl mx-auto bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-10 text-center text-white mb-20"

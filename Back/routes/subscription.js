@@ -9,7 +9,7 @@ const {
     getSubscriptionLocationCounts,
     getSubscriptionMethodCounts,
     getSubscriptionsByMonth,
-    getSubscriptionsByLocations
+    
 } = require("../controllers/subscriptionController.js");
 
 const router = express.Router();
@@ -147,7 +147,7 @@ router.put("/:id", updateSubscription); // Fixed: Removed "/subscriptions"
  *       500:
  *         description: Internal server error
  */
-router.get('/by-location', getSubscriptionsByLocations); 
+router.get('/by-location', getSubscriptionsByLocation); 
 
 /**
  * @swagger
