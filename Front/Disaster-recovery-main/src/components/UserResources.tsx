@@ -319,9 +319,9 @@ const Resources: React.FC = () => {
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 onClick={() => {
                   window.open(
-                    selectedTool === 'Risk Assessment' ? 'https://example.com/risk' :
-                    selectedTool === 'Flood Simulator' ? 'https://example.com/simulator' :
-                    'https://example.com/quiz',
+                    selectedTool === 'Risk Assessment' ? 'https://orbital.co.ke/use-of-gis-in-flood-hazard-assessment-and-mitigation-in-kenya/#:~:text=Flood%20Risk%20Assessment%3A%20This%20process,hazards%20occurring%20in%20the%20area.' :
+                    selectedTool === 'Flood Simulator' ? 'https://quizizz.com/admin/quiz/5e7c969f49f5d0001bef1520/floods' :
+                    'https://quizizz.com/admin/quiz/5e7c969f49f5d0001bef1520/floods',
                     '_blank'
                   );
                 }}
