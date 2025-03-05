@@ -4,6 +4,7 @@ import Footer from './Footer';
 import { BookOpen, Video, Download, AlertCircle, LifeBuoy, Map, FileText, Globe, Youtube, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
 
+
 const Resources: React.FC = () => {
   const fadeIn = {
     hidden: { opacity: 0 },
@@ -15,7 +16,7 @@ const Resources: React.FC = () => {
   };
 
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
-  const YT_PLAYLIST_ID = "https://www.youtube.com/watch?v=JHDeBJ_L7cw"; // Replace with actual ID
+  const YT_PLAYLIST_ID = "PLigZgrpPbvnvB2Qn4GZVaiSjhsJJa3KXx"; // Replace with actual ID
 
   const resources = [
     {
@@ -24,15 +25,31 @@ const Resources: React.FC = () => {
         { 
           title: "Flood Preparedness Handbook", 
           icon: BookOpen,
-          link: "/pdfs/handbook.pdf", // Public folder path
+          link: "/pdfs/EmergencyPlan.pdf", // Public folder path
           type: "PDF",
           difficulty: "Beginner",
           action: 'download'
         },
         { 
-          title: "Emergency Response Protocols", 
+          title: "Emergency Plan Handbook", 
+          icon: BookOpen,
+          link: "/pdfs/subscriptionReport.pdf", // Public folder path
+          type: "PDF",
+          difficulty: "Beginner",
+          action: 'download'
+        },
+        { 
+          title: "Subscriprion Reports Handbook", 
+          icon: BookOpen,
+          link: "/pdfs/DisasterRiskReduction.pdf", // Public folder path
+          type: "PDF",
+          difficulty: "Beginner",
+          action: 'download'
+        },
+        { 
+          title: "Elnino Emergency Response Protocols", 
           icon: AlertCircle,
-          link: "https://example.com/emergency-protocols",
+          link: "https://reliefweb.int/report/kenya/kenya-el-nino-floods-2023-emergency-appeal-mdrke058",
           type: "Article",
           difficulty: "Advanced",
           action: 'external'
@@ -51,9 +68,23 @@ const Resources: React.FC = () => {
           action: 'download'
         },
         { 
-          title: "Latest flood report news", 
+          title: "Elnino Preparedness report news", 
           icon: Video,
           link: "https://www.youtube.com/embed/RggrefIckoY?enablejsapi=1&wmode=opaque",
+          type: "Video",
+          duration: "8:45",
+          action: 'external'
+        },{ 
+          title: "Flood Response in Budalangi", 
+          icon: Video,
+          link: "https://www.youtube.com/watch?v=i906ouUW-hw",
+          type: "Video",
+          duration: "8:45",
+          action: 'external'
+        },{ 
+          title: "Kenyas's rapid response to flooding report news", 
+          icon: Video,
+          link: "https://www.youtube.com/watch?v=YtCPEjHamHA&list=PLigZgrpPbvnvB2Qn4GZVaiSjhsJJa3KXx&index=4",
           type: "Video",
           duration: "8:45",
           action: 'external'
@@ -66,14 +97,14 @@ const Resources: React.FC = () => {
         { 
           title: "Flood Risk Assessment Tool", 
           icon: Map,
-          link: "https://example.com/risk-assessment",
+          link: "https://orbital.co.ke/use-of-gis-in-flood-hazard-assessment-and-mitigation-in-kenya/#:~:text=The%20flood%20hazard%20maps%20can,different%20levels%20of%20flood%20risks.",
           type: "Web App",
           action: 'external'
         },
         { 
           title: "Evacuation Route Planner", 
           icon: Globe,
-          link: "http://localhost:3001/maps",
+          link: "https://www.floodmap.net/?ct=KE",
           type: "Interactive Map",
           action: 'external'
         }
