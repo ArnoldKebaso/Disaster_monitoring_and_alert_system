@@ -29,6 +29,7 @@ import { AuthProvider } from './context/AuthContext';
 import  AdminReportsDashboard from './components/AdminReports';
 import Resources from './components/UserResources';
 import AdminAlert from './components/AdminAlerts';
+import { Toaster } from 'sonner';
 
 import SubscriptionReportsDashboard from './components/SubscriptionReport';
 const App: React.FC = () => {
@@ -36,6 +37,20 @@ const App: React.FC = () => {
   const role = token ? decodeToken(token) : 'viewer';
 
   return (
+    <>
+    <Toaster 
+        position="top-center"  // Positions the toast at the top center of the viewport
+        theme="dark"           // Use a dark theme for better contrast
+        toastOptions={{
+          style: {
+            background: 'red',
+            color: '#fff',
+            fontSize: '16px',
+            borderRadius: '8px',
+            padding: '12px 16px'
+          },
+        }}
+      />
     <AuthProvider>
     <Router>
       <Routes>
@@ -79,6 +94,7 @@ const App: React.FC = () => {
       </Routes>
       </Router>
     </AuthProvider>
+    </>
   );
 };
 
