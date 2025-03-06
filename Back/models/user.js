@@ -25,7 +25,10 @@ const User = sequelize.define('User', {
     type: DataTypes.ENUM('admin', 'reporter', 'viewer'),
     allowNull: false,
   },
-  
+  currentToken: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  }
 });
 
 module.exports = User;

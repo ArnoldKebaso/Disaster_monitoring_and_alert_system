@@ -7,6 +7,7 @@ import { Card, CardContent } from "./ui/card";
 import shelterIconUrl from '../assets/shelter.png';
 import floodIconUrl from '../assets/flood.png';
 import routeIconUrl from '../assets/route-marker.jpg';
+import { useNavigate } from 'react-router-dom';
 import {toast} from 'sonner'
 import { Loader2, Search, MapPin, Home, AlertCircle, Navigation, Compass } from 'lucide-react';
 interface FloodAlert {
@@ -92,6 +93,7 @@ const SafetyMaps: React.FC = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [floodAlerts, setFloodAlerts] = useState<FloodAlert[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!floodAlerts.length) return;
@@ -149,7 +151,9 @@ const SafetyMaps: React.FC = () => {
       </button>
     </div>
   `;
-
+const handleClick = () => {
+    navigate('/report'); // Navigate to the report page
+  };
   const getSeverityColor = (severity: string) => {
     switch (severity.toLowerCase()) {
       case 'high': return 'red-600';
@@ -396,7 +400,7 @@ const SafetyMaps: React.FC = () => {
 
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <h3 className="text-lg font-medium mb-3">Quick Actions</h3>
-                <Button variant="outline" className="w-full mb-2">
+                <Button variant="outline" className="w-full mb-2" onClick={handleClick}>
                   <AlertCircle className="mr-2 h-4 w-4" /> Report Flood
                 </Button>
                 <Button variant="outline" className="w-full">

@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Switch } from './ui/switch';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
+import { useNavigate } from 'react-router-dom';
 
 const AlertTypes = ['All Types', 'RiverFlood', 'FlashFlood', 'UrbanFlood', 'CoastalFlood', 'ElNinoFlooding'];
 const Severities = ['All Severities', 'Low', 'Medium', 'High'];
@@ -43,6 +44,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [editingAlert, setEditingAlert] = useState<Alert | null>(null);
   const [locationsLoading, setLocationsLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Fetch initial data for locations and alerts
   useEffect(() => {
@@ -92,7 +94,9 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     '48h': 48 * 60 * 60 * 1000,
     '7d': 7 * 24 * 60 * 60 * 1000,
   };
-
+  const handleClick = () => {
+    navigate('/createAlert'); // Navigate to the create alert page
+  };
   const filteredAlerts = alerts.filter(alert => {
     const location = alert.location?.toLowerCase() || '';
     const search = searchQuery.toLowerCase();
@@ -223,9 +227,9 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
               <X className="mr-2 h-4 w-4" /> Back to Locations
             </Button>
             {isAdmin && (
-              <Button onClick={() => window.location.href = '/createAlert'} className="bg-green-600 hover:bg-green-700">
-                <Plus className="mr-2 h-4 w-4" /> Create Alert
-              </Button>
+              <Button onClick={handleClick} className="bg-green-600 hover:bg-green-700">
+              <Plus className="mr-2 h-4 w-4" /> Create Alert
+            </Button>
             )}
           </div>
         </div>

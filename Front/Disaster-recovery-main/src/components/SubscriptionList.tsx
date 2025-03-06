@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { EnvelopeIcon, DevicePhoneMobileIcon, MapPinIcon } from '@heroicons/react/24/outline';
-import { ClipLoader } from 'react-spinners'; // Import the loading spinner
-
+import { EnvelopeIcon, DevicePhoneMobileIcon, MapPinIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { ClipLoader } from 'react-spinners';
+import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
+import { Switch } from './ui/switch';
+import { Label } from './ui/label';
 interface Subscription {
   id: number;
   method: string;
@@ -29,6 +32,11 @@ interface Alert {
   status: string;
   createdAt: string;
   updatedAt: string;
+}
+interface SentAlert {
+  email: boolean;
+  sms: boolean;
+  timestamp?: string;
 }
 
 interface AlertLog {
@@ -73,10 +81,16 @@ const SubscriptionList: React.FC = () => {
   const { logs, logAlert } = useAlertLogger(); // Use the logging hook
   const [isEmailLoading, setIsEmailLoading] = useState<{ [key: string]: boolean }>({});
   const [isSmsLoading, setIsSmsLoading] = useState<{ [key: string]: boolean }>({});
+ const [sentAlerts, setSentAlerts] = useState<{ [key: string]: SentAlert }>({});
+  const [darkMode, setDarkMode] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchSubscriptions();
   }, []);
+  const filteredLocations = Object.entries(subscriptionsByLocation).filter(
+    ([location]) => location.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   // Fetch subscriptions
   const fetchSubscriptions = async () => {
@@ -86,6 +100,16 @@ const SubscriptionList: React.FC = () => {
     } catch (error) {
       console.error('Error fetching subscriptions:', error);
     }
+  };
+  const markAsSent = (location: string, method: 'email' | 'sms') => {
+    setSentAlerts(prev => ({
+      ...prev,
+      [location]: {
+        ...prev[location],
+        [method]: true,
+        timestamp: new Date().toISOString()
+      }
+    }));
   };
 
   // Fetch alert data
@@ -281,122 +305,247 @@ ${alertData.precautionary_measures.join('\n')}
   setIsSmsLoading((prev) => ({ ...prev, [location]: false })); // Reset loading state
   alert(`SMS alerts sent successfully for ${location}!`);
 };
+const confirmSendAlert = (type: 'email' | 'sms', location: string) => {
+  toast(`Confirm ${type.toUpperCase()} alert for ${location}?`, {
+    action: {
+      label: 'Send',
+      onClick: () => type === 'email' 
+        ? handleSendEmailAlert(location)
+        : handleSendSmsAlert(location)
+    },
+    cancel: { 
+      label: 'Cancel',
+      onClick: () => {} // Add empty onClick handler
+    }
+  });
+};
+return (
+  <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}`}>
+    <div className="max-w-7xl mx-auto p-6">
+      {/* Dashboard Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Alert Management Console</h1>
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search locations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={`px-4 py-2 rounded-lg ${
+                  darkMode 
+                    ? 'bg-gray-800 text-white border-gray-700'
+                    : 'bg-white text-gray-800 border-gray-200'
+                } border focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            <Switch 
+              id="dark-mode" 
+              checked={darkMode}
+              onCheckedChange={setDarkMode}
+            />
+            <Label htmlFor="dark-mode">Dark Mode</Label>
+          </div>
+        </div>
+      </div>
 
-  return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Subscribed Users by Location</h1>
-      <div className="space-y-6">
-        {Object.entries(subscriptionsByLocation).map(([location, subscriptions]) => {
-          const emailSubscriptions = subscriptions.filter((sub) => sub.method === 'email');
-          const smsSubscriptions = subscriptions.filter((sub) => sub.method === 'sms');
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <motion.div 
+          className={`p-4 rounded-xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-sm`}
+          whileHover={{ y: -2 }}
+        >
+          <h3 className="text-sm text-gray-500">Locations</h3>
+          <p className="text-2xl font-bold">{Object.keys(subscriptionsByLocation).length}</p>
+        </motion.div>
+        {/* Add similar cards for other stats */}
+      </div>
 
-          return (
-            <div key={location} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="p-6 border-b border-gray-200">
+      {/* Location Cards */}
+      <AnimatePresence>
+        {filteredLocations.map(([location, subscriptions], idx) => (
+          <motion.div
+            key={location}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: idx * 0.05 }}
+          >
+            <div className={`mb-6 rounded-xl shadow-lg ${
+              darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            } border`}>
+              {/* Location Header */}
+              <div className={`p-4 border-b ${
+                darkMode ? 'border-gray-700' : 'border-gray-200'
+              } flex items-center justify-between`}>
                 <div className="flex items-center space-x-3">
-                  <MapPinIcon className="h-6 w-6 text-blue-600" />
-                  <h2 className="text-xl font-semibold text-gray-800">{location}</h2>
+                  <MapPinIcon className="h-6 w-6 text-blue-500" />
+                  <h2 className="text-xl font-semibold">{location}</h2>
+                </div>
+                <div className="flex space-x-2">
+                  <span className={`text-sm ${
+                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                  }`}>
+                    Last sent: {sentAlerts[location]?.timestamp || 'Never'}
+                  </span>
                 </div>
               </div>
-              <div className="p-6">
-                {/* Email Subscriptions */}
-                {emailSubscriptions.length > 0 && (
-                  <div className="mb-8">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-700">Email Subscriptions</h3>
-                      <button
-                        onClick={() => handleSendEmailAlert(location)}
-                        disabled={isEmailLoading[location]} // Disable button during loading
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center space-x-2"
-                      >
-                        {isEmailLoading[location] ? (
-                          <ClipLoader size={20} color="#ffffff" /> // Show spinner when loading
-                        ) : (
-                          <>
-                            <EnvelopeIcon className="h-5 w-5" />
-                            <span>Send Email Alert</span>
-                          </>
-                        )}
-                      </button>
+
+              {/* Subscription Sections */}
+              <div className="p-6 space-y-6">
+                {/* Email Section */}
+                {subscriptions.some(s => s.method === 'email') && (
+                  <Section 
+                    title="Email Subscriptions" 
+                    icon={<EnvelopeIcon className="h-5 w-5 text-blue-500" />}
+                    darkMode={darkMode}
+                  >
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-medium">
+                          {subscriptions.filter(s => s.method === 'email').length} Subscribers
+                        </h4>
+                        <button
+                          onClick={() => confirmSendAlert('email', location)}
+                          disabled={isEmailLoading[location]}
+                          className={`px-4 py-2 rounded-lg flex items-center space-x-2 ${
+                            isEmailLoading[location]
+                              ? 'bg-blue-400 cursor-not-allowed'
+                              : 'bg-blue-600 hover:bg-blue-700'
+                          } text-white transition-colors`}
+                        >
+                          {isEmailLoading[location] ? (
+                            <ClipLoader size={20} color="#ffffff" />
+                          ) : (
+                            <>
+                              <EnvelopeIcon className="h-5 w-5" />
+                              <span>Send Email Alert</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <SubscriptionTable 
+                        subscriptions={subscriptions.filter(s => s.method === 'email')} 
+                        darkMode={darkMode}
+                      />
                     </div>
-                    <table className="w-full">
-                      <thead>
-                        <tr className="bg-gray-100">
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">ID</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Method</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Contact</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {emailSubscriptions.map((subscription) => (
-                          <tr key={subscription.id} className="border-b border-gray-200 hover:bg-gray-50 transition duration-200">
-                            <td className="px-4 py-3 text-sm text-gray-700">{subscription.id}</td>
-                            <td className="px-4 py-3 text-sm text-gray-700">
-                              <div className="flex items-center space-x-2">
-                                <EnvelopeIcon className="h-4 w-4 text-blue-600" />
-                                <span>{subscription.method}</span>
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-700">{subscription.contact}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  </Section>
                 )}
 
-                {/* SMS Subscriptions */}
-                {smsSubscriptions.length > 0 && (
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-700">SMS Subscriptions</h3>
-                      <button
-                        onClick={() => handleSendSmsAlert(location)}
-                        disabled={isSmsLoading[location]} // Disable button during loading
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200 flex items-center space-x-2"
-                      >
-                        {isSmsLoading[location] ? (
-                          <ClipLoader size={20} color="#ffffff" /> // Show spinner when loading
-                        ) : (
-                          <>
-                            <DevicePhoneMobileIcon className="h-5 w-5" />
-                            <span>Send SMS Alert</span>
-                          </>
-                        )}
-                      </button>
+                {/* SMS Section */}
+                {subscriptions.some(s => s.method === 'sms') && (
+                  <Section 
+                    title="SMS Subscriptions" 
+                    icon={<DevicePhoneMobileIcon className="h-5 w-5 text-green-500" />}
+                    darkMode={darkMode}
+                  >
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-medium">
+                          {subscriptions.filter(s => s.method === 'sms').length} Subscribers
+                        </h4>
+                        <div className="flex items-center space-x-4">
+                          <div className={`px-3 py-1 rounded-full ${
+                            darkMode ? 'bg-gray-700' : 'bg-gray-100'
+                          }`}>
+                            <span className="text-sm">
+                              Cost Estimate: KES {subscriptions.filter(s => s.method === 'sms').length * 2}
+                            </span>
+                          </div>
+                          <button
+                            onClick={() => confirmSendAlert('sms', location)}
+                            disabled={isSmsLoading[location]}
+                            className={`px-4 py-2 rounded-lg flex items-center space-x-2 ${
+                              isSmsLoading[location]
+                                ? 'bg-green-400 cursor-not-allowed'
+                                : 'bg-green-600 hover:bg-green-700'
+                            } text-white transition-colors`}
+                          >
+                            {isSmsLoading[location] ? (
+                              <ClipLoader size={20} color="#ffffff" />
+                            ) : (
+                              <>
+                                <DevicePhoneMobileIcon className="h-5 w-5" />
+                                <span>Send SMS Alert</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      <SubscriptionTable 
+                        subscriptions={subscriptions.filter(s => s.method === 'sms')} 
+                        darkMode={darkMode}
+                      />
                     </div>
-                    <table className="w-full">
-                      <thead>
-                        <tr className="bg-gray-100">
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">ID</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Method</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">Contact</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {smsSubscriptions.map((subscription) => (
-                          <tr key={subscription.id} className="border-b border-gray-200 hover:bg-gray-50 transition duration-200">
-                            <td className="px-4 py-3 text-sm text-gray-700">{subscription.id}</td>
-                            <td className="px-4 py-3 text-sm text-gray-700">
-                              <div className="flex items-center space-x-2">
-                                <DevicePhoneMobileIcon className="h-4 w-4 text-green-600" />
-                                <span>{subscription.method}</span>
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-700">{subscription.contact}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  </Section>
                 )}
               </div>
             </div>
-          );
-        })}
-      </div>
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
-  );
+  </div>
+);
 };
+
+// Helper Components
+const Section: React.FC<{ 
+title: string; 
+icon: React.ReactNode;
+darkMode: boolean;
+children: React.ReactNode;
+}> = ({ title, icon, darkMode, children }) => (
+<div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+  <div className="flex items-center space-x-2 mb-4">
+    {icon}
+    <h3 className="text-lg font-semibold">{title}</h3>
+  </div>
+  {children}
+</div>
+);
+
+const SubscriptionTable: React.FC<{ 
+subscriptions: Subscription[]; 
+darkMode: boolean;
+}> = ({ subscriptions, darkMode }) => (
+<div className="overflow-x-auto">
+  <table className="w-full">
+    <thead>
+      <tr className={`${darkMode ? 'bg-gray-600' : 'bg-gray-100'}`}>
+        <th className="px-4 py-3 text-left text-sm font-medium">Contact</th>
+        <th className="px-4 py-3 text-left text-sm font-medium">Status</th>
+        <th className="px-4 py-3 text-left text-sm font-medium">Last Sent</th>
+      </tr>
+    </thead>
+    <tbody>
+      {subscriptions.map((subscription) => (
+        <tr 
+          key={subscription.id} 
+          className={`border-b ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}
+        >
+          <td className="px-4 py-3">{subscription.contact}</td>
+          <td className="px-4 py-3">
+            <div className="flex items-center space-x-2">
+              {Math.random() > 0.1 ? (
+                <CheckCircleIcon className="h-4 w-4 text-green-500" />
+              ) : (
+                <XCircleIcon className="h-4 w-4 text-red-500" />
+              )}
+              <span>{Math.random() > 0.1 ? 'Delivered' : 'Failed'}</span>
+            </div>
+          </td>
+          <td className="px-4 py-3">2h ago</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+);
 
 export default SubscriptionList;

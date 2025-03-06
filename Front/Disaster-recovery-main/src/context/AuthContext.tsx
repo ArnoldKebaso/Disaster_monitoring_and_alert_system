@@ -1,6 +1,6 @@
+// src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/api';
-//import { useNavigate } from 'react-router-dom';
 
 type User = {
   id: number;
