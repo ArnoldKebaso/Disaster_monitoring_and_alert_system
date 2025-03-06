@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Search, MapPin, Home, AlertCircle, Navigation, Compass } from 'lucide-react';
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent } from "./ui/card";
 import shelterIconUrl from '../assets/shelter.png';
 import floodIconUrl from '../assets/flood.png';
 import routeIconUrl from '../assets/route-marker.jpg';
-
-
+import {toast} from 'sonner'
+import { Loader2, Search, MapPin, Home, AlertCircle, Navigation, Compass } from 'lucide-react';
 interface FloodAlert {
   alert_id: number;
   alert_type: string;
@@ -21,6 +20,10 @@ interface FloodAlert {
     predicted: string;
   };
   emergency_contacts: string[];
+}
+interface Window {
+  chrome?: any;
+  safari?: any;
 }
 // Custom icons with better visual hierarchy
 const floodIcon = L.icon({
@@ -220,16 +223,71 @@ const SafetyMaps: React.FC = () => {
   };
 
   const handleLocateUser = () => {
+    if (!navigator.geolocation) {
+      console.error('Geolocation is not supported by your browser');
+      toast.error('Geolocation Error', {
+        description: 'Your browser does not support geolocation',
+      });
+      return;
+    }
+  
+    setIsLoading(true);
+    
     navigator.geolocation.getCurrentPosition(
-      position => {
+      (position) => {
         const { latitude, longitude } = position.coords;
         setUserLocation([latitude, longitude]);
         map?.setView([latitude, longitude], 13);
+        
         L.marker([latitude, longitude], { icon: routeIcon })
           .addTo(markerLayer!)
           .bindPopup('<strong>Your Current Location</strong>');
+          
+        setIsLoading(false);
       },
-      error => console.error('Geolocation error:', error)
+      (error) => {
+        setIsLoading(false);
+        console.error('Geolocation error:', error);
+        
+        let errorMessage = 'Unable to retrieve your location';
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = 'Location access was denied. Please enable permissions in your browser settings.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = 'Location information is unavailable.';
+            break;
+          case error.TIMEOUT:
+            errorMessage = 'The request to get location timed out.';
+            break;
+        }
+  
+        toast.error('Location Error', {
+          description: errorMessage,
+          action: {
+            label: 'Settings',
+            onClick: () => {
+              // Safer browser detection
+              const isChrome = navigator.userAgent.includes('Chrome');
+              const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
+            
+              if (isChrome) {
+                window.open('chrome://settings/content/location');
+              } else if (isSafari) {
+                window.open('prefs:root=Privacy');
+              } else {
+                // Generic settings guide
+                window.open('https://support.google.com/chrome/answer/114662?co=GENIE.Platform%3DDesktop');
+              }
+            }
+          }
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,  // 10 seconds
+        maximumAge: 0
+      }
     );
   };
   const handleSearch = async (event: React.FormEvent) => {
@@ -265,7 +323,14 @@ const SafetyMaps: React.FC = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
+                {isLoading && (
+                  <div className="absolute top-4 right-4 bg-white p-2 rounded-lg shadow-md flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span className="text-sm">Locating...</span>
+                  </div>
+          )}
       <div className="max-w-7xl mx-auto">
+        
         <h1 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-3">
           <Compass className="text-blue-600" />
           Flood Safety Navigation Map
