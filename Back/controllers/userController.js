@@ -34,7 +34,6 @@ const loginUser = async (req, res) => {
     console.log('Login attempt for:', email);
 
     const user = await User.findOne({ where: { email } });
-    
     if (!user) {
       console.log('User not found:', email);
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -46,19 +45,26 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    // Generate a new token (JWT)
     const token = jwt.sign(
       { id: user.user_id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    // Set the token cookie with the path option so it's available across all routes.
+    // Hash the token before storing it
+    const hashedToken = await bcrypt.hash(token, 10);
+
+    // Update the user's currentToken with the hashed token
+    await user.update({ currentToken: hashedToken });
+
+    // Set the token cookie with a global path.
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 3600000, // 1 hour
-      path: '/',      // Ensure the cookie is sent for every route
+      path: '/',      // available on every route
     });
 
     console.log('Successful login for:', email);
