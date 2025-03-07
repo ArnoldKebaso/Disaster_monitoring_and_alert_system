@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000",// Your backend URL
+  baseURL: "http://localhost:3000",
   withCredentials: true 
 });
-
 
 instance.interceptors.response.use(
   response => response,
@@ -15,4 +14,5 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 export default instance;

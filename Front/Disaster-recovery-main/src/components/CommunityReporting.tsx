@@ -127,13 +127,13 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
   // Validate all required fields, including image
   if (!reportType || !selectedLocation || !description.trim() || !image) {
     toast.warning("Missing Information", {
-      description: "Please fill in all required fields including evidence image."
+      description: "Please fill in all required fields, including an evidence image."
     });
     setIsSubmitting(false);
     return;
   }
 
-  // Use FormData to support file upload
+  // Use FormData to handle file upload
   const formData = new FormData();
   formData.append('report_type', reportType);
   formData.append('location', selectedLocation.value);
@@ -152,7 +152,7 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
       description: "Your flood report has been received",
       action: {
         label: "Dismiss",
-        onClick: () => console.log("Dismissed")
+        onClick: () => console.log("Dismissed"),
       },
     });
 
@@ -174,6 +174,7 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setIsSubmitting(false);
   }
 };
+
 
   // const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();

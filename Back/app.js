@@ -13,6 +13,7 @@ const authMiddleware = require('./middleware/auth');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 
+
 const app = express();
 const userRoutes = require('./routes/user');
 const authRouter = require('./routes/auth');
@@ -109,6 +110,7 @@ app.use('/floods', floodRouter);
 app.use('/subscriptions', subscriptionRouter);
 app.use('/send', emailRouter);
 app.use('/logs', logRoutes);
+app.use('/uploads', express.static('uploads'));
 app.use('/api', smsRoutes);
 // app.use('/ussd', ussdRoutes);
 // app.use('/stkpush', mpesaRoutes);

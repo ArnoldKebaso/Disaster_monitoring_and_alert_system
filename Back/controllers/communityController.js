@@ -47,14 +47,40 @@ const getReportById = async (req, res) => {
 };
 
 // Create a new community report
+// const createReport = async (req, res) => {
+//   const { report_type, location, description, image_url, status, user_id } = req.body;
+//   try {
+//     const newReport = await CommunityReport.create({
+//       report_type,
+//       location,
+//       description,
+//       image_url,
+//       status,
+//       user_id
+//     });
+//     res.status(201).json(newReport);
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// };
+
 const createReport = async (req, res) => {
-  const { report_type, location, description, image_url, status, user_id } = req.body;
+  // Extract fields from the request body
+  const { report_type, location, description, status, user_id } = req.body;
+  
+  // Check if a file was uploaded using Multer (stored in req.file)
+  let imageUrl = null;
+  if (req.file) {
+    // You can adjust the URL as needed based on your deployment
+    imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+  }
+
   try {
     const newReport = await CommunityReport.create({
       report_type,
       location,
       description,
-      image_url,
+      image_url: imageUrl,
       status,
       user_id
     });

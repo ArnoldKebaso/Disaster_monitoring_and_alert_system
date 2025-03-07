@@ -62,7 +62,7 @@ const Resources: React.FC = () => {
         { 
           title: "Flood Reporting Tutorial", 
           icon: Video,
-          link: "/videos/report-tutorial.mp4", // Public folder path
+          link: "/videos/Reporting.mp4", // Public folder path
           type: "Video",
           duration: "12:30",
           action: 'download'
@@ -163,7 +163,7 @@ const Resources: React.FC = () => {
             <video 
               controls 
               className="w-full h-full object-cover"
-              poster="/videos/thumbnail.jpg"
+              poster="/videos/Reporting.mp4"
             >
               <source src="/videos/report-tutorial.mp4" type="video/mp4" />
               Your browser does not support the video tag.
