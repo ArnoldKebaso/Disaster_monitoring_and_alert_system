@@ -133,13 +133,13 @@ const Home: React.FC = () => {
         >
           <motion.h1 
             variants={fadeIn}
-            className="text-4xl md:text-6xl font-black mb-6 leading-tight bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
+            className="text-4xl md:text-6xl font-black mb-6 text-white-500"
           >
             {t("hero.title")}
           </motion.h1>
           <motion.p 
             variants={fadeIn}
-            className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-blue-100"
+            className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-white-500"
           >
             {t("hero.description")}
           </motion.p>
