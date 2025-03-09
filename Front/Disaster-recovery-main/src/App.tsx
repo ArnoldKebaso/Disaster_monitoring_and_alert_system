@@ -36,7 +36,7 @@ const App: React.FC = () => {
   return (
     <>
       <Toaster 
-        position="top-center"  // Ensures toast is visible
+        position="top-center"
         theme="dark"
         toastOptions={{
           style: {
@@ -63,15 +63,18 @@ const App: React.FC = () => {
 
             {/* Dashboard routes with layout */}
             <Route element={<Layout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/alerts" element={<ActiveAlerts />} />
-              <Route path="/report" element={<CommunityReporting />} />
-              <Route path="/maps" element={<SafetyMaps />} />
-              <Route path="/disaster/:id" element={<DisasterDetails />} />
-              <Route path="/agencies" element={<Agencies />} />
-              <Route path="/home" element={<Home />} />
+              {/* Protected User Dashboard Routes */}
+              {/* <Route element={<ProtectedRoute allowedRoles={['viewer', 'reporter']} />}> */}
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/alerts" element={<ActiveAlerts />} />
+                <Route path="/report" element={<CommunityReporting />} />
+                <Route path="/maps" element={<SafetyMaps />} />
+                <Route path="/disaster/:id" element={<DisasterDetails />} />
+                <Route path="/agencies" element={<Agencies />} />
+                <Route path="/home" element={<Home />} />
+              {/* </Route> */}
 
-              {/* Admin protected routes */}
+              {/* Admin Protected Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
                 <Route path="/locations" element={<Location />} />
                 <Route path="/resources" element={<ResourceComponent />} />
