@@ -206,7 +206,7 @@ const Home: React.FC = () => {
               <img 
                 src={item.image} 
                 alt={item.title} 
-                className="w-full h-40 object-cover object-center" 
+                className="w-full h-30 object-cover object-center" 
               />
               <div className="p-4">
                 {item.icon}
@@ -254,7 +254,6 @@ const Home: React.FC = () => {
                 <option value="sms">{t("subscribe.sms")}</option>
               </select>
             </div>
-
             <div className="mb-6">
               <label className="block text-left text-blue-900 font-semibold mb-2">
                 {subscriptionMethod === "email" ? t("subscribe.emailPlaceholder") : t("subscribe.phonePlaceholder")}
