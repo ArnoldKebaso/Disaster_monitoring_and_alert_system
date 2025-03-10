@@ -64,7 +64,7 @@ const App: React.FC = () => {
             {/* Dashboard routes with layout */}
             <Route element={<Layout />}>
               {/* Protected User Dashboard Routes */}
-              {/* <Route element={<ProtectedRoute allowedRoles={['viewer', 'reporter']} />}> */}
+               <Route element={<ProtectedRoute allowedRoles={['viewer', 'reporter']} />}> 
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/alerts" element={<ActiveAlerts />} />
                 <Route path="/report" element={<CommunityReporting />} />
@@ -72,7 +72,7 @@ const App: React.FC = () => {
                 <Route path="/disaster/:id" element={<DisasterDetails />} />
                 <Route path="/agencies" element={<Agencies />} />
                 <Route path="/home" element={<Home />} />
-              {/* </Route> */}
+               </Route> 
 
               {/* Admin Protected Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
