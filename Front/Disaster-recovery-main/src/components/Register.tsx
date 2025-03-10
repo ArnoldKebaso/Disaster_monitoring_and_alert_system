@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-
+//import { useAuth } from '../context/AuthContext';
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -13,6 +13,8 @@ const Register: React.FC = () => {
   });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  // const { user } = useAuth();
+ 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -21,6 +23,12 @@ const Register: React.FC = () => {
       [name]: value,
     });
   };
+  // useEffect(() => {
+  //   if (user) {
+  //     // If a user is already logged in, redirect to dashboard.
+  //     navigate('/dashboard');
+  //   }
+  // }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
