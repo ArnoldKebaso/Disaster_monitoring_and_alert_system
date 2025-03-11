@@ -79,49 +79,7 @@ const loginUser = async (req, res) => {
 };
 
 
-// const loginUser = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     console.log('Login attempt for:', email); // Debug log
 
-//     const user = await User.findOne({ where: { email } });
-    
-//     if (!user) {
-//       console.log('User not found:', email);
-//       return res.status(401).json({ error: 'Invalid credentials' });
-//     }
-
-//     const validPass = await bcrypt.compare(password, user.password);
-//     if (!validPass) {
-//       console.log('Invalid password for:', email);
-//       return res.status(401).json({ error: 'Invalid credentials' });
-//     }
-
-//     const token = jwt.sign(
-//       { id: user.user_id, role: user.role },
-//       process.env.JWT_SECRET,
-//       { expiresIn: '1h' }
-//     );
-
-//     res.cookie('token', token, {
-//       httpOnly: true,
-//       secure: process.env.NODE_ENV === 'production',
-//       sameSite: 'strict',
-//       maxAge: 3600000 // 1 hour
-//     });
-
-//     console.log('Successful login for:', email); // Debug log
-//     res.json({ 
-//       message: 'Login successful',
-//       user: { id: user.user_id, email: user.email, role: user.role }
-//     });
-//   } catch (error) {
-//     console.error('Login Error:', error);
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// };
-
-// Get all users
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll();
