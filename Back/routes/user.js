@@ -122,7 +122,11 @@ router.get('/user:id', authMiddleware, getUserById);
  */
 router.post('/user', authMiddleware, createUser);
 
-router.get('/validate', authMiddleware, validateSession);
+ router.get('/validate', authMiddleware, validateSession);
+// router.get('/validate', authMiddleware, (req, res) => {
+//     res.set('Cache-Control', 'no-store'); // Prevent caching
+//     res.status(200).json(req.user);
+//   });
 /**
  * @swagger
  * /{id}:
