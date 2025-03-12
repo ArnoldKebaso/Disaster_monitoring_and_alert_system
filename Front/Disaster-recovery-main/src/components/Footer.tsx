@@ -33,8 +33,8 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-bold">Quick Access</h3>
             <nav className="grid grid-cols-2 gap-2">
               {[
-                { path: "/login", name: "Admin Portal", icon: <ShieldAlert className="w-4 h-4" /> },
-                { path: "/dashboard", name: "User Dashboard", icon: <HeartHandshake className="w-4 h-4" /> },
+                // { path: "/login", name: "Admin Portal", icon: <ShieldAlert className="w-4 h-4" /> },
+                { path: "/login", name: "User Dashboard", icon: <HeartHandshake className="w-4 h-4" /> },
                 { path: "/publications", name: "Publications", icon: <BookOpen className="w-4 h-4" /> },
                 { path: "/donate", name: "Donate", icon: <LifeBuoy className="w-4 h-4" /> },
               ].map((link, index) => (

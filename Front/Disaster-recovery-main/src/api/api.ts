@@ -1,3 +1,4 @@
+// src/api/api.ts
 import axios from "axios";
 
 const instance = axios.create({
@@ -8,7 +9,12 @@ const instance = axios.create({
 instance.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401 && window.location.pathname !== '/login') {
+    const publicPaths = ['/login', '/register'];
+    // Only redirect if the current path is not a public path.
+    if (
+      error.response?.status === 401 &&
+      !publicPaths.includes(window.location.pathname)
+    ) {
       window.location.href = '/login';
     }
     return Promise.reject(error);
