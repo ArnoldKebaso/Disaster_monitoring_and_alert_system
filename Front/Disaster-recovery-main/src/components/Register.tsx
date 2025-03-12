@@ -1,42 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-//import { useAuth } from '../context/AuthContext';
+
 const Register: React.FC = () => {
+  // Set default role to 'viewer'
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
-    role: 'viewer', // Default role
+    role: 'viewer', // Always viewer for new registrations
   });
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
-  // const { user } = useAuth();
- 
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
-  // useEffect(() => {
-  //   if (user) {
-  //     // If a user is already logged in, redirect to dashboard.
-  //     navigate('/dashboard');
-  //   }
-  // }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       await axios.post('http://localhost:3000/register', formData);
       setMessage('User registered successfully!');
-      // Redirect to login page after registration
       setTimeout(() => navigate('/login'), 1000);
     } catch (error: any) {
       setMessage(error.response?.data?.error || 'An error occurred during registration.');
@@ -46,12 +37,10 @@ const Register: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="w-full max-w-md mx-auto p-8 border rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
           {message && <p className="mb-4 text-red-500 text-center">{message}</p>}
-          
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label htmlFor="username" className="block text-gray-700 mb-2">Username</label>
@@ -92,20 +81,8 @@ const Register: React.FC = () => {
               />
             </div>
 
-            <div className="mb-6">
-              <label htmlFor="role" className="block text-gray-700 mb-2">Role</label>
-              <select
-                id="role"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="admin">Admin</option>
-                <option value="reporter">Reporter</option>
-                <option value="viewer">Viewer</option>
-              </select>
-            </div>
+            {/* Hidden role field */}
+            <input type="hidden" name="role" value="viewer" />
 
             <button
               type="submit"
@@ -123,7 +100,6 @@ const Register: React.FC = () => {
           </p>
         </div>
       </main>
-
       <Footer />
     </div>
   );
