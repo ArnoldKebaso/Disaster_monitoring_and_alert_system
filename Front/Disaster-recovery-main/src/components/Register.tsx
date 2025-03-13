@@ -4,7 +4,6 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-
 const locationOptions = [
   { value: "Bumadeya", label: "Bumadeya" },
   { value: "Budalangi Central", label: "Budalangi Central" },
@@ -24,16 +23,19 @@ const locationOptions = [
 ];
 
 const Register: React.FC = () => {
-  // Extend formData to include phone and location
+  // Extend formData to include confirmPassword, phone and location
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
     phone: '',
-    location: '', // will be selected from dropdown or auto-detected
+    location: '',
     role: 'viewer', // always viewer on registration
   });
   const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -44,31 +46,17 @@ const Register: React.FC = () => {
     }));
   };
 
-  // Detect user location using browser geolocation
-  const handleDetectLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser');
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        // For demonstration, we simulate detection by setting a default location.
-        // In production, use reverse geocoding to convert lat/lng to a location name.
-        // For example, if detected coordinates are close to Budalangi Central, set that value.
-        setFormData(prev => ({ ...prev, location: "Budalangi Central" }));
-        alert('Location detected: Budalangi Central');
-      },
-      (error) => {
-        alert('Unable to detect location. Please select manually.');
-        console.error(error);
-      }
-    );
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Verify that password and confirmPassword match
+    if (formData.password !== formData.confirmPassword) {
+      setMessage("Passwords do not match");
+      return;
+    }
     try {
-      await axios.post('http://localhost:3000/register', formData);
+      // Exclude confirmPassword from being sent to backend
+      const { confirmPassword, ...dataToSend } = formData;
+      await axios.post('http://localhost:3000/register', dataToSend);
       setMessage('User registered successfully!');
       setTimeout(() => navigate('/login'), 1000);
     } catch (error: any) {
@@ -97,7 +85,6 @@ const Register: React.FC = () => {
                 required
               />
             </div>
-
             {/* Email */}
             <div className="mb-4">
               <label htmlFor="email" className="block text-gray-700 mb-2">Email</label>
@@ -111,12 +98,11 @@ const Register: React.FC = () => {
                 required
               />
             </div>
-
             {/* Password */}
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <label htmlFor="password" className="block text-gray-700 mb-2">Password</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={formData.password}
@@ -124,8 +110,34 @@ const Register: React.FC = () => {
                 className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-500"
                 required
               />
+              <button 
+                type="button" 
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-10 text-sm text-blue-500"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
             </div>
-
+            {/* Confirm Password */}
+            <div className="mb-4 relative">
+              <label htmlFor="confirmPassword" className="block text-gray-700 mb-2">Confirm Password</label>
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <button 
+                type="button" 
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-10 text-sm text-blue-500"
+              >
+                {showConfirmPassword ? "Hide" : "Show"}
+              </button>
+            </div>
             {/* Phone Number */}
             <div className="mb-4">
               <label htmlFor="phone" className="block text-gray-700 mb-2">Phone Number</label>
@@ -137,11 +149,9 @@ const Register: React.FC = () => {
                 onChange={handleChange}
                 className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-500"
                 required
-                // Optionally add a pattern attribute for validation
                 placeholder="e.g., +254712345678"
               />
             </div>
-
             {/* Location Select and Detect Button */}
             <div className="mb-4">
               <label htmlFor="location" className="block text-gray-700 mb-2">Location</label>
@@ -161,15 +171,31 @@ const Register: React.FC = () => {
                 </select>
                 <button
                   type="button"
-                  onClick={handleDetectLocation}
+                  onClick={() => {
+                    if (navigator.geolocation) {
+                      navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                          // Here, you can use reverse geocoding to find the closest location.
+                          // For now, we simulate it by setting a default value.
+                          setFormData(prev => ({ ...prev, location: "Budalangi Central" }));
+                          alert("Detected location: Budalangi Central");
+                        },
+                        (error) => {
+                          alert("Unable to detect location.");
+                          console.error(error);
+                        }
+                      );
+                    } else {
+                      alert("Geolocation is not supported by your browser.");
+                    }
+                  }}
                   className="bg-green-600 text-white p-3 rounded hover:bg-green-700 transition-colors font-semibold"
                 >
                   Detect
                 </button>
               </div>
             </div>
-
-            {/* Hidden role field remains */}
+            {/* Hidden role field */}
             <input type="hidden" name="role" value="viewer" />
 
             <button
