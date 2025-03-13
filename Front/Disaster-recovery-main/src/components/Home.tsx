@@ -97,7 +97,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      {/* Parallax Background Layers */}
+      {/* Parallax Background Layers with Overlay */}
       <div className="fixed inset-0 -z-10">
         <motion.div 
           className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
@@ -115,6 +115,8 @@ const Home: React.FC = () => {
             filter: `blur(${Math.min(scrollY / 100, 4)}px)`
           }}
         />
+        {/* Overlay Layer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/60 to-cyan-800/60"></div>
       </div>
 
       {/* Navbar */}
@@ -133,13 +135,13 @@ const Home: React.FC = () => {
         >
           <motion.h1 
             variants={fadeIn}
-            className="text-4xl md:text-6xl font-black mb-6 text-white-500"
+            className="text-4xl md:text-6xl font-black mb-6 text-white"
           >
             {t("hero.title")}
           </motion.h1>
           <motion.p 
             variants={fadeIn}
-            className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-white-500"
+            className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-white"
           >
             {t("hero.description")}
           </motion.p>
@@ -210,7 +212,7 @@ const Home: React.FC = () => {
               />
               <div className="p-4">
                 {item.icon}
-                <h3 className="text-lg font-semibold text-blue-900 mb-2">{item.title}</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">{item.title}</h3>
                 <p className="text-gray-600 text-sm">{t("whatWeDo.description")}</p>
               </div>
             </motion.div>
@@ -356,31 +358,31 @@ const Home: React.FC = () => {
             {
               label: "County Branches",
               value: "12",
-              icon: <FaMap className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
+              icon: <FaMap className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
               image: county,
             },
             {
               label: "Regional Offices",
               value: "20",
-              icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
+              icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
               image: regional,
             },
             {
               label: "Members & Volunteers",
               value: "5k+",
-              icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
+              icon: <FaUsers className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
               image: volunteer,
             },
             {
               label: "Beneficiaries Supported",
               value: "1k+",
-              icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-yellow-400" />,
+              icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
               image: beneficiary,
             },
           ].map((stat, index) => (
             <motion.div
               key={index}
-              className="bg-blue-800/80 rounded-xl shadow-lg backdrop-blur-sm border border-blue-700"
+              className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow"
               whileHover={{ scale: 1.05 }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -393,8 +395,8 @@ const Home: React.FC = () => {
               />
               <div className="p-4 text-center">
                 {stat.icon}
-                <h3 className="text-3xl font-bold text-yellow-400 mb-2">{stat.value}</h3>
-                <p className="text-blue-100">{stat.label}</p>
+                <h3 className="text-3xl font-bold text-gray-800 mb-2">{stat.value}</h3>
+                <p className="text-gray-600">{stat.label}</p>
               </div>
             </motion.div>
           ))}
