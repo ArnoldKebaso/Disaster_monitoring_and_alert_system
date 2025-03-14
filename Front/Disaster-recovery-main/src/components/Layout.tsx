@@ -18,7 +18,9 @@ const Layout: React.FC = () => {
     { label: 'Agencies', path: '/agencies' },
     { label: 'Register', path: '/register' },
     { label: 'Resources', path: '/userReSources' },
+    { label: 'My Profile', path: '/userProfile' },
   ];
+
 
   const adminMenuItems = [
     { label: 'Safety Map', path: '/maps' },

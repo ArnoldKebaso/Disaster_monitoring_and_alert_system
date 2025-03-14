@@ -30,6 +30,7 @@ import AdminReportsDashboard from './components/AdminReports';
 import Resources from './components/UserResources';
 import AdminAlert from './components/AdminAlerts';
 import SubscriptionReportsDashboard from './components/SubscriptionReport';
+import UserProfile from './components/UserProfile';
 
 const App: React.FC = () => {
   return (
@@ -67,7 +68,7 @@ const App: React.FC = () => {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/alerts" element={<ActiveAlerts />} />
                 <Route path="/report" element={<CommunityReporting />} />
-                
+                <Route path="/userProfile" element={<UserProfile />} />
                 <Route path="/maps" element={<SafetyMaps />} />
                 <Route path="/disaster/:id" element={<DisasterDetails />} />
                 <Route path="/agencies" element={<Agencies />} />

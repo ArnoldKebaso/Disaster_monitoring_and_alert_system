@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -23,7 +24,7 @@ const locationOptions = [
 ];
 
 const Register: React.FC = () => {
-  // Extend formData to include confirmPassword, phone and location
+  // Extend formData to include phone, confirmPassword and location
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -31,8 +32,10 @@ const Register: React.FC = () => {
     confirmPassword: '',
     phone: '',
     location: '',
-    role: 'viewer', // always viewer on registration
+    role: 'viewer', // Always viewer for registration
   });
+  // Track whether the location was detected automatically
+  const [locationSource, setLocationSource] = useState<"manual" | "detected">("manual");
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -44,17 +47,75 @@ const Register: React.FC = () => {
       ...prev,
       [name]: value,
     }));
+    // If user manually changes the location, set source to manual.
+    if(name === 'location'){
+      setLocationSource("manual");
+    }
+  };
+
+  const handleLocateUser = () => {
+    if (!navigator.geolocation) {
+      toast.error('Geolocation Error', {
+        description: 'Your browser does not support geolocation',
+      });
+      return;
+    }
+    
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          // Use Nominatim reverse geocoding to get location name
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await response.json();
+          // Use a property such as city, town or village if available; fallback to display_name.
+          let detected = data.address.city || data.address.town || data.address.village || data.display_name;
+          
+          // Optional: Check if detected matches one of our location options.
+          // For simplicity, we assume that the detected location is acceptable.
+          setFormData(prev => ({ ...prev, location: detected }));
+          setLocationSource("detected");
+          toast.success(`Location detected: ${detected}`);
+        } catch (error) {
+          console.error('Reverse geocoding error:', error);
+          toast.error('Location Error', { description: 'Failed to retrieve location details.' });
+        }
+      },
+      (error) => {
+        console.error('Geolocation error:', error);
+        let errorMessage = 'Unable to retrieve your location';
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = 'Location access was denied. Please enable permissions in your browser settings.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = 'Location information is unavailable.';
+            break;
+          case error.TIMEOUT:
+            errorMessage = 'The request to get location timed out.';
+            break;
+        }
+        toast.error('Location Error', { description: errorMessage });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Verify that password and confirmPassword match
+    // Check password confirmation
     if (formData.password !== formData.confirmPassword) {
       setMessage("Passwords do not match");
       return;
     }
     try {
-      // Exclude confirmPassword from being sent to backend
+      // Exclude confirmPassword from being sent to the backend
       const { confirmPassword, ...dataToSend } = formData;
       await axios.post('http://localhost:3000/register', dataToSend);
       setMessage('User registered successfully!');
@@ -163,6 +224,7 @@ const Register: React.FC = () => {
                   onChange={handleChange}
                   className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-500"
                   required
+                  disabled={locationSource === "detected"}
                 >
                   <option value="">Select your location</option>
                   {locationOptions.map((loc) => (
@@ -171,24 +233,7 @@ const Register: React.FC = () => {
                 </select>
                 <button
                   type="button"
-                  onClick={() => {
-                    if (navigator.geolocation) {
-                      navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                          // Here, you can use reverse geocoding to find the closest location.
-                          // For now, we simulate it by setting a default value.
-                          setFormData(prev => ({ ...prev, location: "Budalangi Central" }));
-                          alert("Detected location: Budalangi Central");
-                        },
-                        (error) => {
-                          alert("Unable to detect location.");
-                          console.error(error);
-                        }
-                      );
-                    } else {
-                      alert("Geolocation is not supported by your browser.");
-                    }
-                  }}
+                  onClick={handleLocateUser}
                   className="bg-green-600 text-white p-3 rounded hover:bg-green-700 transition-colors font-semibold"
                 >
                   Detect
@@ -197,7 +242,6 @@ const Register: React.FC = () => {
             </div>
             {/* Hidden role field */}
             <input type="hidden" name="role" value="viewer" />
-
             <button
               type="submit"
               className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition-colors font-semibold"
@@ -205,7 +249,6 @@ const Register: React.FC = () => {
               Register
             </button>
           </form>
-
           <p className="mt-6 text-center text-gray-600">
             Already have an account?{' '}
             <a href="/login" className="text-blue-600 hover:text-blue-800 font-medium">
