@@ -57,6 +57,8 @@ const CommunityReporting: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('All');
+  const [locationSource, setLocationSource] = useState<'manual' | 'detected' | null>(null);
+
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -87,6 +89,7 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 
   // Use FormData to handle file upload
   const formData = new FormData();
+
   formData.append('report_type', reportType);
   formData.append('location', selectedLocation.value);
   formData.append('description', description);
@@ -94,10 +97,15 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
   formData.append('image', image);
 
   try {
+    // await axios.post('http://localhost:3000/community-reports', formData, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data'
+    //   }
+    // });
+
     await axios.post('http://localhost:3000/community-reports', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+      headers: { 'Content-Type': 'multipart/form-data' },
+      withCredentials: true // Add this
     });
     
     toast.success("Report Submitted", {
@@ -116,7 +124,10 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setImagePreview(null);
 
     // Refresh the reports list
-    const response = await axios.get('http://localhost:3000/community-reports');
+    const response = await axios.get('http://localhost:3000/community-reports', {
+      withCredentials: true // Add this
+    });
+
     setReports(response.data);
   } catch (error: any) {
     toast.error("Submission Failed", {
@@ -372,12 +383,12 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
                     .filter(r => statusFilter === 'All' ? true : r.status === statusFilter)
                     .slice(-10)
                     .reverse()
-                    .map((report, index) => (
+                    .map((report) => (
                       <motion.div
                         key={report.id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: index * 0.1 }}
+                        // transition={{ delay: index * 0.1 }}
                       >
                         <Card className="border-muted-foreground/10 hover:border-blue-500/30 transition-colors">
                           <CardContent className="p-4">
