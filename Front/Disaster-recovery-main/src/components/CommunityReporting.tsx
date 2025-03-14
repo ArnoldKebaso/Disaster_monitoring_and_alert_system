@@ -60,6 +60,12 @@ const CommunityReporting: React.FC = () => {
   const [locationSource, setLocationSource] = useState<'manual' | 'detected' | null>(null);
 
 
+
+
+
+
+
+  
   useEffect(() => {
     const fetchReports = async () => {
       try {
@@ -136,6 +142,128 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
   } finally {
     setIsSubmitting(false);
   }
+};
+
+// const handleLocateUser = () => {
+//   if (!navigator.geolocation) {
+//     toast.error('Geolocation Error', {
+//       description: 'Your browser does not support geolocation',
+//     });
+//     return;
+//   }
+  
+//   navigator.geolocation.getCurrentPosition(
+//     async (position) => {
+//       const { latitude, longitude } = position.coords;
+//       try {
+//         const response = await fetch(
+//           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+//         );
+//         const data = await response.json();
+//         const detected = data.address.city || data.address.town || data.address.village || data.display_name;
+        
+//         // const matchedLocation = locationOptions.find(loc => 
+//         //   loc.label.toLowerCase() === detected.toLowerCase()
+//         // );
+
+//         // if (matchedLocation) {
+//         //   setSelectedLocation(matchedLocation);
+//         //   setLocationSource('detected');
+//         //   toast.success(`Location detected: ${detected}`);
+//         // } else {
+//         //   toast.error('Detected location not in approved list');
+//         // }
+//       } catch (error) {
+//         console.error('Reverse geocoding error:', error);
+//         toast.error('Location Error', { description: 'Failed to retrieve location details.' });
+//       }
+//     },
+//     (error) => {
+//       console.error('Geolocation error:', error);
+//       let errorMessage = 'Unable to retrieve your location';
+//       switch (error.code) {
+//         case error.PERMISSION_DENIED:
+//           errorMessage = 'Location access was denied. Please enable permissions in your browser settings.';
+//           break;
+//         case error.POSITION_UNAVAILABLE:
+//           errorMessage = 'Location information is unavailable.';
+//           break;
+//         case error.TIMEOUT:
+//           errorMessage = 'The request to get location timed out.';
+//           break;
+//       }
+//       toast.error('Location Error', { description: errorMessage });
+//     },
+//     {
+//       enableHighAccuracy: true,
+//       timeout: 10000,
+//       maximumAge: 0,
+//     }
+//   );
+// };
+
+const handleLocateUser = () => {
+  if (!navigator.geolocation) {
+    toast.error('Geolocation Error', {
+      description: 'Your browser does not support geolocation',
+    });
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const { latitude, longitude } = position.coords;
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+        );
+        const data = await response.json();
+        
+        // Improved location parsing with fallback
+        const address = data.address || {};
+        const detected = address.village || address.town || address.city || 
+                        address.suburb || address.county || data.display_name;
+
+        // Find matching option structure
+        const locationValue = detected.replace(/\s+/g, '-').toLowerCase();
+        
+        // Update both the select component and form state
+        setSelectedLocation({
+          value: locationValue,
+          label: detected
+        });
+        setLocationSource("detected");
+
+        toast.success(`Location detected: ${detected}`);
+      } catch (error) {
+        console.error('Reverse geocoding error:', error);
+        toast.error('Location Error', { 
+          description: 'Failed to retrieve location details.' 
+        });
+      }
+    },
+    (error) => {
+      console.error('Geolocation error:', error);
+      let errorMessage = 'Unable to retrieve your location';
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage = 'Location access was denied. Please enable permissions in your browser settings.';
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage = 'Location information is unavailable.';
+          break;
+        case error.TIMEOUT:
+          errorMessage = 'The request to get location timed out.';
+          break;
+      }
+      toast.error('Location Error', { description: errorMessage });
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    }
+  );
 };
 
 
@@ -242,7 +370,7 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
                       Location *
                     </label>
                     <div className="flex items-center gap-2">
-                      <Select
+                      {/* <Select
                         options={locationOptions}
                         value={selectedLocation}
                         onChange={setSelectedLocation}
@@ -256,8 +384,40 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
                             '&:hover': { borderColor: '#cbd5e1' }
                           })
                         }}
-                      />
+                      /> */}
+
+                      <Select
+                          options={locationOptions}
+                          value={selectedLocation}
+                          onChange={(newValue) => {
+                            setSelectedLocation(newValue);
+                            setLocationSource('manual');
+                          }}
+                          isDisabled={locationSource === 'detected'}
+                          className="w-full"
+                          styles={{
+                            control: (base) => ({
+                              ...base,
+                              borderRadius: '8px',
+                              padding: '6px',
+                              borderColor: '#e2e8f0',
+                              '&:hover': { borderColor: '#cbd5e1' },
+                              opacity: locationSource === 'detected' ? 0.7 : 1
+                            })
+                          }}
+                        />
                       <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleLocateUser}
+                        disabled={locationSource === 'manual'}
+                      >
+                        <LocateFixed className="w-4 h-4 mr-2" />
+                        Detect
+                      </Button>
+                                              
+                      {/* <Button
                         type="button"
                         variant="outline"
                         size="sm"
@@ -278,7 +438,7 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
                       >
                         <LocateFixed className="w-4 h-4 mr-2" />
                         Detect
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
 
