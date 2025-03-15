@@ -51,6 +51,12 @@ const CommunityReport = sequelize.define('CommunityReport', {
     onUpdate: DataTypes.NOW,
     comment: 'Timestamp for when the report was last updated',
   },
+  user_id:{
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+    comment: 'The user who submitted the report (optional)',
+  }
 });
 module.exports = CommunityReport;
 // Define relationships

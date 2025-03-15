@@ -42,5 +42,6 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
+
 module.exports = authMiddleware;
 // This middleware function is used to authenticate incoming requests. It verifies the JWT token from the cookie, decodes it, and compares it with the hashed token stored in the user model. If the token is valid, the user object is attached to the request object, and the request is passed to the next middleware function. Otherwise, an error response is sent back to the client.

@@ -55,7 +55,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      await api.post('/login', { email, password }, { withCredentials: true });
+      await api.post('/login', { email, password }, { withCredentials: true })
+      .then((res)=>{
+        console.log("login response data:", res.data);
+      });
       await checkAuth();
     } catch (error) {
       setUser(null);
