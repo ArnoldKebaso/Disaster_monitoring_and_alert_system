@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getAllReports, getReportById, createReport, updateReport, deleteReport, getReportsByMonth, getFrequentReportTypes, getFrequentLocations, getReportsByLocation } = require('../controllers/communityController');
 const upload = require('../middleware/uploader');
+const authMiddleware = require('../middleware/auth');
 /**
  * @swagger
  * tags:
@@ -109,8 +110,9 @@ router.get('/:id', getReportById);
  *       400:
  *         description: Bad request
  */
-router.post('/', upload.single('image'), createReport);
-
+// router.post('/', upload.single('image'), createReport);
+// router.post('/', authMiddleware, upload.single('image'), createReport);
+router.post('/', authMiddleware, upload.single('image'), createReport);
 
 /**
  * @swagger

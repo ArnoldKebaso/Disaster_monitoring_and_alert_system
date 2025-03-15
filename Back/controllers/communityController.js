@@ -64,31 +64,66 @@ const getReportById = async (req, res) => {
 //   }
 // };
 
+// controllers/communityController.js
+
+// 
+// Modify createReport controller to include user info from auth
 const createReport = async (req, res) => {
+  // Get user ID from authentication middleware
+  const userId = req.user.id;
+
   // Extract fields from the request body
-  const { report_type, location, description, status, user_id } = req.body;
+  const { report_type, location, description, status } = req.body;
   
-  // Check if a file was uploaded using Multer (stored in req.file)
+  // Check if a file was uploaded using Multer
   let imageUrl = null;
   if (req.file) {
-    // You can adjust the URL as needed based on your deployment
     imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
   }
 
   try {
+    // Include user_id from authenticated user
     const newReport = await CommunityReport.create({
       report_type,
       location,
       description,
       image_url: imageUrl,
       status,
-      user_id
+      user_id: userId  // Add this line
     });
+    
     res.status(201).json(newReport);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+
+
+// const createReport = async (req, res) => {
+//   // Extract fields from the request body
+//   const { report_type, location, description, status, user_id } = req.body;
+  
+//   // Check if a file was uploaded using Multer (stored in req.file)
+//   let imageUrl = null;
+//   if (req.file) {
+//     // You can adjust the URL as needed based on your deployment
+//     imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+//   }
+
+//   try {
+//     const newReport = await CommunityReport.create({
+//       report_type,
+//       location,
+//       description,
+//       image_url: imageUrl,
+//       status,
+//       user_id
+//     });
+//     res.status(201).json(newReport);
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// };
 
 // Update a report by ID
 const updateReport = async (req, res) => {

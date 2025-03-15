@@ -2,17 +2,21 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-// Register new user
+
 const registerUser = async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    // Destructure all expected fields.
+    // Even if a role is passed, override it to 'viewer'
+    const { username, email, password, phone, location } = req.body;
     
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       username,
       email,
       password: hashedPassword,
-      role
+      phone,       // Save the phone number
+      location,    // Save the selected or detected location
+      role: 'viewer'  // Always force viewer role on registration
     });
     
     res.status(201).json({
@@ -24,8 +28,6 @@ const registerUser = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
-
 // Login user and generate JWt
 
 const loginUser = async (req, res) => {

@@ -1,6 +1,6 @@
+// models/user.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-
 
 const User = sequelize.define('User', {
   user_id: {
@@ -21,9 +21,19 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  // New fields added:
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  location: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   role: {
     type: DataTypes.ENUM('admin', 'reporter', 'viewer'),
     allowNull: false,
+    defaultValue: 'viewer',
   },
   currentToken: {
     type: DataTypes.STRING,
@@ -32,9 +42,12 @@ const User = sequelize.define('User', {
 });
 
 module.exports = User;
+
 User.associate = models => {
   User.hasMany(models.CommunityReport, {
     foreignKey: 'user_id',
     as: 'reports'
   });
 };
+
+
