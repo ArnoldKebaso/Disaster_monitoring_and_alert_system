@@ -733,16 +733,16 @@ body {
   top: 0.5rem;
 }
 
+.top-3 {
+  top: 0.75rem;
+}
+
 .top-4 {
   top: 1rem;
 }
 
 .top-full {
   top: 100%;
-}
-
-.top-3 {
-  top: 0.75rem;
 }
 
 .-z-10 {
@@ -1514,12 +1514,12 @@ body {
   border-width: 2px;
 }
 
-.border-\[1\.5px\] {
-  border-width: 1.5px;
-}
-
 .border-4 {
   border-width: 4px;
+}
+
+.border-\[1\.5px\] {
+  border-width: 1.5px;
 }
 
 .border-b {
@@ -2268,6 +2268,10 @@ body {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pt-2 {
+  padding-top: 0.5rem;
 }
 
 .text-left {

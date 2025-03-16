@@ -38,6 +38,11 @@ const User = sequelize.define('User', {
   currentToken: {
     type: DataTypes.STRING,
     allowNull: true,
+  },
+  profilePhoto: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: ''
   }
 });
 

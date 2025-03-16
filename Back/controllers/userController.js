@@ -94,7 +94,9 @@ const getAllUsers = async (req, res) => {
 // Get user by ID
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id);
+    const user = await User.findByPk(req.params.id, {
+      attributes: ['user_id', 'username', 'email', 'phone', 'location', 'profilePhoto', 'role']
+    });
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.status(200).json(user);
   } catch (error) {
@@ -116,11 +118,18 @@ const createUser = async (req, res) => {
 // Update user by ID
 const updateUser = async (req, res) => {
   try {
-    const { username, email, role } = req.body;
+    const { phone, location } = req.body;
     const user = await User.findByPk(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
-    await user.update({ username, email, role });
-    res.status(200).json(user);
+    
+    await user.update({ phone, location });
+    res.status(200).json({
+      id: user.user_id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      location: user.location
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -157,4 +166,56 @@ const validateSession = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, validateSession , createUser, updateUser, deleteUser, registerUser, loginUser };
+
+const updateProfilePhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const user = await User.findByPk(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const imageUrl = `/uploads/${req.file.filename}`;
+    await user.update({ profilePhoto: imageUrl });
+    
+    res.json({ 
+      message: 'Profile photo updated successfully',
+      profilePhoto: imageUrl
+    });
+  } catch (error) {
+    console.error('Profile photo error:', error);
+    res.status(500).json({ error: 'Failed to update profile photo' });
+  }
+};
+// controllers/userController.js
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    
+    // Validation
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const user = await User.findByPk(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    // Verify current password
+    const validPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!validPassword) {
+      return res.status(401).json({ error: 'Current password is incorrect' });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await user.update({ password: hashedPassword });
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Password change error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { getAllUsers, getUserById, validateSession , createUser, updateUser, deleteUser, registerUser, loginUser, updateProfilePhoto, changePassword };

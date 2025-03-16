@@ -2,10 +2,9 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const session = require('express-session');
-var logger = require('morgan');
-//const cors = require('cors');
+const logger = require('morgan');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const sequelize = require('./config/database');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require('./swagger');
@@ -13,8 +12,9 @@ const authMiddleware = require('./middleware/auth');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 
-
 const app = express();
+
+// Import routes
 const userRoutes = require('./routes/user');
 const authRouter = require('./routes/auth');
 const alertRouter = require('./routes/alert');
@@ -22,7 +22,6 @@ const communityController = require('./routes/community');
 const highRiskController = require('./routes/high_risk');
 const safeRoutesRouter = require('./routes/safeRoute');
 const subscriptionRouter = require('./routes/subscription');
-
 const locationRouter = require('./routes/location');
 const resourceRouter = require('./routes/resource');
 // const infrastructureRouter = require('./routes/infrastructure');
@@ -32,12 +31,13 @@ const floodRouter = require('./routes/flood');
 const emailRouter = require('./routes/emailRoutes');
 const logRoutes = require('./routes/logRoutes');
 const smsRoutes = require('./routes/smsRoutes');
-// const ussdRoutes = require('./routes/ussdRoutes');
-// const mpesaRoutes = require('./routes/mpesaRoutes');
-
-require('dotenv').config();
-
+const adminCommunityReportsRoutes = require('./routes/adminCommunityReports');
 const cors = require('cors');
+
+// Remove express-fileupload middleware to avoid conflict with Multer
+// const fileUpload = require('express-fileupload');
+// app.use(fileUpload());
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(session({
@@ -56,25 +56,21 @@ app.use(session({
 const store = new SequelizeStore({ db: sequelize });
 store.sync();
 
-
 app.use(cors({
   origin: 'http://localhost:3001',
   credentials: true
 }));
+
 app.post('/logout', (req, res) => {
   // Clear the session or token (if using sessions)
   res.clearCookie('token'); // Clear the token cookie
   res.status(200).json({ message: 'Logged out successfully' });
 });
 
-
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
-// app.use(cors({
-//   origin: 'localhost', // Your frontend domain
-//   credentials: true // Allow cookies to be sent with the requests
-// }));
 
+// Ensure the uploads directory exists
 if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
 }
@@ -91,7 +87,7 @@ sequelize.sync({ force: false }).then(() => {
   console.log('Database & tables created!');
 });
 
-// Define routes and controllers here...
+// Define routes and controllers
 app.use('/user', authMiddleware, userRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/register', authRouter);
@@ -110,20 +106,16 @@ app.use('/floods', floodRouter);
 app.use('/subscriptions', subscriptionRouter);
 app.use('/send', emailRouter);
 app.use('/logs', logRoutes);
-app.use('/uploads', express.static('uploads'));
+app.use('/user', authMiddleware, userRoutes);
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', smsRoutes);
+app.use('/admin/community-reports', authMiddleware, adminCommunityReportsRoutes);
 // app.use('/ussd', ussdRoutes);
 // app.use('/stkpush', mpesaRoutes);
 
+app.use('/profile-photos', express.static(path.join(__dirname, 'uploads/profile-photos')));
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
-
-
-
-
-
-
-
-

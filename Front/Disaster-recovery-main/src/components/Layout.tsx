@@ -23,16 +23,16 @@ const Layout: React.FC = () => {
 
 
   const adminMenuItems = [
-    { label: 'Safety Map', path: '/maps' },
+    // { label: 'Safety Map', path: '/maps' },
     { label: 'Subscription', path: '/subscriptions' },
-    { label: 'Register', path: '/register' },
+    // { label: 'Register', path: '/register' },
     { label: 'Modify Alerts', path: '/adminAlerts' },
     { label: 'Create Alert', path: '/createAlert' },
-    { label: 'Send Email', path: '/email' },
+    // { label: 'Send Email', path: '/email' },
     { label: 'Home', path: '/' },
     { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Alerts', path: '/alerts' },
-    { label: 'sms', path: '/sms' },
+    // { label: 'Alerts', path: '/alerts' },
+    { label: 'Community Reports', path: '/adminCommunityReports' },
     { label: 'Reports', path: '/adminReport' },
     { label: 'Subscribed Users', path: '/subscriptionReport' },
   ];
