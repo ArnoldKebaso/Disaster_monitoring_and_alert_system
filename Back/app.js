@@ -31,7 +31,7 @@ const floodRouter = require('./routes/flood');
 const emailRouter = require('./routes/emailRoutes');
 const logRoutes = require('./routes/logRoutes');
 const smsRoutes = require('./routes/smsRoutes');
-
+const adminCommunityReportsRoutes = require('./routes/adminCommunityReports');
 const cors = require('cors');
 
 // Remove express-fileupload middleware to avoid conflict with Multer
@@ -110,6 +110,7 @@ app.use('/user', authMiddleware, userRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', smsRoutes);
+app.use('/admin/community-reports', authMiddleware, adminCommunityReportsRoutes);
 // app.use('/ussd', ussdRoutes);
 // app.use('/stkpush', mpesaRoutes);
 
