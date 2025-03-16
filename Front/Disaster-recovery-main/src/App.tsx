@@ -31,7 +31,7 @@ import Resources from './components/UserResources';
 import AdminAlert from './components/AdminAlerts';
 import SubscriptionReportsDashboard from './components/SubscriptionReport';
 import UserProfile from './components/UserProfile';
-
+import AdminCommunityReports from './components/AdminCommunityReports';
 const App: React.FC = () => {
   return (
     <>
@@ -77,16 +77,16 @@ const App: React.FC = () => {
 
               {/* Admin Protected Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-                <Route path="/locations" element={<Location />} />
-                <Route path="/resources" element={<ResourceComponent />} />
-                <Route path="/demographics" element={<DemographicComponent />} />
-                <Route path="/healthcare" element={<HealthcareComponent />} />
-                <Route path="/floods" element={<FloodComponent />} />
+                {/* <Route path="/locations" element={<Location />} /> */}
+                {/* <Route path="/resources" element={<ResourceComponent />} /> */}
+                {/* <Route path="/demographics" element={<DemographicComponent />} />
+                <Route path="/healthcare" element={<HealthcareComponent />} /> */}
+                {/* <Route path="/floods" element={<FloodComponent />} /> */}
                 <Route path="/createAlert" element={<CreateAlert />} />
                 <Route path="/adminAlerts" element={<AdminAlert />} />
                 <Route path="/email" element={<EmailForm />} />
                 <Route path="/subscriptions" element={<SubscriptionList />} />
-                <Route path="/sms" element={<SmsAlertForm />} />
+                <Route path="/adminCommunityReports" element={<AdminCommunityReports />} />
                 <Route path="/adminReport" element={<AdminReportsDashboard />} />
                 <Route path="/subscriptionReport" element={<SubscriptionReportsDashboard />} />
               </Route>
