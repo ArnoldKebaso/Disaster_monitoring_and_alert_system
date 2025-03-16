@@ -144,63 +144,6 @@ const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
   }
 };
 
-// const handleLocateUser = () => {
-//   if (!navigator.geolocation) {
-//     toast.error('Geolocation Error', {
-//       description: 'Your browser does not support geolocation',
-//     });
-//     return;
-//   }
-  
-//   navigator.geolocation.getCurrentPosition(
-//     async (position) => {
-//       const { latitude, longitude } = position.coords;
-//       try {
-//         const response = await fetch(
-//           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-//         );
-//         const data = await response.json();
-//         const detected = data.address.city || data.address.town || data.address.village || data.display_name;
-        
-//         // const matchedLocation = locationOptions.find(loc => 
-//         //   loc.label.toLowerCase() === detected.toLowerCase()
-//         // );
-
-//         // if (matchedLocation) {
-//         //   setSelectedLocation(matchedLocation);
-//         //   setLocationSource('detected');
-//         //   toast.success(`Location detected: ${detected}`);
-//         // } else {
-//         //   toast.error('Detected location not in approved list');
-//         // }
-//       } catch (error) {
-//         console.error('Reverse geocoding error:', error);
-//         toast.error('Location Error', { description: 'Failed to retrieve location details.' });
-//       }
-//     },
-//     (error) => {
-//       console.error('Geolocation error:', error);
-//       let errorMessage = 'Unable to retrieve your location';
-//       switch (error.code) {
-//         case error.PERMISSION_DENIED:
-//           errorMessage = 'Location access was denied. Please enable permissions in your browser settings.';
-//           break;
-//         case error.POSITION_UNAVAILABLE:
-//           errorMessage = 'Location information is unavailable.';
-//           break;
-//         case error.TIMEOUT:
-//           errorMessage = 'The request to get location timed out.';
-//           break;
-//       }
-//       toast.error('Location Error', { description: errorMessage });
-//     },
-//     {
-//       enableHighAccuracy: true,
-//       timeout: 10000,
-//       maximumAge: 0,
-//     }
-//   );
-// };
 
 const handleLocateUser = () => {
   if (!navigator.geolocation) {
@@ -370,21 +313,7 @@ const handleLocateUser = () => {
                       Location *
                     </label>
                     <div className="flex items-center gap-2">
-                      {/* <Select
-                        options={locationOptions}
-                        value={selectedLocation}
-                        onChange={setSelectedLocation}
-                        className="flex-1"
-                        styles={{
-                          control: (base) => ({
-                            ...base,
-                            borderRadius: '8px',
-                            padding: '6px',
-                            borderColor: '#e2e8f0',
-                            '&:hover': { borderColor: '#cbd5e1' }
-                          })
-                        }}
-                      /> */}
+                    
 
                       <Select
                           options={locationOptions}
@@ -416,29 +345,7 @@ const handleLocateUser = () => {
                         <LocateFixed className="w-4 h-4 mr-2" />
                         Detect
                       </Button>
-                                              
-                      {/* <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          navigator.geolocation.getCurrentPosition(
-                            (position) => {
-                              setUserLocation({
-                                lat: position.coords.latitude,
-                                lon: position.coords.longitude
-                              });
-                              toast.info("Location Detected");
-                            },
-                            (error) => toast.error("Location Error", {
-                              description: error.message
-                            })
-                          );
-                        }}
-                      >
-                        <LocateFixed className="w-4 h-4 mr-2" />
-                        Detect
-                      </Button> */}
+                                          
                     </div>
                   </div>
 
