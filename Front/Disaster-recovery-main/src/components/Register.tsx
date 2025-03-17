@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { z } from 'zod';
 
 const locationOptions = [
   { value: "Bumadeya", label: "Bumadeya" },
@@ -22,6 +23,23 @@ const locationOptions = [
   { value: "East Bunyala", label: "East Bunyala" },
   { value: "South Bunyala", label: "South Bunyala" },
 ];
+
+
+const registerSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email("Invalid email address"),
+  // Kenyan mobile number: +2547XXXXXXXX (10 digits after +254)
+  phone: z.string().regex(/^\+2547\d{8}$/, "Invalid Kenyan mobile number. Format: +2547XXXXXXXX"),
+  password: z.string().min(12, "Password must be at least 12 characters")
+    .refine(val => /[A-Z]/.test(val), "Password must include at least one uppercase letter")
+    .refine(val => /[a-z]/.test(val), "Password must include at least one lowercase letter")
+    .refine(val => /[0-9]/.test(val), "Password must include at least one number")
+    .refine(val => /[^A-Za-z0-9]/.test(val), "Password must include at least one special character"),
+  confirmPassword: z.string(),
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
 
 const Register: React.FC = () => {
   // Extend formData to include phone, confirmPassword and location
@@ -109,19 +127,19 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Check password confirmation
-    if (formData.password !== formData.confirmPassword) {
-      setMessage("Passwords do not match");
-      return;
-    }
     try {
-      // Exclude confirmPassword from being sent to the backend
-      const { confirmPassword, ...dataToSend } = formData;
-      await axios.post('http://localhost:3000/register', dataToSend);
-      setMessage('User registered successfully!');
-      setTimeout(() => navigate('/login'), 1000);
+      // Validate form data
+      registerSchema.parse(formData);
+      // Optionally, you might check username uniqueness via an API call.
+      await axios.post('http://localhost:3000/register', formData);
+      toast.success("Registered successfully!");
+      navigate('/login');
     } catch (error: any) {
-      setMessage(error.response?.data?.error || 'An error occurred during registration.');
+      if (error instanceof z.ZodError) {
+        error.errors.forEach(err => toast.error(err.message));
+      } else {
+        toast.error(error.response?.data?.error || "Registration failed");
+      }
     }
   };
 
