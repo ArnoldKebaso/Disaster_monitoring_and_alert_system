@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
               {[
                 // { path: "/login", name: "Admin Portal", icon: <ShieldAlert className="w-4 h-4" /> },
                 { path: "/login", name: "User Dashboard", icon: <HeartHandshake className="w-4 h-4" /> },
-                { path: "/publications", name: "Publications", icon: <BookOpen className="w-4 h-4" /> },
+                { path: "/userReSources", name: "Publications", icon: <BookOpen className="w-4 h-4" /> },
                 { path: "/donate", name: "Donate", icon: <LifeBuoy className="w-4 h-4" /> },
               ].map((link, index) => (
                 <Link
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-cyan-400" />
-                <span>123 FMAS Street, Nairobi, Kenya</span>
+                <span>123 FMAS , Njoro, Egerton, Kenya</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-5 h-5 text-cyan-400" />
