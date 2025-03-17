@@ -41,14 +41,13 @@ const App: React.FC = () => {
     <>
       <Toaster 
         position="top-center"
-        theme="dark"
+        theme="light"
         toastOptions={{
+          className: 'p-4 rounded-lg text-sm font-medium',
           style: {
-            background: 'green',
-            color: '#fff',
             fontSize: '16px',
             borderRadius: '8px',
-            padding: '12px 16px'
+            padding: '12px 24px'
           },
         }}
       />
@@ -83,7 +82,6 @@ const App: React.FC = () => {
 
               {/* Admin Protected Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-               
                 <Route path="/createAlert" element={<CreateAlert />} />
                 <Route path="/adminAlerts" element={<AdminAlert />} />
                 <Route path="/email" element={<EmailForm />} />

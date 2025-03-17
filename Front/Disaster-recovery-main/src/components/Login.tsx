@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
+import { showError, showSuccess } from '../utils/toastHelpers';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       await login(email, password);
-      toast.success('Login successful! Redirecting...');
+      showSuccess('Login successful! Redirecting...');
     } catch (error) {
       toast.error('Login failed', {
         description: 'Please check your email and password and try again.',
