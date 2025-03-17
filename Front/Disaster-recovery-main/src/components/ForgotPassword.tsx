@@ -5,7 +5,11 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
+import { z } from 'zod';
 
+const emailSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -13,14 +17,17 @@ const ForgotPassword: React.FC = () => {
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      emailSchema.parse({ email });
       const response = await axios.post('http://localhost:3000/forgot-password', { email });
       setMessage(response.data.message);
-      toast.success('Reset link sent! Check your email.');
-      setEmail(''); // Clear email field on success
+      toast.success("Reset link sent! Check your email.");
+      setEmail(''); // Clear the email field on success
     } catch (error: any) {
-      const errMsg = error.response?.data?.error || 'Error sending reset link';
-      setMessage(errMsg);
-      toast.error(errMsg);
+      if (error instanceof z.ZodError) {
+        error.errors.forEach(err => toast.error(err.message));
+      } else {
+        toast.error(error.response?.data?.error || "Error sending reset link");
+      }
     }
   };
 

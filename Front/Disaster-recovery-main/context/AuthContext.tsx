@@ -23,14 +23,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
 
   useEffect(() => {
-    // Skip authentication check on public reset pages
-    if (['/forgot-password', '/reset-password'].includes(location.pathname)) {
+    // Define public routes where we do NOT want to check auth
+    const publicPaths = ['/forgot-password', '/reset-password'];
+    if (publicPaths.includes(location.pathname)) {
       return;
     }
     const checkAuth = async () => {
       try {
         const { data } = await axios.get('http://localhost:3000/me', {
-          withCredentials: true
+          withCredentials: true,
         });
         setUser(data);
       } catch {
@@ -42,7 +43,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post('http://localhost:3000/login', 
+      const response = await axios.post(
+        'http://localhost:3000/login',
         { email, password },
         { withCredentials: true }
       );
@@ -56,9 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
-      await axios.post('http://localhost:3000/logout', {}, { 
-        withCredentials: true 
-      });
+      await axios.post('http://localhost:3000/logout', {}, { withCredentials: true });
     } finally {
       setUser(null);
       navigate('/login');
@@ -73,6 +73,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+
 
 
 

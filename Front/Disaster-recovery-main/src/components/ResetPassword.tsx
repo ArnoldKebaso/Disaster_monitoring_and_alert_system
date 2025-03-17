@@ -6,29 +6,76 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
+import { z } from 'zod';
+
+const passwordSchema = z.object({
+  newPassword: z.string().min(12, "Password must be at least 12 characters")
+    .refine(val => /[A-Z]/.test(val), "Must include an uppercase letter")
+    .refine(val => /[a-z]/.test(val), "Must include a lowercase letter")
+    .refine(val => /[0-9]/.test(val), "Must include a number")
+    .refine(val => /[^A-Za-z0-9]/.test(val), "Must include a special character"),
+  confirmPassword: z.string(),
+}).refine(data => data.newPassword === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
 
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email') || '';
   const token = searchParams.get('token') || '';
   const [newPassword, setNewPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
+
+
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/reset-password', {
-        email,
-        token,
-        newPassword,
-      });
+      passwordSchema.parse({ newPassword, confirmPassword });
+      const response = await axios.post('http://localhost:3000/reset-password', 
+        { email, token, newPassword },
+        { withCredentials: true }
+      );
       toast.success(response.data.message);
+      // Optionally, you might auto-login the user here.
       navigate('/login');
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Reset failed');
+      if (error instanceof z.ZodError) {
+        error.errors.forEach(err => toast.error(err.message));
+      } else {
+        toast.error(error.response?.data?.error || "Reset failed");
+      }
     }
   };
+// const handleResetPassword = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     if (newPassword !== confirmPassword) {
+//       toast.error("Passwords do not match");
+//       return;
+//     }
+//     if (newPassword.length < 6) {
+//       toast.error("Password must be at least 6 characters");
+//       return;
+//     }
+//     try {
+//       const response = await axios.post(
+//         'http://localhost:3000/reset-password',
+//         { email, token, newPassword },
+//         { withCredentials: true }
+//       );
+//       toast.success(response.data.message);
+//       // Optionally, you could auto-login the user here by generating a token.
+//       // For now, we redirect to the login page.
+//       navigate('/login');
+//     } catch (error: any) {
+//       toast.error(error.response?.data?.error || 'Reset failed');
+//     }
+//   };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -40,7 +87,7 @@ const ResetPassword: React.FC = () => {
             <div className="mb-4 relative">
               <label htmlFor="newPassword" className="block text-gray-700">New Password</label>
               <input
-                type={showPassword ? 'text' : 'password'}
+                type={showNew ? 'text' : 'password'}
                 id="newPassword"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -49,10 +96,28 @@ const ResetPassword: React.FC = () => {
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowNew(!showNew)}
                 className="absolute right-2 top-9 text-gray-500"
               >
-                {showPassword ? <EyeOff /> : <Eye />}
+                {showNew ? <EyeOff /> : <Eye />}
+              </button>
+            </div>
+            <div className="mb-4 relative">
+              <label htmlFor="confirmPassword" className="block text-gray-700">Confirm New Password</label>
+              <input
+                type={showConfirm ? 'text' : 'password'}
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full p-2 border rounded pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirm(!showConfirm)}
+                className="absolute right-2 top-9 text-gray-500"
+              >
+                {showConfirm ? <EyeOff /> : <Eye />}
               </button>
             </div>
             <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
