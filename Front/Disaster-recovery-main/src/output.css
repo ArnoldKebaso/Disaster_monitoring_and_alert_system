@@ -741,6 +741,10 @@ body {
   top: 1rem;
 }
 
+.top-9 {
+  top: 2.25rem;
+}
+
 .top-full {
   top: 100%;
 }
@@ -2253,6 +2257,10 @@ body {
 
 .pl-6 {
   padding-left: 1.5rem;
+}
+
+.pr-10 {
+  padding-right: 2.5rem;
 }
 
 .pr-4 {

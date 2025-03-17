@@ -30,7 +30,7 @@ const Layout: React.FC = () => {
     { label: 'Create Alert', path: '/createAlert' },
     // { label: 'Send Email', path: '/email' },
     { label: 'Home', path: '/' },
-    { label: 'Dashboard', path: '/dashboard' },
+    // { label: 'Dashboard', path: '/dashboard' },
     // { label: 'Alerts', path: '/alerts' },
     { label: 'Community Reports', path: '/adminCommunityReports' },
     { label: 'Reports', path: '/adminReport' },

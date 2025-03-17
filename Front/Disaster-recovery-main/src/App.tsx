@@ -1,3 +1,4 @@
+// App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
@@ -7,6 +8,8 @@ import SafetyMaps from './components/SafetyMaps';
 import DisasterDetails from './components/DisasterDetails';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 import Location from './components/Location';
 import ResourceComponent from './components/ResourceComponent';
 import Register from './components/Register';
@@ -32,6 +35,7 @@ import AdminAlert from './components/AdminAlerts';
 import SubscriptionReportsDashboard from './components/SubscriptionReport';
 import UserProfile from './components/UserProfile';
 import AdminCommunityReports from './components/AdminCommunityReports';
+
 const App: React.FC = () => {
   return (
     <>
@@ -55,6 +59,8 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/contact" element={<ContactUS />} />
             <Route path="/disasterinfo" element={<DisasterInfo />} />
@@ -77,11 +83,7 @@ const App: React.FC = () => {
 
               {/* Admin Protected Routes */}
               <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-                {/* <Route path="/locations" element={<Location />} /> */}
-                {/* <Route path="/resources" element={<ResourceComponent />} /> */}
-                {/* <Route path="/demographics" element={<DemographicComponent />} />
-                <Route path="/healthcare" element={<HealthcareComponent />} /> */}
-                {/* <Route path="/floods" element={<FloodComponent />} /> */}
+               
                 <Route path="/createAlert" element={<CreateAlert />} />
                 <Route path="/adminAlerts" element={<AdminAlert />} />
                 <Route path="/email" element={<EmailForm />} />
