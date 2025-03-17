@@ -749,6 +749,10 @@ body {
   top: 100%;
 }
 
+.top-12 {
+  top: 3rem;
+}
+
 .-z-10 {
   z-index: -10;
 }
@@ -2295,6 +2299,10 @@ body {
   padding-top: 2rem;
 }
 
+.pr-12 {
+  padding-right: 3rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -3021,6 +3029,11 @@ body {
 .hover\:text-yellow-300:hover {
   --tw-text-opacity: 1;
   color: rgb(253 224 71 / var(--tw-text-opacity, 1));
+}
+
+.hover\:text-gray-700:hover {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
 }
 
 .hover\:underline:hover {
