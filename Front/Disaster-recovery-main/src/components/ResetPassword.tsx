@@ -1,4 +1,3 @@
-// src/components/ResetPassword.tsx
 import React, { useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -20,7 +19,6 @@ const passwordSchema = z.object({
   path: ["confirmPassword"],
 });
 
-
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email') || '';
@@ -31,8 +29,6 @@ const ResetPassword: React.FC = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
 
-
-
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -42,7 +38,6 @@ const ResetPassword: React.FC = () => {
         { withCredentials: true }
       );
       toast.success(response.data.message);
-      // Optionally, you might auto-login the user here.
       navigate('/login');
     } catch (error: any) {
       if (error instanceof z.ZodError) {
@@ -52,80 +47,68 @@ const ResetPassword: React.FC = () => {
       }
     }
   };
-// const handleResetPassword = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     if (newPassword !== confirmPassword) {
-//       toast.error("Passwords do not match");
-//       return;
-//     }
-//     if (newPassword.length < 6) {
-//       toast.error("Password must be at least 6 characters");
-//       return;
-//     }
-//     try {
-//       const response = await axios.post(
-//         'http://localhost:3000/reset-password',
-//         { email, token, newPassword },
-//         { withCredentials: true }
-//       );
-//       toast.success(response.data.message);
-//       // Optionally, you could auto-login the user here by generating a token.
-//       // For now, we redirect to the login page.
-//       navigate('/login');
-//     } catch (error: any) {
-//       toast.error(error.response?.data?.error || 'Reset failed');
-//     }
-//   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-grow flex items-center justify-center p-4">
-        <div className="w-full max-w-md mx-auto p-8 border rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-6 text-center">Reset Password</h2>
-          <form onSubmit={handleResetPassword}>
-            <div className="mb-4 relative">
-              <label htmlFor="newPassword" className="block text-gray-700">New Password</label>
-              <input
-                type={showNew ? 'text' : 'password'}
-                id="newPassword"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full p-2 border rounded pr-10"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowNew(!showNew)}
-                className="absolute right-2 top-9 text-gray-500"
-              >
-                {showNew ? <EyeOff /> : <Eye />}
-              </button>
+      <main className="flex-grow flex items-center justify-center p-4 mb-12">
+        <div className="w-full max-w-lg mx-auto p-10 border rounded-xl shadow-xl">
+          <h2 className="text-3xl font-bold mb-8 text-center">Reset Password</h2>
+          <form onSubmit={handleResetPassword} className="space-y-6">
+            <div className="space-y-4">
+              <div className="relative">
+                <label htmlFor="newPassword" className="block text-lg text-gray-700 mb-2">New Password</label>
+                <input
+                  type={showNew ? 'text' : 'password'}
+                  id="newPassword"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full p-3 text-lg border-2 rounded-lg focus:ring-2 focus:ring-blue-500 pr-12"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNew(!showNew)}
+                  className="absolute right-3 top-12 text-gray-500 hover:text-gray-700"
+                >
+                  {showNew ? <EyeOff size={24} /> : <Eye size={24} />}
+                </button>
+              </div>
+
+              <div className="relative">
+                <label htmlFor="confirmPassword" className="block text-lg text-gray-700 mb-2">Confirm Password</label>
+                <input
+                  type={showConfirm ? 'text' : 'password'}
+                  id="confirmPassword"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full p-3 text-lg border-2 rounded-lg focus:ring-2 focus:ring-blue-500 pr-12"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(!showConfirm)}
+                  className="absolute right-3 top-12 text-gray-500 hover:text-gray-700"
+                >
+                  {showConfirm ? <EyeOff size={24} /> : <Eye size={24} />}
+                </button>
+              </div>
             </div>
-            <div className="mb-4 relative">
-              <label htmlFor="confirmPassword" className="block text-gray-700">Confirm New Password</label>
-              <input
-                type={showConfirm ? 'text' : 'password'}
-                id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full p-2 border rounded pr-10"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-2 top-9 text-gray-500"
-              >
-                {showConfirm ? <EyeOff /> : <Eye />}
-              </button>
-            </div>
-            <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+
+            <button 
+              type="submit" 
+              className="w-full bg-blue-600 text-white p-3 rounded-lg text-lg hover:bg-blue-700 transition-colors"
+            >
               Reset Password
             </button>
           </form>
-          <div className="mt-4 text-center">
-            <Link to="/login" className="text-blue-500 hover:underline">Back to Login</Link>
+          <div className="mt-8 text-center">
+            <Link 
+              to="/login" 
+              className="text-blue-600 hover:text-blue-800 text-lg font-medium"
+            >
+              Back to Login
+            </Link>
           </div>
         </div>
       </main>
