@@ -13,7 +13,9 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 
 const app = express();
-
+const passport = require('./config/passport');
+app.use(passport.initialize());
+app.use(passport.session());
 // Import routes
 const userRoutes = require('./routes/user');
 const authRouter = require('./routes/auth');
@@ -34,9 +36,6 @@ const smsRoutes = require('./routes/smsRoutes');
 const adminCommunityReportsRoutes = require('./routes/adminCommunityReports');
 const cors = require('cors');
 
-// Remove express-fileupload middleware to avoid conflict with Multer
-// const fileUpload = require('express-fileupload');
-// app.use(fileUpload());
 
 app.use(express.json());
 app.use(cookieParser());

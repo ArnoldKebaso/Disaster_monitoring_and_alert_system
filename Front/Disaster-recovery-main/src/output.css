@@ -745,6 +745,10 @@ body {
   top: 100%;
 }
 
+.top-9 {
+  top: 2.25rem;
+}
+
 .-z-10 {
   z-index: -10;
 }
@@ -2285,6 +2289,10 @@ body {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pr-10 {
+  padding-right: 2.5rem;
 }
 
 .text-left {
