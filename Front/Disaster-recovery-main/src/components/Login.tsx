@@ -15,22 +15,31 @@ const Login: React.FC = () => {
   const { user, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await login(email, password);
+      // Do not redirect immediately here; let the effect below handle it.
     } catch (error) {
       setMessage('Login failed. Please check your credentials.');
     }
   };
 
+  // When the user is updated, redirect based on role.
   useEffect(() => {
     if (user) {
-      const to = (location.state as { from?: { pathname: string } })?.from?.pathname || '/dashboard';
-      navigate(to);
+      if (user.role === 'admin') {
+        navigate('/subscriptions'); // Admin default route.
+      } else {
+        // Use the saved redirect location or default to dashboard.
+        const to = (location.state as { from?: { pathname: string } })?.from?.pathname || '/dashboard';
+        navigate(to);
+      }
     }
   }, [user, navigate, location]);
+
+
+
 
   const handleGoogleSignIn = () => {
     window.location.href = 'http://localhost:3000/auth/google';
