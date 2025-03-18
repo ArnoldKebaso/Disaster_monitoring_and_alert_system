@@ -729,6 +729,10 @@ body {
   top: 2.5rem;
 }
 
+.top-12 {
+  top: 3rem;
+}
+
 .top-2 {
   top: 0.5rem;
 }
@@ -741,16 +745,8 @@ body {
   top: 1rem;
 }
 
-.top-9 {
-  top: 2.25rem;
-}
-
 .top-full {
   top: 100%;
-}
-
-.top-12 {
-  top: 3rem;
 }
 
 .-z-10 {
@@ -2263,8 +2259,8 @@ body {
   padding-left: 1.5rem;
 }
 
-.pr-10 {
-  padding-right: 2.5rem;
+.pr-12 {
+  padding-right: 3rem;
 }
 
 .pr-4 {
@@ -2297,10 +2293,6 @@ body {
 
 .pt-8 {
   padding-top: 2rem;
-}
-
-.pr-12 {
-  padding-right: 3rem;
 }
 
 .text-left {
@@ -3016,6 +3008,11 @@ body {
   color: hsl(var(--foreground));
 }
 
+.hover\:text-gray-700:hover {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
+}
+
 .hover\:text-gray-900:hover {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity, 1));
@@ -3029,11 +3026,6 @@ body {
 .hover\:text-yellow-300:hover {
   --tw-text-opacity: 1;
   color: rgb(253 224 71 / var(--tw-text-opacity, 1));
-}
-
-.hover\:text-gray-700:hover {
-  --tw-text-opacity: 1;
-  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
 }
 
 .hover\:underline:hover {

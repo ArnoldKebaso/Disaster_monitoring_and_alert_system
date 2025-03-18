@@ -32,8 +32,6 @@ router.get('/validate', authMiddleware, validateSession);
 module.exports = router;
 
 
-
-
 // const express = require('express');
 // const router = express.Router();
 // const { getAllUsers,updateProfilePhoto, changePassword, getUserById, createUser, updateUser, validateSession , deleteUser } = require('../controllers/userController');
