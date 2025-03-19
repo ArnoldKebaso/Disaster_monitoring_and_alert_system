@@ -3,7 +3,17 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, Menu, X, ShieldAlert, HeartPulse, BookOpen, LifeBuoy, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Globe,
+  Menu,
+  X,
+  ShieldAlert,
+  HeartPulse,
+  BookOpen,
+  LifeBuoy,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,40 +25,34 @@ const Navbar: React.FC = () => {
   };
 
   const menuVariants = {
-    open: { 
+    open: {
       opacity: 1,
       height: "auto",
-      transition: { staggerChildren: 0.1, when: "beforeChildren" }
+      transition: { staggerChildren: 0.1, when: "beforeChildren" },
     },
-    closed: { 
+    closed: {
       opacity: 0,
       height: 0,
-      transition: { staggerChildren: 0.1, staggerDirection: -1 }
+      transition: { staggerChildren: 0.1, staggerDirection: -1 },
     },
   };
 
   const navLinks = [
     { path: "/", name: t("navbar.home"), key: "home" },
     { path: "/about", name: t("navbar.about"), key: "about" },
-    { 
+    {
       name: t("navbar.getInvolved"),
       key: "get-involved",
       subLinks: [
-        { path: "/donate", name: t("navbar.donate"), icon: <HeartPulse className="w-4 h-4" /> }
-      ]
+        {
+          path: "/donate",
+          name: t("navbar.donate"),
+          icon: <HeartPulse className="w-4 h-4" />,
+        },
+      ],
     },
-    { 
-      name: t("navbar.resources"),
-      key: "resources-group",
-      subLinks: [
-        { path: "/userReSources", name: t("navbar.impactStories"), icon: <BookOpen className="w-4 h-4" /> },
-        { path: "/annual-reports", name: t("navbar.annualReports"), icon: <LifeBuoy className="w-4 h-4" /> }
-      ]
-    },
-    { path: "/agencies", name: t("navbar.agencies"), key: "agencies" },
-    // Remove or change the duplicate "Resources" item to avoid conflict:
-    { path: "/userReSources", name: "Resources (User)", key: "resources-user" },
-    { path: "/contact", name: t("navbar.contact"), key: "contact" }
+    { path: "/userReSources", name: "Resources", key: "resources-user" },
+    { path: "/contact", name: t("navbar.contact"), key: "contact" },
   ];
 
   const toggleSubmenu = (key: string) => {
@@ -56,25 +60,28 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="bg-gradient-to-r from-blue-900 to-cyan-800 text-white shadow-xl"
+      className="bg-gradient-to-r from-blue-900 to-cyan-800 text-white shadow-xl w-full"
     >
-      <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="w-full px-6 py-4">
         <div className="flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-2">
-            <ShieldAlert className="w-8 h-8 text-cyan-400" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-200 bg-clip-text text-transparent">
-              {t("navbar.title")}
-            </span>
-          </Link>
+          {/* Left: Logo */}
+          <div className="flex-shrink-0">
+            <Link to="/" className="flex items-center gap-2">
+              <ShieldAlert className="w-8 h-8 text-cyan-400" />
+              <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-200 bg-clip-text text-transparent">
+                {t("navbar.title")}
+              </span>
+            </Link>
+          </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-6">
+          {/* Center: Desktop Navigation */}
+          <div className="hidden lg:flex flex-1 justify-center items-center gap-6">
             {navLinks.map((link, index) => (
-              <div 
-                key={link.key || link.path || index} 
+              <div
+                key={link.key || link.path || index}
                 className="relative group"
                 onMouseEnter={() => link.subLinks && setOpenSubmenu(link.key!)}
                 onMouseLeave={() => link.subLinks && setOpenSubmenu(null)}
@@ -82,12 +89,12 @@ const Navbar: React.FC = () => {
                 {link.path ? (
                   <Link
                     to={link.path}
-                    className="flex items-center gap-1 px-4 py-2 hover:bg-white/10 rounded-lg transition-all"
+                    className="flex items-center gap-1 px-2 py-2 hover:bg-white/10 rounded-lg transition-all"
                   >
                     {link.name}
                   </Link>
                 ) : (
-                  <div className="cursor-pointer px-4 py-2 hover:bg-white/10 rounded-lg">
+                  <div className="cursor-pointer px-2 py-2 hover:bg-white/10 rounded-lg flex items-center gap-1">
                     {link.name}
                     <AnimatePresence>
                       {link.subLinks && openSubmenu === link.key && (
@@ -117,6 +124,7 @@ const Navbar: React.FC = () => {
             ))}
           </div>
 
+          {/* Right: Language Toggle and Mobile Menu */}
           <div className="flex items-center gap-4">
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -148,7 +156,10 @@ const Navbar: React.FC = () => {
             >
               <div className="pt-4 space-y-2">
                 {navLinks.map((link, index) => (
-                  <div key={link.key || link.path || index} className="border-b border-white/10">
+                  <div
+                    key={link.key || link.path || index}
+                    className="border-b border-white/10"
+                  >
                     {link.path ? (
                       <Link
                         to={link.path}
