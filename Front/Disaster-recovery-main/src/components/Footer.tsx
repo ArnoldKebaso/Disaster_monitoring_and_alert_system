@@ -41,54 +41,34 @@ const Footer: React.FC = () => {
           <motion.div variants={itemVariants} className="flex-1 space-y-4">
             <ShieldAlert className="w-8 h-8 text-cyan-400 mb-4" />
             <h3 className="text-lg font-bold">Quick Access</h3>
-            <nav className="grid grid-cols-2 gap-2">
+            <nav className="flex flex-col gap-2">
               {[
-                // { path: "/login", name: "Admin Portal", icon: <ShieldAlert className="w-4 h-4" /> },
                 {
                   path: "/login",
                   name: "User Dashboard",
                   icon: <HeartHandshake className="w-4 h-4" />,
                 },
                 {
-                  path: "/userReSources",
-                  name: "Publications",
+                  path: "/userResources", // Correct resources path
+                  name: "Resources",
                   icon: <BookOpen className="w-4 h-4" />,
                 },
                 {
-                  path: "/donate",
-                  name: "Donate",
-                  icon: <LifeBuoy className="w-4 h-4" />,
+                  path: "/domain", // New domain link
+                  name: "Domain",
+                  icon: <MapPin className="w-4 h-4" />,
                 },
               ].map((link, index) => (
                 <Link
                   key={index}
                   to={link.path}
-                  className="flex items-center gap-2 text-sm hover:text-cyan-300 transition-colors"
+                  className="flex items-center gap-2 text-sm hover:text-cyan-300 transition-colors duration-300"
                 >
                   {link.icon}
                   {link.name}
                 </Link>
               ))}
             </nav>
-          </motion.div>
-
-          {/* Contact Info */}
-          <motion.div variants={itemVariants} className="flex-1 space-y-4">
-            <h3 className="text-lg font-bold">Contact Us</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-cyan-400" />
-                <span>123 FMAS, Njoro, Egerton, Kenya</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-5 h-5 text-cyan-400" />
-                <span>+254 123 456 789</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-5 h-5 text-cyan-400" />
-                <span>info@fmas.com</span>
-              </div>
-            </div>
           </motion.div>
 
           {/* Social Links */}
