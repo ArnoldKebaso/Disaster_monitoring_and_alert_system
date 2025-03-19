@@ -37,17 +37,7 @@ const Navbar: React.FC = () => {
         { path: "/donate", name: t("navbar.donate"), icon: <HeartPulse className="w-4 h-4" /> }
       ]
     },
-    { 
-      name: t("navbar.resources"),
-      key: "resources-group",
-      subLinks: [
-        { path: "/userReSources", name: t("navbar.impactStories"), icon: <BookOpen className="w-4 h-4" /> },
-        { path: "/annual-reports", name: t("navbar.annualReports"), icon: <LifeBuoy className="w-4 h-4" /> }
-      ]
-    },
-    { path: "/agencies", name: t("navbar.agencies"), key: "agencies" },
-    // Remove or change the duplicate "Resources" item to avoid conflict:
-    { path: "/userReSources", name: "Resources (User)", key: "resources-user" },
+    { path: "/userReSources", name: "Resources", key: "resources-user" },
     { path: "/contact", name: t("navbar.contact"), key: "contact" }
   ];
 
@@ -59,19 +49,21 @@ const Navbar: React.FC = () => {
     <motion.nav 
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="bg-gradient-to-r from-blue-900 to-cyan-800 text-white shadow-xl"
+      className="bg-gradient-to-r from-blue-900 to-cyan-800 text-white shadow-xl w-full"
     >
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-2">
-            <ShieldAlert className="w-8 h-8 text-cyan-400" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-200 bg-clip-text text-transparent">
-              {t("navbar.title")}
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-6">
+      <div className="w-full px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* Left: Logo */}
+          <div className="flex-shrink-0">
+            <Link to="/" className="flex items-center gap-2">
+              <ShieldAlert className="w-8 h-8 text-cyan-400" />
+              <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-200 bg-clip-text text-transparent">
+                {t("navbar.title")}
+              </span>
+            </Link>
+          </div>
+          {/* Center: Desktop Navigation */}
+          <div className="hidden lg:flex flex-1 justify-evenly items-center">
             {navLinks.map((link, index) => (
               <div 
                 key={link.key || link.path || index} 
@@ -116,7 +108,7 @@ const Navbar: React.FC = () => {
               </div>
             ))}
           </div>
-
+          {/* Right: Language Toggle and Mobile Menu */}
           <div className="flex items-center gap-4">
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -126,7 +118,6 @@ const Navbar: React.FC = () => {
               <Globe className="w-5 h-5" />
               {t("languageToggle")}
             </motion.button>
-
             <button
               className="lg:hidden text-white p-2"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
