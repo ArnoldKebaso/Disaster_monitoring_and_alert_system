@@ -118,7 +118,7 @@ const Footer: React.FC = () => {
             variants={itemVariants}
             className="text-center text-sm text-white/80"
           >
-            © {new Date().getFullYear()} FMAS - Flood Monitoring & Alert System
+            © {new Date().getFullYear()} @Arnold Onchieku Kebaso @FMAS - Flood Monitoring & Alert System 
           </motion.div>
         </div>
       </div>

@@ -34,6 +34,9 @@ import {
 import Hero1 from "../assets/Budalangi1.jpeg";
 import Hero2 from "../assets/Budalangi3.jpg";
 import Hero3 from "../assets/floodResponse.png";
+import Hero4 from "../assets/Budalangi8.jpeg";
+import Hero5 from "../assets/Budalangi9.jpeg";
+import Hero6 from "../assets/Budalangi6.jpeg";
 import monitorIcon from "../assets/floodMonitoring.png";
 import alertIcon from "../assets/alert.png";
 import reourceImage from "../assets/resourceAllocation.png";
@@ -45,21 +48,23 @@ import beneficiary from "../assets/beneficiary.png";
 
 // Example PDF/Video Thumbnails
 import PdfThumb from "../assets/Budalangi3.jpg";
+import Pdf from "../assets/flood.png";
 import VideoThumb from "../assets/alert.png";
+import ContactComponent from "./ContactComponent";
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
 
-  // ==============================
+  // 
   // Carousel / Hero Section State
-  // ==============================
-  const heroImages = [Hero1, Hero2, Hero3];
+  //
+  const heroImages = [Hero1, Hero2, Hero4, Hero5,Hero6];
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-    }, 6000); // Slide changes every 6 seconds
+    }, 5000); // Slide changes every 5 seconds
     return () => clearInterval(interval);
   }, [heroImages.length]);
 
@@ -135,7 +140,7 @@ const Home: React.FC = () => {
     {
       question: "How can I report a flood incident?",
       answer:
-        "You can submit a detailed report with images and location data through our Report page or via SMS if you're in a low-connectivity area. The system verifies your report before generating alerts to the community.",
+        "You can submit a detailed report with images and location data through our Report page. The system verifies your report before generating alerts to the community.",
     },
     {
       question: "How do I receive alerts?",
@@ -326,7 +331,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* SUBSCRIBE SECTION (unchanged form, new background) */}
       <section className="py-20 bg-blue-50">
         <div className="max-w-2xl mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight text-center text-blue-900">
@@ -343,7 +347,7 @@ const Home: React.FC = () => {
                 className="mb-4 p-4 bg-yellow-100 rounded-lg border border-yellow-300"
               >
                 <p className="text-yellow-800 font-bold animate-pulse">
-                  ⚠️ Remember to dial <span className="underline">*456*9*5#</span> on your phone!
+                  ⚠️ Remember to dial <span className="underline">*456*9*5#</span> on your phone to enable promotional messages!
                 </p>
               </motion.div>
             )}
@@ -478,7 +482,7 @@ const Home: React.FC = () => {
               whileHover={{ y: -5 }}
             >
               <img
-                src={PdfThumb}
+                src={Pdf}
                 alt="Flood Preparedness PDF"
                 className="w-full h-40 object-contain mb-4"
               />
@@ -683,6 +687,7 @@ const Home: React.FC = () => {
 
       {/* CONTACT US SNIPPET */}
       <section className="py-16 bg-blue-50">
+        {/* <ContactComponent /> */}
         <div className="max-w-3xl mx-auto text-center px-4">
           <h2 className="text-4xl font-bold text-blue-900 mb-6">
             Get In Touch
@@ -698,6 +703,7 @@ const Home: React.FC = () => {
             Contact Us
           </Link>
         </div>
+        
       </section>
 
       {/* Footer */}
