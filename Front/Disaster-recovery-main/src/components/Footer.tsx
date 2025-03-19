@@ -1,42 +1,64 @@
-// components/Footer.tsx
+// src/components/Footer.tsx
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  Mail, MapPin, Phone, Facebook, Twitter, Instagram, Youtube,
-  ShieldAlert, HeartHandshake, BookOpen, LifeBuoy 
+import {
+  Mail,
+  MapPin,
+  Phone,
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
+  ShieldAlert,
+  HeartHandshake,
+  BookOpen,
+  LifeBuoy,
 } from "lucide-react";
 
 const Footer: React.FC = () => {
   const footerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 }
+    visible: { y: 0, opacity: 1 },
   };
 
   return (
-    <motion.footer 
+    <motion.footer
       initial="hidden"
       animate="visible"
       variants={footerVariants}
-      className="bg-gradient-to-br from-blue-900 to-cyan-800 text-white pt-20"
+      className="bg-gradient-to-br from-blue-900 to-cyan-800 text-white pt-20 w-full"
     >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12">
+      <div className="w-full px-6">
+        {/* Using flex instead of grid for better spacing on large screens */}
+        <div className="flex flex-col md:flex-row md:justify-between gap-6 pb-12">
           {/* Quick Links */}
-          <motion.div variants={itemVariants} className="space-y-4">
+          <motion.div variants={itemVariants} className="flex-1 space-y-4">
             <ShieldAlert className="w-8 h-8 text-cyan-400 mb-4" />
             <h3 className="text-lg font-bold">Quick Access</h3>
             <nav className="grid grid-cols-2 gap-2">
               {[
                 // { path: "/login", name: "Admin Portal", icon: <ShieldAlert className="w-4 h-4" /> },
-                { path: "/login", name: "User Dashboard", icon: <HeartHandshake className="w-4 h-4" /> },
-                { path: "/userReSources", name: "Publications", icon: <BookOpen className="w-4 h-4" /> },
-                { path: "/donate", name: "Donate", icon: <LifeBuoy className="w-4 h-4" /> },
+                {
+                  path: "/login",
+                  name: "User Dashboard",
+                  icon: <HeartHandshake className="w-4 h-4" />,
+                },
+                {
+                  path: "/userReSources",
+                  name: "Publications",
+                  icon: <BookOpen className="w-4 h-4" />,
+                },
+                {
+                  path: "/donate",
+                  name: "Donate",
+                  icon: <LifeBuoy className="w-4 h-4" />,
+                },
               ].map((link, index) => (
                 <Link
                   key={index}
@@ -51,12 +73,12 @@ const Footer: React.FC = () => {
           </motion.div>
 
           {/* Contact Info */}
-          <motion.div variants={itemVariants} className="space-y-4">
+          <motion.div variants={itemVariants} className="flex-1 space-y-4">
             <h3 className="text-lg font-bold">Contact Us</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-cyan-400" />
-                <span>123 FMAS , Njoro, Egerton, Kenya</span>
+                <span>123 FMAS, Njoro, Egerton, Kenya</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-5 h-5 text-cyan-400" />
@@ -70,7 +92,7 @@ const Footer: React.FC = () => {
           </motion.div>
 
           {/* Social Links */}
-          <motion.div variants={itemVariants} className="space-y-4">
+          <motion.div variants={itemVariants} className="flex-1 space-y-4">
             <h3 className="text-lg font-bold">Stay Connected</h3>
             <div className="flex gap-4">
               {[
@@ -92,7 +114,7 @@ const Footer: React.FC = () => {
           </motion.div>
 
           {/* Newsletter */}
-          <motion.div variants={itemVariants} className="space-y-4">
+          <motion.div variants={itemVariants} className="flex-1 space-y-4">
             <h3 className="text-lg font-bold">Newsletter</h3>
             <form className="space-y-3">
               <input
