@@ -9,7 +9,7 @@ const instance = axios.create({
 instance.interceptors.response.use(
   response => response,
   error => {
-    const publicPaths = ['/login', '/register','/contact','/forgot-password','/about','/reset-password','/userReSources','/disasterinfo','/donate'];
+    const publicPaths = ['/login', '/register','/contact','/forgot-password','/about','/reset-password','/userReSources','/disasterinfo','/donate','/faq'];
     // Only redirect if the current path is not a public path.
     if (
       error.response?.status === 401 &&
