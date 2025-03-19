@@ -1045,6 +1045,10 @@ body {
   height: 100vh;
 }
 
+.h-20 {
+  height: 5rem;
+}
+
 .max-h-96 {
   max-height: 24rem;
 }
@@ -1140,6 +1144,10 @@ body {
 
 .w-48 {
   width: 12rem;
+}
+
+.w-20 {
+  width: 5rem;
 }
 
 .min-w-\[200px\] {
@@ -2313,6 +2321,14 @@ body {
   padding-top: 2rem;
 }
 
+.pb-8 {
+  padding-bottom: 2rem;
+}
+
+.pb-4 {
+  padding-bottom: 1rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -2367,6 +2383,11 @@ body {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .font-black {
@@ -3362,6 +3383,10 @@ body {
 }
 
 @media (min-width: 640px) {
+  .sm\:flex-row {
+    flex-direction: row;
+  }
+
   .sm\:gap-2\.5 {
     gap: 0.625rem;
   }
