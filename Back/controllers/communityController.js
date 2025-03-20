@@ -5,14 +5,6 @@ const sequelize = require('../config/database');
 const { Op } = require('sequelize');
 
 
-
-// const corsOptions = {
-//   origin: 'http://localhost:3001',
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// };
-
-// app.use(cors(corsOptions));
 app.use(cors()); // This should be placed before any routes
 app.use(express.json());
 app.use(cors({
@@ -28,17 +20,28 @@ const User = require('../models/user');
 // Get all community reports
 const getAllReports = async (req, res) => {
   try {
-    const reports = await CommunityReport.findAll({ include: User });
+    const reports = await CommunityReport.findAll({
+      include: [{
+        model: User,
+        attributes: ['user_id', 'username', 'email', 'phone', 'location'] 
+      }]
+    });
     res.status(200).json(reports);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
+
 // Get report by ID
 const getReportById = async (req, res) => {
   try {
-    const report = await CommunityReport.findByPk(req.params.id, { include: User });
+    const report = await CommunityReport.findByPk(req.params.id, {
+      include: [{
+        model: User,
+        attributes: ['user_id', 'username', 'email', 'phone', 'location']
+      }]
+    });
     if (!report) return res.status(404).json({ error: 'Report not found' });
     res.status(200).json(report);
   } catch (error) {
@@ -46,23 +49,38 @@ const getReportById = async (req, res) => {
   }
 };
 
-// Create a new community report
+// Modify createReport controller to include user info from auth
 const createReport = async (req, res) => {
-  const { report_type, location, description, image_url, status, user_id } = req.body;
+  // Get user ID from authentication middleware
+  const userId = req.user.id;
+
+  // Extract fields from the request body
+  const { report_type, location, description, status } = req.body;
+  
+  // Check if a file was uploaded using Multer
+  let imageUrl = null;
+  if (req.file) {
+    imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+  }
+
   try {
+    // Include user_id from authenticated user
     const newReport = await CommunityReport.create({
       report_type,
       location,
       description,
-      image_url,
+      image_url: imageUrl,
       status,
-      user_id
+      user_id: userId  // Add this line
     });
+    
     res.status(201).json(newReport);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+
+
 
 // Update a report by ID
 const updateReport = async (req, res) => {

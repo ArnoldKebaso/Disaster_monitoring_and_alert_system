@@ -1,7 +1,6 @@
 // components/Layout.tsx
 import React from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { AlertTriangle } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
@@ -18,36 +17,35 @@ const Layout: React.FC = () => {
     { label: 'Safety Map', path: '/maps' },
     { label: 'Agencies', path: '/agencies' },
     { label: 'Register', path: '/register' },
-     { label: 'Resources', path: '/userReSources' },
-    
+    { label: 'Resources', path: '/userReSources' },
+    { label: 'My Profile', path: '/userProfile' },
   ];
 
+
   const adminMenuItems = [
-    { label: 'Safety Map', path: '/maps' },
-    { label: 'Locations', path: '/locations' },
-    { label: 'Resources', path: '/resources' },
-    { label: 'Healthcare', path: '/healthcare' },
-    { label: 'Demographics', path: '/demographics' },
-    { label: 'Flood Data', path: '/floods' },
+    // { label: 'Safety Map', path: '/maps' },
     { label: 'Subscription', path: '/subscriptions' },
-    { label: 'Agencies', path: '/agencies' },
-    { label: 'Register', path: '/register' },
+    // { label: 'Register', path: '/register' },
     { label: 'Modify Alerts', path: '/adminAlerts' },
     { label: 'Create Alert', path: '/createAlert' },
-    { label: 'Send Email', path: '/email' },
+    // { label: 'Send Email', path: '/email' },
     { label: 'Home', path: '/' },
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Alerts', path: '/alerts' },
-    { label: 'sms', path: '/sms' },
+    // { label: 'Dashboard', path: '/dashboard' },
+    // { label: 'Alerts', path: '/alerts' },
+    { label: 'Community Reports', path: '/adminCommunityReports' },
     { label: 'Reports', path: '/adminReport' },
     { label: 'Subscribed Users', path: '/subscriptionReport' },
   ];
 
+  // Select the proper menu based on user role
   const menuItems = user?.role === 'admin' ? adminMenuItems : userMenuItems;
+
+  // Filter out the Register link if a user is logged in
+  const filteredMenuItems = user ? menuItems.filter(item => item.label !== 'Register') : menuItems;
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:3000/logout');
+      await axios.post('http://localhost:3000/logout', {}, { withCredentials: true });
       logout(); // Use context logout
       navigate('/login');
     } catch (error) {
@@ -59,10 +57,9 @@ const Layout: React.FC = () => {
     <div className="min-h-screen bg-gray-100 flex">
       {/* Sidebar */}
       <aside className="w-64 bg-blue-900 text-white shadow-lg">
-        {/* ... rest of your sidebar JSX */}
         <nav className="mt-6">
           <ul className="space-y-2">
-            {menuItems.map((item) => (
+            {filteredMenuItems.map((item) => (
               <li key={item.label}>
                 <Link
                   to={item.path}
@@ -78,15 +75,18 @@ const Layout: React.FC = () => {
             ))}
           </ul>
         </nav>
-        {/* Logout Button */}
-        <div className="p-6">
-          <button
-            onClick={handleLogout}
-            className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg text-lg transition-all duration-200"
-          >
-            Logout
-          </button>
-        </div>
+
+        {/* Conditionally render Logout button only when user is logged in */}
+        {user && (
+          <div className="p-6">
+            <button
+              onClick={handleLogout}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg text-lg transition-all duration-200"
+            >
+              Logout
+            </button>
+          </div>
+        )}
       </aside>
 
       {/* Main Content */}

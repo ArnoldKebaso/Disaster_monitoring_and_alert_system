@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 const { registerUser, loginUser,validateSession  } = require('../controllers/userController');
+const {forgotPassword, resetPassword, googleAuthCallback} = require('../controllers/authController');
 const authMiddleware = require('../middleware/auth');
 /**
  * @swagger
@@ -81,6 +83,17 @@ router.post('/register', registerUser);
 
 router.get('/validate', authMiddleware, validateSession);
 router.post('/login', loginUser);
+// Forgot Password Endpoint
+router.post('/forgot-password', forgotPassword);
+
+// Reset Password Route
+router.post('/reset-password', resetPassword);
+
+// Google OAuth Routes
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), googleAuthCallback);
+
+
 router.post('/logout', (req, res) => {
     // Clear the token or session (if using sessions)
     res.clearCookie('token'); // Clear the token cookie

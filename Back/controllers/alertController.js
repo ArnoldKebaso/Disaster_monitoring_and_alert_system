@@ -111,10 +111,9 @@ const archiveAlert = async (req, res) => {
     const alert = await Alert.findByPk(req.params.id);
     if (!alert) return res.status(404).json({ error: 'Alert not found' });
 
-    // Update status to archived
+    // Only update the status; Sequelize will handle updatedAt automatically
     const updatedAlert = await alert.update({
-      status: 'archived',
-      updatedAt: new Date()  // Explicitly set updatedAt
+      status: 'archived'
     });
 
     res.status(200).json(updatedAlert);
@@ -126,8 +125,32 @@ const archiveAlert = async (req, res) => {
     });
   }
 };
+const unarchiveAlert = async (req, res) => {
+  try {
+    const alert = await Alert.findByPk(req.params.id);
+    if (!alert) return res.status(404).json({ error: 'Alert not found' });
+
+    // Optionally, ensure that only archived alerts can be unarchived
+    if (alert.status !== 'archived') {
+      return res.status(400).json({ error: 'Alert is not archived' });
+    }
+
+    const updatedAlert = await alert.update({
+      status: 'active'  // or 'resolved', as appropriate
+    });
+
+    res.status(200).json(updatedAlert);
+  } catch (error) {
+    console.error('Unarchive error:', error);
+    res.status(500).json({
+      error: 'Failed to unarchive alert',
+      details: error.message
+    });
+  }
+};
 
 
 
 
-module.exports = { getAllAlerts, getAlertById, createAlert, updateAlert, deleteAlert, getUniqueLocations, archiveAlert };
+
+module.exports = { getAllAlerts, getAlertById, createAlert, updateAlert, deleteAlert, getUniqueLocations, archiveAlert,unarchiveAlert };

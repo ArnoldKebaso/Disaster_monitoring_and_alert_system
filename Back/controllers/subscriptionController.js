@@ -145,32 +145,71 @@ const getSubscriptionsByLocations = async (req, res) => {
     }
 };
 
+// const getSubscriptionsByLocation = async (req, res) => {
+//     try {
+//         const subscriptions = await Subscription.findAll();
+
+//         // Group subscriptions by location
+//         const groupedSubscriptions = subscriptions.reduce((acc, subscription) => {
+//             subscription.locations.forEach((location) => {
+//                 if (!acc[location]) {
+//                     acc[location] = [];
+//                 }
+//                 acc[location].push({
+//                     id: subscription.id,
+//                     method: subscription.method,
+//                     contact: subscription.contact,
+//                 });
+//             });
+//             return acc;
+//         }, {});
+
+//         res.status(200).json(groupedSubscriptions);
+//     } catch (error) {
+//         res.status(500).json({ message: "Error fetching subscriptions", error });
+//     }
+// };
+
 const getSubscriptionsByLocation = async (req, res) => {
     try {
+      const { location } = req.query;
+      if (location) {
+        // When a location is provided, filter subscriptions that contain this location
+        const subscriptions = await Subscription.findAll({
+          where: Sequelize.where(
+            Sequelize.fn('JSON_CONTAINS',
+              Sequelize.col('locations'),
+              Sequelize.literal('?')
+            ),
+            1
+          ),
+          replacements: [JSON.stringify(location)],
+        });
+        return res.status(200).json(subscriptions);
+      } else {
+        // No query parameter: group all subscriptions by location
         const subscriptions = await Subscription.findAll();
-
-        // Group subscriptions by location
         const groupedSubscriptions = subscriptions.reduce((acc, subscription) => {
-            subscription.locations.forEach((location) => {
-                if (!acc[location]) {
-                    acc[location] = [];
-                }
-                acc[location].push({
-                    id: subscription.id,
-                    method: subscription.method,
-                    contact: subscription.contact,
-                });
+          subscription.locations.forEach((loc) => {
+            if (!acc[loc]) {
+              acc[loc] = [];
+            }
+            acc[loc].push({
+              id: subscription.id,
+              method: subscription.method,
+              contact: subscription.contact,
+              createdAt: subscription.createdAt, // include createdAt if needed
             });
-            return acc;
+          });
+          return acc;
         }, {});
-
-        res.status(200).json(groupedSubscriptions);
+        return res.status(200).json(groupedSubscriptions);
+      }
     } catch (error) {
-        res.status(500).json({ message: "Error fetching subscriptions", error });
+      console.error('Error in getSubscriptionsByLocation:', error);
+      return res.status(500).json({ error: error.message });
     }
-};
-
-
+  };
 
 
 // Update a subscription

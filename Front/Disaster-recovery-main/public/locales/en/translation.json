@@ -11,6 +11,7 @@
     "annualReports": "Annual Reports",
     "agencies": "Agencies",
     "contact": "Contact Us",
+    "FAQ": "FAQ",
     "alerts": "View Alerts"
   },
   "hero": {
@@ -19,6 +20,7 @@
   },
   "subscribe": {
     "title": "Subscribe for Notifications",
+    "smsWarning" : "Kindly enable promotional messages to receive alerts",
     "method": "Choose Notification Method",
     "selectMethod": "Select a method",
     "email": "Email",

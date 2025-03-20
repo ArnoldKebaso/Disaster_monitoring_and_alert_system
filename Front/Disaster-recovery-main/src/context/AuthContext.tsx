@@ -1,6 +1,8 @@
+// src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/api';
-//import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { decodeToken } from '../utils/decodeToken';
 
 type User = {
   id: number;
@@ -23,9 +25,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const checkAuth = async () => {
     try {
-      const response = await api.get('/validate');
-      setUser(response.data);
+      // Force a fresh response by appending a timestamp and setting no-cache headers.
+      const response = await api.get(`/validate?t=${Date.now()}`, {
+        withCredentials: true,
+        headers: { 'Cache-Control': 'no-store' }
+      });
+      console.log("checkAuth response data:", response.data);
+      let userData = response.data;
+      // If the response doesn’t include a role, decode it from the token.
+      if (!userData.role) {
+        const token = Cookies.get('token');
+        if (token) {
+          const role = decodeToken(token);
+          userData = { ...userData, role };
+        }
+      }
+      setUser(userData);
     } catch (error) {
+      console.error("checkAuth error:", error);
       setUser(null);
     } finally {
       setLoading(false);
@@ -38,7 +55,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      await api.post('/login', { email, password });
+      await api.post('/login', { email, password }, { withCredentials: true })
+      .then((res)=>{
+        console.log("login response data:", res.data);
+      });
       await checkAuth();
     } catch (error) {
       setUser(null);
@@ -48,7 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      await api.post('/logout');
+      await api.post('/logout', {}, { withCredentials: true });
       setUser(null);
     } catch (error) {
       console.error('Logout error:', error);

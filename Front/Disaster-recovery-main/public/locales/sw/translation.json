@@ -11,6 +11,7 @@
     "annualReports": "Ripoti za Kila Mwaka",
     "agencies": "Mashirika",
     "contact": "Wasiliana Nasi",
+    "FAQ": "Maswali Yanayoulizwa Sana",
     "alerts": "Tazama Onyo"
   },
   "hero": {
@@ -19,6 +20,7 @@
   },
   "subscribe": {
     "title": "Jisajili kwa Arifa za Barua Pepe",
+    "smsWarning" : "Tafadhali wezesha ujumbe wa matangazo ili upokee arifa",
     "method": "Chagua Njia ya Kupokea Arifa",
     "selectMethod": "Chagua njia",
     "email": "Barua Pepe",

@@ -1,25 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Bell, MapPin, Users, X } from 'lucide-react';
+// UserCommunityReports.tsx
+import React, { useState, useEffect } from 'react';
+import { X, Search, MapPin, Clock, AlertCircle, User } from 'lucide-react';
 import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-
-interface Alert {
-  alert_type: string;
-  severity: string;
-  location: string;
-  description: string;
-  status: string;
-}
-
-interface Route {
-  route_id: number;
-  start_location: string;
-  end_location: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Card, CardContent } from './ui/card';
+import { motion } from 'framer-motion';
+import { toast } from 'sonner';
+import ReactPaginate from 'react-paginate';
 
 interface CommunityReport {
   report_id: number;
@@ -30,189 +16,233 @@ interface CommunityReport {
   status: string;
   createdAt: string;
   updatedAt: string;
-  user_id: string | null;
-  User: any | null;
 }
 
-const Dashboard: React.FC = () => {
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [highRiskAreas, setHighRiskAreas] = useState<number>(0);
-  const [safeRoutes, setSafeRoutes] = useState<Route[]>([]);
-  const [communityReports, setCommunityReports] = useState<CommunityReport[]>([]);
-  const [recentAlerts, setRecentAlerts] = useState<CommunityReport[]>([]);
-  const [selectedReport, setSelectedReport] = useState<CommunityReport | null>(null); // Track the selected report for details
+const ITEMS_PER_PAGE = 6;
 
-  useEffect(() => {
-    // Fetch alerts
-    axios
-      .get('http://localhost:3000/alerts')
-      .then((response) => setAlerts(response.data))
-      .catch((error) => console.error('Error fetching alerts:', error));
+const UserCommunityReports: React.FC = () => {
+  const [reports, setReports] = useState<CommunityReport[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [selectedReport, setSelectedReport] = useState<CommunityReport | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-    // Fetch high-risk areas
-    axios
-      .get('http://localhost:3000/high-risk-areas')
-      .then((response) => setHighRiskAreas(response.data.length))
-      .catch((error) => console.error('Error fetching high-risk areas:', error));
-
-    // Fetch safe routes
-    axios
-      .get('http://localhost:3000/safe-routes')
-      .then((response) => setSafeRoutes(response.data))
-      .catch((error) => console.error('Error fetching safe routes:', error));
-
-    // Fetch community reports
-    axios
-      .get('http://localhost:3000/community-reports')
-      .then((response) => {
-        setCommunityReports(response.data);
-        setRecentAlerts(response.data.slice(0, 5));
-      })
-      .catch((error) => console.error('Error fetching community reports:', error));
-  }, []);
-
-  const handleViewDetails = (report: CommunityReport) => {
-    setSelectedReport(report); // Set the selected report to show details
+  const fetchReports = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/community-reports', {
+        credentials: 'include',
+      });
+      const data = await response.json();
+      const sorted = data.sort((a: CommunityReport, b: CommunityReport) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      setReports(sorted);
+    } catch (error) {
+      toast.error('Failed to load community reports');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const closeDetailsModal = () => {
-    setSelectedReport(null); // Close the modal
+  useEffect(() => { fetchReports(); }, []);
+
+  const filteredReports = reports.filter(report =>
+    report.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    report.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const pageCount = Math.ceil(filteredReports.length / ITEMS_PER_PAGE);
+  const currentReports = filteredReports.slice(
+    currentPage * ITEMS_PER_PAGE,
+    (currentPage + 1) * ITEMS_PER_PAGE
+  );
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'verified': return 'bg-green-100 text-green-800';
+      case 'rejected': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
+
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  );
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <main className="flex-1 container mx-auto px-6 py-8 max-w-6xl">
-        <div className="py-6">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-800 mb-6">FMAS Dashboard</h1>
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">Community Flood Reports</h1>
 
-          {/* Statistics Cards */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Card className="shadow-md transition-transform hover:scale-105">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-semibold text-gray-700">Active Alerts</CardTitle>
-                <Bell className="h-5 w-5 text-blue-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900">{alerts.length}</div>
-                <p className="text-sm text-gray-600">+2 since last hour</p>
-              </CardContent>
-            </Card>
+        {/* Search Bar */}
+        <div className="relative mb-8 max-w-md">
+          <input
+            placeholder="Search reports..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+        </div>
 
-            <Card className="shadow-md transition-transform hover:scale-105">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-semibold text-gray-700">High-Risk Areas</CardTitle>
-                <MapPin className="h-5 w-5 text-red-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900">{highRiskAreas}</div>
-                <p className="text-sm text-gray-600">2 new areas identified</p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-md transition-transform hover:scale-105">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-semibold text-gray-700">Community Reports</CardTitle>
-                <Users className="h-5 w-5 text-purple-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900">{communityReports.length}</div>
-                <p className="text-sm text-gray-600">+12 from yesterday</p>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-md transition-transform hover:scale-105">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-semibold text-gray-700">Safe Routes</CardTitle>
-                <MapPin className="h-5 w-5 text-green-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900">{safeRoutes.length}</div>
-                <p className="text-sm text-gray-600">Updated 5 mins ago</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Recent Alerts Section */}
-          <div className="mt-10 bg-white shadow-sm rounded-lg p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Recent Alerts</h2>
-            <div className="space-y-4">
-              {recentAlerts.map((report, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow-sm transition-transform hover:scale-105"
-                >
-                  <div>
-                    <h3 className="font-semibold text-gray-700">{report.report_type}</h3>
-                    <p className="text-sm text-gray-600">{report.location}</p>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-sm text-gray-500 mr-4">Recently</span>
+        {/* Reports Grid */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {currentReports.map(report => (
+            <motion.div
+              key={report.report_id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Card className="hover:shadow-lg transition-shadow duration-200">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <AlertCircle className="h-6 w-6 text-blue-500" />
+                      <div>
+                        <h3 className="text-lg font-semibold">{report.report_type}</h3>
+                        <span className={`${getStatusColor(report.status)} px-2 py-1 rounded-full text-xs`}>
+                          {report.status}
+                        </span>
+                      </div>
+                    </div>
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
-                      className="border-blue-500 text-blue-500 hover:bg-blue-100"
-                      onClick={() => handleViewDetails(report)}
+                      onClick={() => setSelectedReport(report)}
+                      className="text-blue-600 hover:bg-blue-50"
                     >
-                      View Details
+                      Details
                     </Button>
                   </div>
+
+                  {report.image_url && (
+                    <div className="relative h-64 mb-4 rounded-lg overflow-hidden">
+                      <img
+                        src={report.image_url}
+                        alt="Flood Report"
+                        className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                        onClick={() => setSelectedReport(report)}
+                      />
+                    </div>
+                  )}
+
+                  <p className="text-gray-600 line-clamp-3 mb-4">{report.description}</p>
+
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <MapPin className="h-4 w-4 flex-shrink-0" />
+                    <span className="truncate">{report.location}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+                    <Clock className="h-4 w-4 flex-shrink-0" />
+                    <span>{new Date(report.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Pagination */}
+        <div className="mt-8">
+          <ReactPaginate
+            previousLabel={'Previous'}
+            nextLabel={'Next'}
+            pageCount={pageCount}
+            onPageChange={({ selected }) => setCurrentPage(selected)}
+            containerClassName="flex justify-center gap-2"
+            pageClassName="px-3 py-1 rounded hover:bg-gray-100"
+            activeClassName="bg-blue-500 text-white"
+            previousClassName="px-3 py-1 rounded hover:bg-gray-100"
+            nextClassName="px-3 py-1 rounded hover:bg-gray-100"
+            disabledClassName="opacity-50 cursor-not-allowed"
+          />
+        </div>
+
+        {/* Details Modal */}
+        {selectedReport && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          >
+            <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-gray-800">Report Details</h2>
+                  <Button
+                    onClick={() => setSelectedReport(null)}
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full"
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </main>
 
-      {/* Details Modal */}
-      {selectedReport && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Report Details</h2>
-              <Button
-                onClick={closeDetailsModal}
-                className="text-gray-500 hover:text-gray-700"
-                variant="ghost"
-              >
-                <X className="h-6 w-6" />
-              </Button>
-            </div>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-4">
+                    <DetailItem label="Report Type" value={selectedReport.report_type} />
+                    <DetailItem label="Location" value={selectedReport.location} />
+                    <DetailItem label="Status" value={selectedReport.status} />
+                  </div>
+                  <div className="space-y-4">
+                    <DetailItem
+                      label="Reported On"
+                      value={new Date(selectedReport.createdAt).toLocaleString()}
+                    />
+                    <DetailItem
+                      label="Last Updated"
+                      value={new Date(selectedReport.updatedAt).toLocaleString()}
+                    />
+                  </div>
+                </div>
 
-            <div className="space-y-4">
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Report ID:</span> {selectedReport.report_id}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Report Type:</span> {selectedReport.report_type}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Location:</span> {selectedReport.location}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Description:</span> {selectedReport.description}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Status:</span> {selectedReport.status}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Created At:</span>{' '}
-                {new Date(selectedReport.createdAt).toLocaleString()}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-bold">Updated At:</span>{' '}
-                {new Date(selectedReport.updatedAt).toLocaleString()}
-              </p>
-              {selectedReport.image_url && (
-                <p className="text-sm text-gray-600">
-                  <span className="font-bold">Image URL:</span> {selectedReport.image_url}
-                </p>
-              )}
+                <Section title="Description">
+                  <p className="text-gray-800 whitespace-pre-wrap">{selectedReport.description}</p>
+                </Section>
+
+                {selectedReport.image_url && (
+                  <Section title="Visual Evidence">
+                    <div className="relative w-full h-96 rounded-xl overflow-hidden border border-gray-200">
+                      <img
+                        src={selectedReport.image_url}
+                        alt="Flood Evidence"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  </Section>
+                )}
+              </div>
             </div>
+          </motion.div>
+        )}
+
+        {currentReports.length === 0 && (
+          <div className="text-center py-12 text-gray-500">
+            No flood reports found matching your search
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
-export default Dashboard;
+const DetailItem: React.FC<{ label: string; value: string | number }> = ({ label, value }) => (
+  <div className="text-sm">
+    <span className="font-medium text-gray-600">{label}:</span>
+    <p className="text-gray-800 mt-1 font-medium">{value}</p>
+  </div>
+);
+
+const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+  <div className="mt-6">
+    <h3 className="text-lg font-semibold text-gray-800 mb-3">{title}</h3>
+    {children}
+  </div>
+);
+
+export default UserCommunityReports;
