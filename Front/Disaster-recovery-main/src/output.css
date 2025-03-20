@@ -1045,20 +1045,12 @@ body {
   height: 100vh;
 }
 
-.h-7 {
-  height: 1.75rem;
-}
-
 .max-h-96 {
   max-height: 24rem;
 }
 
 .max-h-\[90vh\] {
   max-height: 90vh;
-}
-
-.max-h-full {
-  max-height: 100%;
 }
 
 .max-h-dvh {
@@ -2884,11 +2876,6 @@ body {
 .hover\:bg-blue-800:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(30 64 175 / var(--tw-bg-opacity, 1));
-}
-
-.hover\:bg-cyan-300:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(103 232 249 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:bg-cyan-50:hover {
