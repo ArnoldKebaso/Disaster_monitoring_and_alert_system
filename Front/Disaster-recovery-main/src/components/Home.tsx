@@ -556,7 +556,7 @@ const Home: React.FC = () => {
           </div>
           <div className="text-center mt-8">
             <Link
-              to="/userResources"
+              to="/resources"
               className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-full font-bold hover:from-cyan-600 hover:to-blue-700 transition"
             >
               View More Resources
