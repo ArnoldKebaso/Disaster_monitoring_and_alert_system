@@ -14,41 +14,110 @@
     "FAQ": "Maswali Yanayoulizwa Sana",
     "alerts": "Tazama Onyo"
   },
-  "hero": {
-    "title": "Jiandae, Uwe Salama",
-    "description": "Ufuatiliaji wa Mafuriko na Usimamizi wa Maafa kwa Ufanisi."
+  "home": {
+    "hero": {
+      "title": "Mfumo wa Ufuatiliaji na Onyo la Mafuriko",
+      "description": "Kuwawezesha jamii ya Budalangi kupitia arifa za mafuriko kwa wakati halisi, taarifa za kina, na rasilimali za kukabiliana na maafa kwa ufanisi.",
+      "ctaDonate": "Changia",
+      "ctaViewAlerts": "Tazama Arifa"
+    },
+    "whatWeDo": {
+      "title": "Tunachofanya",
+      "floodMonitoring": {
+        "title": "Ufuatiliaji wa Mafuriko",
+        "description": "Mfumo wetu unafuata viwango vya maji na hali ya hewa kwa wakati halisi."
+      },
+      "floodAlerts": {
+        "title": "Arifa za Mafuriko",
+        "description": "Pokea arifa papo hapo kupitia SMS, barua pepe, au arifa za kusukuma."
+      },
+      "resourceAllocation": {
+        "title": "Ugawaji wa Rasilimali",
+        "description": "Tunashirikiana kugawa vifaa na wajitolea kwa maeneo yanayohitaji msaada zaidi."
+      },
+      "floodResponse": {
+        "title": "Majibu ya Mafuriko",
+        "description": "Shirikiana na mashirika ya ndani ili kujibu haraka na kwa ufanisi."
+      }
+    },
+    "donate": {
+      "title": "Tusaidie Kuokoa Maisha",
+      "description": "Changia zako zinaendesha ufuatiliaji wa wakati halisi, majibu ya dharura, na mafunzo kwa jamii—hakikisha wale walio katika hatari wanalindwa wakati mafuriko yanapogonga.",
+      "cta": "Changia Sasa"
+    },
+    "subscribe": {
+      "title": "Jisajili kwa Arifa",
+      "selectMethodLabel": "Chagua Njia ya Usajili",
+      "chooseMethod": "-- Chagua Njia --",
+      "email": "Barua Pepe",
+      "sms": "SMS",
+      "contactEmail": "Weka Barua Pepe Yako",
+      "contactPhone": "Weka Nambari ya Simu Yako",
+      "emailPlaceholder": "jane@example.com",
+      "phonePlaceholder": "+254 700 000 000",
+      "selectLocationsLabel": "Chagua Maeneo",
+      "locationsPlaceholder": "Chagua maeneo...",
+      "button": "Jisajili",
+      "allFieldsRequired": "Shamba zote zinahitajika!",
+      "submittedSuccess": "Usajili umefanikiwa!",
+      "submittedFailed": "Usajili umeshindikana. Jaribu tena."
+    },
+    "report": {
+      "title": "Ripoti Matukio ya Mafuriko",
+      "description": "Tuma ripoti za kina zenye picha na taarifa za eneo ili kutusaidia kuthibitisha na kuwafahamisha jamii haraka.",
+      "button": "Ripoti Sasa"
+    },
+    "publications": {
+      "title": "Machapisho na Video",
+      "description": "Angalia mkusanyiko wa miongozo na mafunzo maarufu. Kwa rasilimali zaidi, bonyeza hapa.",
+      "floodHandbook": {
+        "title": "Mwongozo wa Uandaa Mafuriko",
+        "description": "Mwongozo wa kina wa kujiandaa kwa mafuriko.",
+        "cta": "Pakua"
+      },
+      "floodTutorial": {
+        "title": "Mafunzo ya Ripoti za Mafuriko",
+        "description": "Video ya hatua kwa hatua jinsi ya kutuma ripoti za mafuriko.",
+        "cta": "Tazama Video"
+      },
+      "emergencyProtocol": {
+        "title": "Itifaki ya Majibu ya Dharura",
+        "description": "Mwongozo rasmi kwa timu za majibu ya dharura za ndani.",
+        "cta": "Angalia"
+      },
+      "viewMore": "Angalia Rasilimali Zaidi"
+    },
+    "faq": {
+      "title": "Maswali Yanayoulizwa Mara kwa Mara",
+      "q1": {
+        "question": "Ninawezaje kuripoti tukio la mafuriko?",
+        "answer": "Unaweza kutuma ripoti ya kina yenye picha na taarifa za eneo kupitia ukurasa wetu wa Ripoti. Mfumo unathibitisha ripoti yako kabla ya kutuma arifa kwa jamii."
+      },
+      "q2": {
+        "question": "Ninapokea arifa vipi?",
+        "answer": "Arifa za mafuriko hutolewa kupitia SMS, barua pepe, au arifa za kusukuma. Unaweza kubadilisha mipangilio yako ili usikose taarifa muhimu."
+      },
+      "q3": {
+        "question": "Taarifa zangu ziko salama?",
+        "answer": "Tunathamini usalama wa data kwa kutumia usimbuaji, ufikiaji kulingana na majukumu, na kufuata kanuni za ulinzi wa data. Taarifa zako binafsi ziko salama."
+      },
+      "button": "Angalia FAQ Kamili"
+    },
+    "impact": {
+      "title": "Athari Yetu",
+      "countyBranches": "Matawi ya Kaunti",
+      "regionalOffices": "Ofisi za Kanda",
+      "membersVolunteers": "Wanachama na Wajitolea",
+      "beneficiariesSupported": "Walionufaika"
+    },
+    "contact": {
+      "title": "Wasiliana Nasi",
+      "description": "Una maswali, unahitaji msaada, au unataka kujua zaidi? Wasiliana nasi wakati wowote—tuko hapa kusaidia.",
+      "button": "Wasiliana Nasi"
+    }
   },
   "subscribe": {
-    "title": "Jisajili kwa Arifa za Barua Pepe",
-    "smsWarning" : "Tafadhali wezesha ujumbe wa matangazo ili upokee arifa",
-    "method": "Chagua Njia ya Kupokea Arifa",
-    "selectMethod": "Chagua njia",
-    "email": "Barua Pepe",
-    "sms": "SMS",
-    "phonePlaceholder": "Weka nambari ya simu",
-    "emailPlaceholder": "Weka barua pepe",
-    "selectLocation": "Ni eneo au maeneo gani ungependa kupokea arifa?",
-    "subscribeButton": "Jisajili"
-  },
-  "whatWeDo": {
-    "title": "Tunachofanya",
-    "floodMonitoring": "Ufuatiliaji wa Mafuriko",
-    "floodAlert": "Onyo la Mafuriko",
-    "resourceAllocation": "Ugawaji wa Rasilimali",
-    "floodResponse": "Majibu ya Mafuriko",
-    "description": "Jifunze zaidi kuhusu juhudi zetu."
-  },
-  "analytics": {
-    "title": "Athari Yetu",
-    "countyBranches": "Matawi ya Kaunti",
-    "regionalOffices": "Ofisi za Kanda",
-    "membersVolunteers": "Wanachama na Wajitolea",
-    "beneficiariesSupported": "Walionufaika"
-  },
-  "reportFlood": {
-    "title": "Ripoti Matukio ya Mafuriko",
-    "description": "Tusaidie kujibu haraka kwa kuripoti matukio ya mafuriko katika eneo lako. Mawazo yako yanaweza kuokoa maisha.",
-    "button": "Ripoti Sasa"
+    "smsWarning": "⚠️ Kumbuka kupiga simu *456*9*5# ili kuwezesha ujumbe wa matangazo!"
   },
   "footer": {
     "quickLinks": "Viungo vya Haraka",

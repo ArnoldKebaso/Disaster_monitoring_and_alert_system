@@ -1,10 +1,12 @@
-// UserProfile.tsx
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
-import { toast } from 'sonner';
-import { Eye, EyeOff, Loader2, Camera, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
+// src/pages/UserProfile.tsx
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "sonner";
+import { Eye, EyeOff, Loader2, Camera } from "lucide-react";
+import { motion } from "framer-motion";
+import { LogOut } from "lucide-react";
 const locationOptions = [
   { value: "Bumadeya", label: "Bumadeya" },
   { value: "Budalangi Central", label: "Budalangi Central" },
@@ -23,78 +25,84 @@ const locationOptions = [
   { value: "South Bunyala", label: "South Bunyala" },
 ];
 
+
+
 const UserProfile: React.FC = () => {
   const { user, logout } = useAuth();
+   const navigate = useNavigate();
   const [profile, setProfile] = useState({
-    username: '',
-    email: '',
-    phone: '',
-    location: '',
-    profilePhoto: '',
+    username: "",
+    email: "",
+    phone: "",
+    location: "",
+    profilePhoto: "",
   });
   const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmNewPassword: '',
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [locationSource, setLocationSource] = useState<"manual" | "detected">("manual");
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/user/${user?.id}`, {
-          withCredentials: true
+          withCredentials: true,
         });
         setProfile(response.data);
       } catch (error) {
-        toast.error('Failed to load profile data');
+        toast.error("Failed to load profile data");
       }
     };
-    
+
     if (user) fetchProfile();
   }, [user]);
 
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleProfileChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setProfile(prev => ({ ...prev, [name]: value }));
+    setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.[0]) return;
-    
+
     const formData = new FormData();
-    formData.append('profilePhoto', e.target.files[0]);
-  
+    formData.append("profilePhoto", e.target.files[0]);
+
     try {
       const response = await axios.post(
-        'http://localhost:3000/user/profile-photo',
+        "http://localhost:3000/user/profile-photo",
         formData,
         {
-          headers: { 
-            
-            'Authorization': `Bearer ${localStorage.getItem('token')}` // Add if needed
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          withCredentials: true
+          withCredentials: true,
         }
       );
-      
-      setProfile(prev => ({ 
-        ...prev, 
-        profilePhoto: response.data.profilePhoto 
+      setProfile((prev) => ({
+        ...prev,
+        profilePhoto: response.data.profilePhoto,
       }));
-      toast.success('Profile photo updated');
+      toast.success("Profile photo updated");
     } catch (error) {
-      toast.error('Failed to update photo');
+      toast.error("Failed to update photo");
     }
   };
+
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await axios.put(`http://localhost:3000/user/${user?.id}`, 
+      await axios.put(
+        `http://localhost:3000/user/${user?.id}`,
         { phone: profile.phone, location: profile.location },
         { withCredentials: true }
       );
@@ -108,49 +116,53 @@ const UserProfile: React.FC = () => {
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Frontend validation
-    if (!passwordData.currentPassword || 
-        !passwordData.newPassword || 
-        !passwordData.confirmNewPassword) {
-      toast.error('All fields are required');
+
+    if (
+      !passwordData.currentPassword ||
+      !passwordData.newPassword ||
+      !passwordData.confirmNewPassword
+    ) {
+      toast.error("All fields are required");
       return;
     }
-  
+
     if (passwordData.newPassword !== passwordData.confirmNewPassword) {
       toast.error("Passwords don't match");
       return;
     }
-  
+
     if (passwordData.newPassword.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
     }
-  
+
     setIsLoading(true);
     try {
       await axios.put(
-        'http://localhost:3000/user/change-password',
+        "http://localhost:3000/user/change-password",
         {
           currentPassword: passwordData.currentPassword,
-          newPassword: passwordData.newPassword
+          newPassword: passwordData.newPassword,
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          withCredentials: true
+          withCredentials: true,
         }
       );
-      
       toast.success("Password changed successfully");
-      setPasswordData({ currentPassword: '', newPassword: '', confirmNewPassword: '' });
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
       logout();
     } catch (error: any) {
       const message = error.response?.data?.error || "Password change failed";
       if (error.response?.status === 401) {
-        toast.error('Current password is incorrect');
+        toast.error("Current password is incorrect");
       } else {
         toast.error(message);
       }
@@ -158,49 +170,72 @@ const UserProfile: React.FC = () => {
       setIsLoading(false);
     }
   };
+ const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
+      logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   const handleLocateUser = () => {
     if (!navigator.geolocation) {
-      toast.error('Geolocation Error', {
-        description: 'Your browser does not support geolocation',
+      toast.error("Geolocation Error", {
+        description: "Your browser does not support geolocation",
       });
       return;
     }
-    
+    const handleLogout = async () => {
+      try {
+        await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
+        logout();
+        navigate("/login");
+      } catch (error) {
+        console.error("Logout failed:", error);
+      }
+    };
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
+      (position) => {
         const { latitude, longitude } = position.coords;
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          );
-          const data = await response.json();
-          let detected = data.address.city || data.address.town || 
-                        data.address.village || data.display_name;
-          
-          setProfile(prev => ({ ...prev, location: detected }));
-          setLocationSource("detected");
-          toast.success(`Location detected: ${detected}`);
-        } catch (error) {
-          console.error('Reverse geocoding error:', error);
-          toast.error('Location Error', { description: 'Failed to retrieve location details.' });
-        }
+        fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            const detected =
+              data.address.city ||
+              data.address.town ||
+              data.address.village ||
+              data.display_name;
+            setProfile((prev) => ({ ...prev, location: detected }));
+            setLocationSource("detected");
+            toast.success(`Location detected: ${detected}`);
+          })
+          .catch((error) => {
+            console.error("Reverse geocoding error:", error);
+            toast.error("Location Error", {
+              description: "Failed to retrieve location details.",
+            });
+          });
       },
       (error) => {
-        console.error('Geolocation error:', error);
-        let errorMessage = 'Unable to retrieve your location';
+        console.error("Geolocation error:", error);
+        let errorMessage = "Unable to retrieve your location";
         switch (error.code) {
           case error.PERMISSION_DENIED:
-            errorMessage = 'Location access was denied. Please enable permissions in your browser settings.';
+            errorMessage =
+              "Location access was denied. Please enable permissions in your browser settings.";
             break;
           case error.POSITION_UNAVAILABLE:
-            errorMessage = 'Location information is unavailable.';
+            errorMessage = "Location information is unavailable.";
             break;
           case error.TIMEOUT:
-            errorMessage = 'The request to get location timed out.';
+            errorMessage = "The request to get location timed out.";
             break;
         }
-        toast.error('Location Error', { description: errorMessage });
+        toast.error("Location Error", { description: errorMessage });
       },
       {
         enableHighAccuracy: true,
@@ -209,22 +244,24 @@ const UserProfile: React.FC = () => {
       }
     );
   };
-  
+
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="max-w-4xl mx-auto p-6 space-y-8"
     >
-      <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Profile Settings</h1>
+      <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+        Profile Settings
+      </h1>
 
       {/* Profile Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <div className="flex items-center gap-6 mb-8">
+        <div className="flex flex-col sm:flex-row items-center gap-6 mb-8">
           <div className="relative group">
-          <img
+            <img
               src={
-                profile.profilePhoto.startsWith('http')
+                profile.profilePhoto.startsWith("http")
                   ? profile.profilePhoto
                   : `http://localhost:3000${profile.profilePhoto}`
               }
@@ -249,21 +286,11 @@ const UserProfile: React.FC = () => {
           </div>
         </div>
 
-        <form onSubmit={handleProfileSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              name="phone"
-              value={profile.phone}
-              onChange={handleProfileChange}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              pattern="[+]{0,1}[0-9\s]{10,15}"
-            />
-          </div> */}
-        <div>
+        <form
+          onSubmit={handleProfileSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Phone Number
             </label>
@@ -286,7 +313,7 @@ const UserProfile: React.FC = () => {
                 name="location"
                 value={profile.location}
                 onChange={(e) => {
-                  setProfile(prev => ({...prev, location: e.target.value}));
+                  setProfile((prev) => ({ ...prev, location: e.target.value }));
                   setLocationSource("manual");
                 }}
                 className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -294,7 +321,9 @@ const UserProfile: React.FC = () => {
               >
                 <option value="">Select your location</option>
                 {locationOptions.map((loc) => (
-                  <option key={loc.value} value={loc.value}>{loc.label}</option>
+                  <option key={loc.value} value={loc.value}>
+                    {loc.label}
+                  </option>
                 ))}
               </select>
               <button
@@ -306,25 +335,17 @@ const UserProfile: React.FC = () => {
               </button>
             </div>
           </div>
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Location
-            </label>
-            <input
-              type="text"
-              name="location"
-              value={profile.location}
-              onChange={handleProfileChange}
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
-          </div> */}
 
           <button
             type="submit"
             disabled={isLoading}
             className="md:col-span-2 mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
           >
-            {isLoading ? <Loader2 className="animate-spin mx-auto" /> : 'Update Profile'}
+            {isLoading ? (
+              <Loader2 className="animate-spin mx-auto" />
+            ) : (
+              "Update Profile"
+            )}
           </button>
         </form>
       </div>
@@ -334,7 +355,6 @@ const UserProfile: React.FC = () => {
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">
           Change Password
         </h2>
-        
         <form onSubmit={handlePasswordSubmit} className="space-y-6">
           <div className="space-y-4">
             <div>
@@ -346,19 +366,29 @@ const UserProfile: React.FC = () => {
                   type={showCurrentPassword ? "text" : "password"}
                   name="currentPassword"
                   value={passwordData.currentPassword}
-                  onChange={(e) => setPasswordData(prev => ({...prev, currentPassword: e.target.value}))}
+                  onChange={(e) =>
+                    setPasswordData((prev) => ({
+                      ...prev,
+                      currentPassword: e.target.value,
+                    }))
+                  }
                   className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
                 <button
                   type="button"
-                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  onClick={() =>
+                    setShowCurrentPassword(!showCurrentPassword)
+                  }
                   className="absolute right-3 top-3 text-gray-500 dark:text-gray-400"
                 >
-                  {showCurrentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showCurrentPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
                 </button>
               </div>
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 New Password
@@ -368,7 +398,12 @@ const UserProfile: React.FC = () => {
                   type={showNewPassword ? "text" : "password"}
                   name="newPassword"
                   value={passwordData.newPassword}
-                  onChange={(e) => setPasswordData(prev => ({...prev, newPassword: e.target.value}))}
+                  onChange={(e) =>
+                    setPasswordData((prev) => ({
+                      ...prev,
+                      newPassword: e.target.value,
+                    }))
+                  }
                   className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
                 <button
@@ -376,11 +411,14 @@ const UserProfile: React.FC = () => {
                   onClick={() => setShowNewPassword(!showNewPassword)}
                   className="absolute right-3 top-3 text-gray-500 dark:text-gray-400"
                 >
-                  {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showNewPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
                 </button>
               </div>
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Confirm New Password
@@ -390,28 +428,53 @@ const UserProfile: React.FC = () => {
                   type={showConfirmPassword ? "text" : "password"}
                   name="confirmNewPassword"
                   value={passwordData.confirmNewPassword}
-                  onChange={(e) => setPasswordData(prev => ({...prev, confirmNewPassword: e.target.value}))}
+                  onChange={(e) =>
+                    setPasswordData((prev) => ({
+                      ...prev,
+                      confirmNewPassword: e.target.value,
+                    }))
+                  }
                   className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
                 <button
                   type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  onClick={() =>
+                    setShowConfirmPassword(!showConfirmPassword)
+                  }
                   className="absolute right-3 top-3 text-gray-500 dark:text-gray-400"
                 >
-                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
                 </button>
               </div>
             </div>
           </div>
-
           <button
             type="submit"
             disabled={isLoading}
             className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
           >
-            {isLoading ? <Loader2 className="animate-spin mx-auto" /> : 'Change Password'}
+            {isLoading ? (
+              <Loader2 className="animate-spin mx-auto" />
+            ) : (
+              "Change Password"
+            )}
           </button>
         </form>
+        {user && (
+              <div className="p-6">
+                <button
+                  onClick={handleLogout}
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg text-base transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <LogOut className="w-5 h-5" />
+                  Logout
+                </button>
+              </div>
+            )}
       </div>
     </motion.div>
   );

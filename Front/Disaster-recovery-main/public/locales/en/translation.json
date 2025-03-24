@@ -14,41 +14,110 @@
     "FAQ": "FAQ",
     "alerts": "View Alerts"
   },
-  "hero": {
-    "title": "Be Prepared, Stay Safe",
-    "description": "Comprehensive Flood Monitoring and Disaster Management Solutions."
+  "home": {
+    "hero": {
+      "title": "Flood Monitoring & Alert System",
+      "description": "Empowering the Budalangi community with real-time flood alerts, intuitive reporting, and comprehensive resources for safer, more resilient living.",
+      "ctaDonate": "Donate",
+      "ctaViewAlerts": "View Alerts"
+    },
+    "whatWeDo": {
+      "title": "What We Do",
+      "floodMonitoring": {
+        "title": "Flood Monitoring",
+        "description": "Our system tracks water levels & weather patterns in real-time."
+      },
+      "floodAlerts": {
+        "title": "Flood Alerts",
+        "description": "Receive instant alerts via SMS, email, or push notifications."
+      },
+      "resourceAllocation": {
+        "title": "Resource Allocation",
+        "description": "We coordinate supplies & volunteers to areas most in need."
+      },
+      "floodResponse": {
+        "title": "Flood Response",
+        "description": "Collaborate with local agencies for quick & efficient response."
+      }
+    },
+    "donate": {
+      "title": "Help Us Save Lives",
+      "description": "Your donation fuels real-time monitoring, emergency responses, and community training—ensuring that those most vulnerable are protected when floods strike.",
+      "cta": "Donate Now"
+    },
+    "subscribe": {
+      "title": "Subscribe for Alerts",
+      "selectMethodLabel": "Select Subscription Method",
+      "chooseMethod": "-- Choose Method --",
+      "email": "Email",
+      "sms": "SMS",
+      "contactEmail": "Enter your Email",
+      "contactPhone": "Enter your Phone Number",
+      "emailPlaceholder": "jane@example.com",
+      "phonePlaceholder": "+254 700 000 000",
+      "selectLocationsLabel": "Select Locations",
+      "locationsPlaceholder": "Select locations...",
+      "button": "Subscribe",
+      "allFieldsRequired": "All fields are required!",
+      "submittedSuccess": "Subscription submitted successfully!",
+      "submittedFailed": "Subscription failed. Try again."
+    },
+    "report": {
+      "title": "Report Flood Incidents",
+      "description": "Submit detailed reports with images and locations to help us verify and alert the community faster.",
+      "button": "Report Now"
+    },
+    "publications": {
+      "title": "Publications & Videos",
+      "description": "Browse a selection of our most popular guides and tutorials. For more resources, click below.",
+      "floodHandbook": {
+        "title": "Flood Preparedness Handbook",
+        "description": "A comprehensive guide to preparing for floods.",
+        "cta": "Download"
+      },
+      "floodTutorial": {
+        "title": "Flood Reporting Tutorial",
+        "description": "Step-by-step video on how to submit flood reports.",
+        "cta": "Watch Video"
+      },
+      "emergencyProtocol": {
+        "title": "Emergency Response Protocol",
+        "description": "Official guidelines for local emergency response teams.",
+        "cta": "View"
+      },
+      "viewMore": "View More Resources"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "How can I report a flood incident?",
+        "answer": "You can submit a detailed report with images and location data through our Report page. The system verifies your report before generating alerts to the community."
+      },
+      "q2": {
+        "question": "How do I receive alerts?",
+        "answer": "Flood alerts are delivered through SMS, email, or push notifications. You can customize your preferences and choose multiple channels to ensure you never miss an important update."
+      },
+      "q3": {
+        "question": "Is my data secure?",
+        "answer": "We prioritize data security with encryption, role-based access, and compliance with data protection regulations. Your personal information remains confidential and protected."
+      },
+      "button": "View Full FAQ"
+    },
+    "impact": {
+      "title": "Our Impact",
+      "countyBranches": "County Branches",
+      "regionalOffices": "Regional Offices",
+      "membersVolunteers": "Members & Volunteers",
+      "beneficiariesSupported": "Beneficiaries Supported"
+    },
+    "contact": {
+      "title": "Get In Touch",
+      "description": "Have questions, need assistance, or want to learn more? Reach out to us anytime—we’re here to help.",
+      "button": "Contact Us"
+    }
   },
   "subscribe": {
-    "title": "Subscribe for Notifications",
-    "smsWarning" : "Kindly enable promotional messages to receive alerts",
-    "method": "Choose Notification Method",
-    "selectMethod": "Select a method",
-    "email": "Email",
-    "sms": "SMS",
-    "phonePlaceholder": "Enter your phone number",
-    "emailPlaceholder": "Enter your email",
-    "selectLocation": "Which location(s) would you like to receive alerts for?",
-    "subscribeButton": "Subscribe"
-  },
-  "whatWeDo": {
-    "title": "What We Do",
-    "floodMonitoring": "Flood Monitoring",
-    "floodAlert": "Flood Alert",
-    "resourceAllocation": "Resource Allocation",
-    "floodResponse": "Flood Response",
-    "description": "Learn more about our efforts."
-  },
-  "analytics": {
-    "title": "Our Impact",
-    "countyBranches": "County Branches",
-    "regionalOffices": "Regional Offices",
-    "membersVolunteers": "Members & Volunteers",
-    "beneficiariesSupported": "Beneficiaries Supported"
-  },
-  "reportFlood": {
-    "title": "Report Flood Incidents",
-    "description": "Help us respond faster by reporting flood incidents in your area. Your input can save lives.",
-    "button": "Report Now"
+    "smsWarning": "⚠️ Remember to dial *456*9*5# on your phone to enable promotional messages!"
   },
   "footer": {
     "quickLinks": "Quick Links",
