@@ -342,6 +342,60 @@
       "hotline": "+254 789 123 456"
     }
   },
+  "faq": {
+    "pageTitle": "Frequently Asked Questions",
+    "pageSubtitle": "Find answers to common questions about FMAS",
+    "items": {
+      "1": {
+        "question": "1. What is the Flood Monitoring and Alert System (FMAS)?",
+        "answer": "FMAS is a cutting-edge platform designed for the Budalangi community, historically prone to severe flooding. It provides real-time flood information and actionable alerts so residents can prepare and respond effectively during flood emergencies."
+      },
+      "2": {
+        "question": "2. What are the mission and vision of FMAS?",
+        "answer": "Our mission is to reduce the impact of floods by providing timely alerts, facilitating easy incident reporting, and offering educational resources for flood preparedness. We envision a resilient, well-informed community that actively engages in flood management and disaster response."
+      },
+      "3": {
+        "question": "3. What challenges does the Budalangi community face?",
+        "answer": "Budalangi has long struggled with recurring floods, displacement, and damaged infrastructure. These hardships motivated the creation of FMAS, which specifically addresses local needs by analyzing historical flood patterns and tailoring solutions to longstanding issues."
+      },
+      "4": {
+        "question": "4. Which features does FMAS offer?",
+        "answer": "FMAS provides:\n• Real-time flood alerts (via SMS & email)\n• An intuitive incident reporting system (with images & location data)\n• Predictive analytics (hydrological & meteorological data)\n• Interactive geospatial maps (high-risk zones & safe routes)\n• Educational resources (step-by-step flood preparedness & safety measures)\nEach feature helps users stay safe, informed, and better prepared for flood events."
+      },
+      "5": {
+        "question": "5. How does FMAS work?",
+        "answer": "FMAS uses a role-based workflow: when a user reports a flood incident, administrators verify the data before generating alerts. The system supports offline capabilities like SMS alerts for areas with limited internet access, ensuring seamless communication among community members, local responders, and partners such as the Kenya Red Cross."
+      },
+      "6": {
+        "question": "6. What technology and architecture power FMAS?",
+        "answer": "FMAS is built with a React.js & TypeScript front-end and a Node.js & Express.js back-end. Data encryption, robust authentication, and third-party geospatial integrations ensure reliability, security, and real-time data access. This modern stack enables continuous improvements and rapid feature updates."
+      },
+      "7": {
+        "question": "7. Who are the key stakeholders and collaborators?",
+        "answer": "FMAS is supported by organizations like the National Disaster Management Unit (NDMU) and the Kenya Red Cross. Their collaboration enhances credibility, facilitates rapid emergency response, and fosters deeper community engagement in disaster management initiatives."
+      },
+      "8": {
+        "question": "8. Does FMAS provide educational resources?",
+        "answer": "Absolutely! FMAS goes beyond alerts by offering a dedicated educational section with downloadable guides, tutorial videos, and interactive modules on flood preparedness. Empowering the community with knowledge is a cornerstone of our project’s success."
+      },
+      "9": {
+        "question": "9. Are there future plans for expanding FMAS?",
+        "answer": "Yes. We aim to incorporate IoT sensors for real-time water monitoring, and possibly extend FMAS to manage other disasters like landslides or droughts. We actively gather user feedback and leverage technological advancements to make the system even more user-centric."
+      },
+      "10": {
+        "question": "10. How can I get involved?",
+        "answer": "You can subscribe to FMAS alerts, report flood incidents, and explore educational resources on the platform. Simply sign up for tailored notifications, share your insights with us, and help build a safer, more prepared community."
+      },
+      "11": {
+        "question": "11. How do I receive flood alerts?",
+        "answer": "You can receive alerts via SMS, email, or push notifications. Multiple channels ensure you get timely updates, even in low-connectivity situations. You can customize alert settings in your profile or account preferences."
+      },
+      "12": {
+        "question": "12. Is my data secure on FMAS?",
+        "answer": "We use data encryption, role-based access controls, and comply with relevant data protection regulations to keep your information safe. Our back-end implements strict security protocols to ensure the highest standards of user data privacy."
+      }
+    }
+  },
   "footer": {
     "quickLinks": "Quick Links",
     "adminPortal": "Admin Portal",

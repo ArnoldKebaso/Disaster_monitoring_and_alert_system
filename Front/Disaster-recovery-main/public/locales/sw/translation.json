@@ -342,6 +342,60 @@
       "hotline": "+254 789 123 456"
     }
   },
+  "faq": {
+    "pageTitle": "Maswali Yanayoulizwa Mara kwa Mara",
+    "pageSubtitle": "Pata majibu ya maswali ya kawaida kuhusu FMAS",
+    "items": {
+      "1": {
+        "question": "1. FMAS ni nini (Mfumo wa Ufuatiliaji na Onyo la Mafuriko)?",
+        "answer": "FMAS ni jukwaa la kisasa lililoundwa kwa ajili ya jamii ya Budalangi, ambalo mara nyingi hukumbwa na mafuriko makubwa. Linatoa taarifa za mafuriko kwa wakati halisi na arifa zinazochukuliwa hatua ili wakazi waweze kujiandaa na kujibu kwa ufanisi wakati wa dharura za mafuriko."
+      },
+      "2": {
+        "question": "2. Dhamira na maono ya FMAS ni yapi?",
+        "answer": "Dhamira yetu ni kupunguza athari za mafuriko kwa kutoa arifa kwa wakati, kuwezesha kuripoti matukio kwa urahisi, na kutoa rasilimali za elimu za kujiandaa kwa mafuriko. Tunaona jamii yenye ustahimilivu, yenye taarifa, inayoshiriki kikamilifu katika usimamizi wa mafuriko na majibu ya dharura."
+      },
+      "3": {
+        "question": "3. Changamoto gani zinakabili jamii ya Budalangi?",
+        "answer": "Budalangi imekuwa ikikumbwa na mafuriko yanayojirudia, uhamishaji, na uharibifu wa miundombinu. Changamoto hizi ziliwahamasisha kuanzishwa kwa FMAS, ambayo inalenga mahitaji ya ndani kwa kuchambua mifumo ya mafuriko ya kihistoria na kuboresha suluhisho."
+      },
+      "4": {
+        "question": "4. FMAS inatoa vipengele vipi?",
+        "answer": "FMAS inatoa:\n• Arifa za mafuriko kwa wakati halisi (kupitia SMS na barua pepe)\n• Mfumo rahisi wa kuripoti matukio (na picha na taarifa za eneo)\n• Uchambuzi wa utabiri (data ya hidrolojia na meteorolojia)\n• Ramani za kijiografia za kushirikisha (eneo lenye hatari na njia salama)\n• Rasilimali za elimu (maelekezo ya hatua kwa hatua ya kujiandaa na usalama wakati wa mafuriko)\nKila kipengele husaidia watumiaji kuwa salama, na taarifa, na kujiandaa vyema kwa matukio ya mafuriko."
+      },
+      "5": {
+        "question": "5. FMAS inafanya kazi vipi?",
+        "answer": "FMAS inatumia mtiririko wa kazi kulingana na jukumu: wakati mtumiaji anaripoti tukio la mafuriko, wasimamizi wanathibitisha taarifa kabla ya kutuma arifa. Mfumo unaunga mkono uwezo wa nje ya mtandao kama arifa za SMS kwa maeneo yenye muunganisho mdogo, kuhakikisha mawasiliano mazuri kati ya wanajamii, wahusika wa majibu, na washirika kama Kenya Red Cross."
+      },
+      "6": {
+        "question": "6. Ni teknolojia na usanifu gani unaoendesha FMAS?",
+        "answer": "FMAS imetengenezwa kwa React.js na TypeScript kwa upande wa mbele na Node.js na Express.js kwa upande wa nyuma. Usimbuaji wa data, uthibitishaji thabiti, na ushirikiano na huduma za kijiografia unahakikisha uaminifu, usalama, na upatikanaji wa data kwa wakati halisi. Mfumo huu wa kisasa unaruhusu maboresho ya mara kwa mara na masasisho ya haraka."
+      },
+      "7": {
+        "question": "7. Wahusika na washirika wakuu ni nani?",
+        "answer": "FMAS inaungwa mkono na mashirika kama Kitengo cha Taifa cha Usimamizi wa Majanga (NDMU) na Kenya Red Cross. Ushirikiano wao unaongeza uaminifu, unarahisisha majibu ya dharura kwa haraka, na unakuza ushirikiano wa kina wa jamii katika mipango ya majanga."
+      },
+      "8": {
+        "question": "8. Je, FMAS inatoa rasilimali za elimu?",
+        "answer": "Hakika! FMAS inazidi kutoa arifa kwa kutoa sehemu maalum ya elimu yenye miongozo inayoweza kupakuliwa, video za mafunzo, na moduli za kushirikisha kuhusu kujiandaa kwa mafuriko. Kuwawezesha jamii kupitia elimu ni msingi wa mafanikio ya mradi wetu."
+      },
+      "9": {
+        "question": "9. Je, kuna mipango ya kupanua FMAS?",
+        "answer": "Ndiyo. Tunakusudia kuongeza sensa za IoT kwa ajili ya ufuatiliaji wa maji kwa wakati halisi, na labda kupanua FMAS kudhibiti majanga mengine kama kuanguka kwa ardhi au ukame. Tunakusanya maoni ya watumiaji na kutumia maendeleo ya kiteknolojia ili kufanya mfumo uwe wa mtumiaji zaidi."
+      },
+      "10": {
+        "question": "10. Ninawezaje kujihusisha?",
+        "answer": "Unaweza kujisajili kwa arifa za FMAS, kuripoti matukio ya mafuriko, na kuchunguza rasilimali za elimu kwenye jukwaa. Jiandikishe kwa arifa maalum, shiriki maoni yako nasi, na saidia kujenga jamii salama na iliyoandaa vizuri."
+      },
+      "11": {
+        "question": "11. Ninapokea arifa za mafuriko vipi?",
+        "answer": "Unaweza kupokea arifa kupitia SMS, barua pepe, au arifa za kusukuma. Njia nyingi zinahakikisha unapata taarifa kwa wakati, hata katika maeneo yenye muunganisho mdogo. Unaweza kubadilisha mipangilio ya arifa katika wasifu wako au mapendeleo ya akaunti."
+      },
+      "12": {
+        "question": "12. Je, data yangu iko salama kwenye FMAS?",
+        "answer": "Tunatumia usimbuaji wa data, udhibiti wa ufikiaji kulingana na majukumu, na tunafuata sheria za ulinzi wa data ili kuhakikisha taarifa zako ziko salama. Sehemu yetu ya nyuma inatekeleza itifaki kali za usalama ili kuhakikisha viwango vya juu vya faragha ya taarifa za watumiaji."
+      }
+    }
+  },
   "footer": {
     "quickLinks": "Viungo vya Haraka",
     "adminPortal": "Lango la Msimamizi",
