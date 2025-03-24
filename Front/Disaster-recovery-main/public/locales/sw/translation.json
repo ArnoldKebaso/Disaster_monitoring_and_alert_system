@@ -307,6 +307,41 @@
       "button": "Jisajili"
     }
   },
+  "contact": {
+    "heroTitle": "Wasiliana Nasi",
+    "heroSubtitle": "Una maswali au unahitaji msaada? Timu yetu iko hapa kukusaidia 24/7.",
+    "form": {
+      "nameLabel": "Jina Lako",
+      "namePlaceholder": "John Doe",
+      "emailLabel": "Anwani ya Barua Pepe",
+      "emailPlaceholder": "john@example.com",
+      "subjectLabel": "Somo",
+      "subjectPlaceholder": "Tunawezaje kusaidia?",
+      "messageLabel": "Ujumbe",
+      "messagePlaceholder": "Andika ujumbe wako hapa...",
+      "sendButton": "Tuma Ujumbe",
+      "sending": "Inatuma..."
+    },
+    "status": {
+      "success": "Ujumbe umetumwa kwa mafanikio!",
+      "error": "Imeshindwa kutuma ujumbe. Tafadhali jaribu tena."
+    },
+    "info": {
+      "title": "Taarifa za Mawasiliano",
+      "description": "Wasiliana nasi kupitia njia hizi. Timu yetu ya msaada inajibu ndani ya saa 2 za kazi.",
+      "locationTitle": "Mahali Pa Kupatikana",
+      "locationText": "Njoro, Kenya",
+      "phoneTitle": "Piga Simu",
+      "phoneText": "+254 123 456 789",
+      "emailTitle": "Anwani ya Barua Pepe",
+      "emailText": "fmas@gmail.com"
+    },
+    "emergency": {
+      "supportTitle": "Msaada wa Dharura 24/7",
+      "supportText": "Kwa dharura zinazohusiana na mafuriko, piga simu kwa hotline yetu:",
+      "hotline": "+254 789 123 456"
+    }
+  },
   "footer": {
     "quickLinks": "Viungo vya Haraka",
     "adminPortal": "Lango la Msimamizi",

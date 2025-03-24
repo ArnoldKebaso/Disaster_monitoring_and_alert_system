@@ -307,6 +307,41 @@
       "button": "Subscribe"
     }
   },
+  "contact": {
+    "heroTitle": "Get in Touch",
+    "heroSubtitle": "Have questions or need assistance? Our team is here to help you 24/7.",
+    "form": {
+      "nameLabel": "Your Name",
+      "namePlaceholder": "John Doe",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "john@example.com",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "How can we help?",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Write your message here...",
+      "sendButton": "Send Message",
+      "sending": "Sending..."
+    },
+    "status": {
+      "success": "Message sent successfully!",
+      "error": "Failed to send message. Please try again."
+    },
+    "info": {
+      "title": "Contact Information",
+      "description": "Reach out to us through any of these channels. Our support team typically responds within 2 business hours.",
+      "locationTitle": "Our Location",
+      "locationText": "Njoro, Kenya",
+      "phoneTitle": "Call Us",
+      "phoneText": "+254 123 456 789",
+      "emailTitle": "Email Address",
+      "emailText": "fmas@gmail.com"
+    },
+    "emergency": {
+      "supportTitle": "24/7 Emergency Support",
+      "supportText": "For urgent flood-related emergencies, call our hotline:",
+      "hotline": "+254 789 123 456"
+    }
+  },
   "footer": {
     "quickLinks": "Quick Links",
     "adminPortal": "Admin Portal",
