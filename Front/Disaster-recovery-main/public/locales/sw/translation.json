@@ -119,6 +119,83 @@
   "subscribe": {
     "smsWarning": "⚠️ Kumbuka kupiga simu *456*9*5# ili kuwezesha ujumbe wa matangazo!"
   },
+  "about": {
+    "hero": {
+      "title": "Mfumo wa Ufuatiliaji na Onyo la Mafuriko",
+      "subtitle": "Kuimarisha Jamii ya Budalangi na Ulinzi wa Mafuriko kwa Wakati Halisi",
+      "feature": "Ulinzi wa Jamii 24/7"
+    },
+    "mission": {
+      "title": "Dhamira Yetu",
+      "description": "Kupunguza athari za mafuriko kupitia arifa za wakati, ripoti za jamii, na rasilimali za elimu. Kujenga Budalangi yenye ustahimilivu kupitia teknolojia na ushirikiano.",
+      "stat": "Taarifa za Mabadiliko ya Mafuriko Zaidi ya Miaka 15"
+    },
+    "security": {
+      "title": "Usalama na Uaminifu",
+      "items": {
+        "uptime": "Uptime",
+        "uptimeDesc": "Upatikanaji wa Mfumo 99.9%",
+        "encryption": "Usimbuaji",
+        "encryptionDesc": "Ulinzi wa Data wa Kiwango cha Kijeshi",
+        "certified": "Yaliyethibitishwa",
+        "certifiedDesc": "Zifuatazo ISO 27001",
+        "alerts": "Arifa",
+        "alertsDesc": "Utoaji wa Arifa kwa Sekunde 3"
+      },
+      "footer": "Miundombinu yetu hufanyiwa ukaguzi wa usalama na majaribio mara kwa mara ili kuhakikisha huduma haivurugwi."
+    },
+    "features": {
+      "title": "Vipengele Muhimu na Uwezo",
+      "items": [
+        {
+          "title": "Ufuatiliaji wa Wakati Halisi",
+          "content": "Uangalizi wa 24/7 wa viwango vya maji na hali ya hewa"
+        },
+        {
+          "title": "Ripoti za Jamii",
+          "content": "Ripoti za matukio zenye picha na GPS"
+        },
+        {
+          "title": "Kituo cha Elimu",
+          "content": "Rasilimali za mafunzo ya kujiandaa kwa mafuriko"
+        },
+        {
+          "title": "Ufikiaji kulingana na Majukumu",
+          "content": "Lango maalum kwa aina tofauti za watumiaji"
+        },
+        {
+          "title": "Ramani ya Hatari",
+          "content": "Uonyeshaji wa maeneo hatarishi ya mafuriko"
+        },
+        {
+          "title": "Uchanganuzi wa Utabiri",
+          "content": "Mitindo ya utabiri wa mafuriko kwa kutumia AI"
+        }
+      ]
+    },
+    "impact": {
+      "title": "Athari kwa Jamii",
+      "description": "Tangu utekelezaji, FMAS imegeuza usimamizi wa mafuriko katika Budalangi:",
+      "stats": [
+        { "value": "95%", "label": "Usahihi wa Arifa" },
+        { "value": "30min", "label": "Muda wa Majibu" },
+        { "value": "10k+", "label": "Maisha Yaliyolindwa" },
+        { "value": "24/7", "label": "Ufuatiliaji" }
+      ],
+      "testimonial": {
+        "title": "Ushuhuda wa Mtumiaji",
+        "quote": "Arifa za FMAS zilitusaidia kuondoka salama msimu uliopita. Sasa tumejiandaa vizuri zaidi.",
+        "author": "Mkulima wa Kanda",
+        "affiliation": "Jamii ya Budalangi"
+      }
+    },
+    "cta": {
+      "title": "Jiunge na Mtandao wetu wa Ulinzi wa Mafuriko",
+      "description": "Pata arifa za wakati halisi, toa ripoti, na upate rasilimali za kuokoa maisha",
+      "donate": "Changia",
+      "viewAlerts": "Tazama Arifa"
+    }
+  },
   "footer": {
     "quickLinks": "Viungo vya Haraka",
     "adminPortal": "Lango la Msimamizi",

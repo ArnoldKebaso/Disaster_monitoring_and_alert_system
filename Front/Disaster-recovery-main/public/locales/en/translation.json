@@ -119,6 +119,83 @@
   "subscribe": {
     "smsWarning": "⚠️ Remember to dial *456*9*5# on your phone to enable promotional messages!"
   },
+  "about": {
+    "hero": {
+      "title": "Flood Monitoring & Alert System",
+      "subtitle": "Empowering Budalangi Community with Real-Time Flood Protection",
+      "feature": "24/7 Community Protection"
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "Reduce flood impact through timely alerts, community reporting, and educational resources. Building a resilient, proactive Budalangi through technology and collaboration.",
+      "stat": "15+ Years Flood History Analyzed"
+    },
+    "security": {
+      "title": "Security & Reliability",
+      "items": {
+        "uptime": "Uptime",
+        "uptimeDesc": "99.9% System Availability",
+        "encryption": "Encryption",
+        "encryptionDesc": "Military-Grade Data Protection",
+        "certified": "Certified",
+        "certifiedDesc": "ISO 27001 Compliant",
+        "alerts": "Alerts",
+        "alertsDesc": "3-Second Notification Delivery"
+      },
+      "footer": "Our infrastructure undergoes regular security audits and stress tests to ensure uninterrupted service."
+    },
+    "features": {
+      "title": "Key Features & Capabilities",
+      "items": [
+        {
+          "title": "Real-Time Monitoring",
+          "content": "24/7 surveillance of water levels and weather patterns"
+        },
+        {
+          "title": "Community Reporting",
+          "content": "Image-based incident reports with GPS tagging"
+        },
+        {
+          "title": "Educational Hub",
+          "content": "Interactive flood preparedness resources"
+        },
+        {
+          "title": "Role-Based Access",
+          "content": "Dedicated portals for different user types"
+        },
+        {
+          "title": "Risk Mapping",
+          "content": "Interactive flood zone visualization"
+        },
+        {
+          "title": "Predictive Analytics",
+          "content": "AI-powered flood prediction models"
+        }
+      ]
+    },
+    "impact": {
+      "title": "Community Impact",
+      "description": "Since implementation, FMAS has transformed flood management in Budalangi:",
+      "stats": [
+        { "value": "95%", "label": "Alert Accuracy" },
+        { "value": "30min", "label": "Response Time" },
+        { "value": "10k+", "label": "Lives Protected" },
+        { "value": "24/7", "label": "Monitoring" }
+      ],
+      "testimonial": {
+        "title": "User Testimonial",
+        "quote": "FMAS warnings helped us evacuate safely last season. We're now better prepared.",
+        "author": "Local Farmer",
+        "affiliation": "Budalangi Community"
+      }
+    },
+    "cta": {
+      "title": "Join Our Flood Protection Network",
+      "description": "Get real-time alerts, contribute reports, and access life-saving resources",
+      "donate": "Donate",
+      "viewAlerts": "View Alerts"
+    }
+  },
   "footer": {
     "quickLinks": "Quick Links",
     "adminPortal": "Admin Portal",
