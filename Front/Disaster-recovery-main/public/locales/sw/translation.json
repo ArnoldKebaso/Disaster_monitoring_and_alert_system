@@ -245,6 +245,68 @@
       ]
     }
   },
+  "resources": {
+    "hero": {
+      "title": "Rasilimali za Kujiandaa na Mafuriko",
+      "subtitle": "Jifunze kupitia maarifa, zana, na mikakati ili uwe salama wakati wa mafuriko.",
+      "videoNotSupported": "Kivinjari chako hakitegemei video."
+    },
+    "categories": {
+      "guides": "Miongozo",
+      "multimedia": "Mitandao ya Habari",
+      "tools": "Zana"
+    },
+    "difficulty": {
+      "beginner": "Mwanzo",
+      "advanced": "Za juu"
+    },
+    "guides": {
+      "floodPreparednessHandbook": "Mwongozo wa Kujiandaa na Mafuriko",
+      "emergencyPlanHandbook": "Mwongozo wa Mpango wa Dharura",
+      "subscriptionReportsHandbook": "Mwongozo wa Ripoti za Usajili",
+      "elninoResponseProtocols": "Itifaki za Majibu ya Dharura za El Niño"
+    },
+    "multimedia": {
+      "floodReportingTutorial": "Mafunzo ya Ripoti za Mafuriko",
+      "elninoPreparednessNews": "Habari za Kujiandaa kwa El Niño",
+      "floodResponseBudalangi": "Majibu ya Mafuriko katika Budalangi",
+      "kenyaRapidResponse": "Ripoti ya Majibu ya Haraka ya Kenya kwa Mafuriko"
+    },
+    "tools": {
+      "floodRiskAssessmentTool": "Zana ya Tathmini ya Hatari ya Mafuriko",
+      "evacuationRoutePlanner": "Mpangilio wa Njia za Uhamisho"
+    },
+    "essentialReadings": {
+      "floodFirstAidGuide": "Mwongozo wa Msaada wa Kwanza kwa Mafuriko",
+      "adultFirstAidCprAedCourse": "Kozi ya Msaada wa Kwanza/CPR/AED kwa Watu Wazima",
+      "evacuationPlanning": "Mipango ya Uhamisho"
+    },
+    "toolsInteractive": {
+      "riskAssessment": "Tathmini ya Hatari",
+      "riskAssessment_description": "Pima kiwango chako cha hatari ya mafuriko kulingana na eneo na historia.",
+      "floodSimulator": "Kichezo cha Mafuriko",
+      "floodSimulator_description": "Ona taswira ya matukio ya mafuriko katika eneo lako.",
+      "preparationQuiz": "Mtihani wa Kujiandaa",
+      "preparationQuiz_description": "Jaribu maarifa yako ya kujiandaa kwa mafuriko.",
+      "launchButton": "Anzisha Zana"
+    },
+    "learningHub": {
+      "title": "Kituo cha Kujifunza kinacho Shirikisha",
+      "iframeTitle": "Video za Elimu",
+      "essentialReading": {
+        "title": "Usomaji Muhimu"
+      },
+      "interactiveTools": {
+        "title": "Zana Zinazo Shirikisha"
+      }
+    },
+    "newsletter": {
+      "title": "Uwe Tayari",
+      "subtitle": "Pata taarifa za kila mwezi pamoja na rasilimali mpya na vidokezo vya usalama wakati wa mafuriko",
+      "inputPlaceholder": "Weka barua pepe yako",
+      "button": "Jisajili"
+    }
+  },
   "footer": {
     "quickLinks": "Viungo vya Haraka",
     "adminPortal": "Lango la Msimamizi",

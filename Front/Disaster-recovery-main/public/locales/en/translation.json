@@ -245,6 +245,68 @@
       ]
     }
   },
+  "resources": {
+    "hero": {
+      "title": "Flood Preparedness Resources",
+      "subtitle": "Empower yourself with knowledge, tools, and strategies to stay safe during flood events.",
+      "videoNotSupported": "Your browser does not support the video tag."
+    },
+    "categories": {
+      "guides": "Guides",
+      "multimedia": "Multimedia",
+      "tools": "Tools"
+    },
+    "difficulty": {
+      "beginner": "Beginner",
+      "advanced": "Advanced"
+    },
+    "guides": {
+      "floodPreparednessHandbook": "Flood Preparedness Handbook",
+      "emergencyPlanHandbook": "Emergency Plan Handbook",
+      "subscriptionReportsHandbook": "Subscription Reports Handbook",
+      "elninoResponseProtocols": "Elnino Emergency Response Protocols"
+    },
+    "multimedia": {
+      "floodReportingTutorial": "Flood Reporting Tutorial",
+      "elninoPreparednessNews": "Elnino Preparedness Report News",
+      "floodResponseBudalangi": "Flood Response in Budalangi",
+      "kenyaRapidResponse": "Kenya's Rapid Response to Flooding Report News"
+    },
+    "tools": {
+      "floodRiskAssessmentTool": "Flood Risk Assessment Tool",
+      "evacuationRoutePlanner": "Evacuation Route Planner"
+    },
+    "essentialReadings": {
+      "floodFirstAidGuide": "Flood First Aid Guide",
+      "adultFirstAidCprAedCourse": "Adult First Aid/CPR/AED Course",
+      "evacuationPlanning": "Evacuation Planning"
+    },
+    "toolsInteractive": {
+      "riskAssessment": "Risk Assessment",
+      "riskAssessment_description": "Evaluate your current flood risk level based on location and historical data.",
+      "floodSimulator": "Flood Simulator",
+      "floodSimulator_description": "Visualize potential flood scenarios in your area.",
+      "preparationQuiz": "Preparation Quiz",
+      "preparationQuiz_description": "Test your flood preparedness knowledge.",
+      "launchButton": "Launch Tool"
+    },
+    "learningHub": {
+      "title": "Interactive Learning Hub",
+      "iframeTitle": "Educational Videos",
+      "essentialReading": {
+        "title": "Essential Reading"
+      },
+      "interactiveTools": {
+        "title": "Interactive Tools"
+      }
+    },
+    "newsletter": {
+      "title": "Stay Prepared",
+      "subtitle": "Get monthly updates with new resources and flood safety tips",
+      "inputPlaceholder": "Enter your email",
+      "button": "Subscribe"
+    }
+  },
   "footer": {
     "quickLinks": "Quick Links",
     "adminPortal": "Admin Portal",
