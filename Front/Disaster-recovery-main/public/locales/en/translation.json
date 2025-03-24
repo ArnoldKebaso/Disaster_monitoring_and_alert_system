@@ -196,6 +196,55 @@
       "viewAlerts": "View Alerts"
     }
   },
+  "donate": {
+    "hero": {
+      "title": "Empower Disaster Response",
+      "subtitle": "Your generosity fuels our mission to provide immediate relief and build resilient communities"
+    },
+    "cards": {
+      "financialSupport": {
+        "title": "Financial Support",
+        "description": "Directly fund emergency responses and recovery programs",
+        "paymentTitle": "M-Pesa Payments:",
+        "number": "+254 758 132 658",
+        "paybill": "Paybill 123456",
+        "account": "Account: DISASTER RELIEF",
+        "button": "Give Now"
+      },
+      "goods": {
+        "title": "Essential Goods",
+        "description": "We urgently need these life-saving supplies:",
+        "supplies": [
+          "Medical Kits",
+          "Dry Food",
+          "Clean Water",
+          "Blankets"
+        ],
+        "dropOff": {
+          "title": "Drop-off Center:",
+          "address": "Budalangi Humanitarian HQ, Budalangi",
+          "hours": "Open 24/7"
+        }
+      },
+      "partnership": {
+        "title": "Partnership & Volunteering",
+        "description": "Join our network of change-makers",
+        "email": "partners@fmas.org",
+        "phone": "+254 758 132 658",
+        "button": "Become a Partner"
+      }
+    },
+    "impact": {
+      "title": "Your Impact Matters",
+      "description": "Every contribution helps us maintain 24/7 monitoring systems and deploy emergency teams within 30 minutes of disaster alerts",
+      "stats": [
+        "5,000+ Lives Saved",
+        "200+ Communities",
+        "85% Efficiency",
+        "24/7 Support"
+      ]
+    }
+  },
   "footer": {
     "quickLinks": "Quick Links",
     "adminPortal": "Admin Portal",

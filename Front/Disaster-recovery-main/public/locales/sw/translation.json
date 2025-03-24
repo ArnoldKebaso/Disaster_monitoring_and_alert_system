@@ -196,6 +196,55 @@
       "viewAlerts": "Tazama Arifa"
     }
   },
+  "donate": {
+    "hero": {
+      "title": "Wezesha Majibu ya Dharura",
+      "subtitle": "Ukarimu wako unaendesha dhamira yetu ya kutoa msaada wa haraka na kujenga jamii imara"
+    },
+    "cards": {
+      "financialSupport": {
+        "title": "Msaada wa Kifedha",
+        "description": "Fadhili majibu ya dharura na mipango ya urejeshaji",
+        "paymentTitle": "Malipo ya M-Pesa:",
+        "number": "+254 758 132 658",
+        "paybill": "Paybill 123456",
+        "account": "Akaunti: DISASTER RELIEF",
+        "button": "Toa Msaada Sasa"
+      },
+      "goods": {
+        "title": "Vifaa Muhimu",
+        "description": "Tunahitaji haraka vifaa hivi vya kuokoa maisha:",
+        "supplies": [
+          "Vifaa vya Matibabu",
+          "Chakula Kikavu",
+          "Maji Safi",
+          "Blanketi"
+        ],
+        "dropOff": {
+          "title": "Kituo cha Kuwasilisha:",
+          "address": "Makao ya Kibinadamu ya Budalangi, Budalangi",
+          "hours": "Fungua 24/7"
+        }
+      },
+      "partnership": {
+        "title": "Ushirikiano na Ujitolea",
+        "description": "Jiunge na mtandao wetu wa wabadilishaji",
+        "email": "partners@fmas.org",
+        "phone": "+254 758 132 658",
+        "button": "Jiunge Kama Mshirika"
+      }
+    },
+    "impact": {
+      "title": "Athari Yako Ni Muhimu",
+      "description": "Kila mchango unatusaidia kudumisha mifumo ya ufuatiliaji 24/7 na kupeleka timu za dharura ndani ya dakika 30 baada ya arifa ya maafa",
+      "stats": [
+        "Maisha 5,000+ Yaliyolindwa",
+        "Jamii 200+",
+        "Ufanisi 85%",
+        "Msaada 24/7"
+      ]
+    }
+  },
   "footer": {
     "quickLinks": "Viungo vya Haraka",
     "adminPortal": "Lango la Msimamizi",
