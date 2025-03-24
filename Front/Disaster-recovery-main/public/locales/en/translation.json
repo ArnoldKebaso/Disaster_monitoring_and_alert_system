@@ -397,18 +397,14 @@
     }
   },
   "footer": {
-    "quickLinks": "Quick Links",
-    "adminPortal": "Admin Portal",
-    "responderPortal": "Responder Portal",
+    "quickAccess": "Quick Access",
     "userDashboard": "User Dashboard",
-    "publications": "Publications",
-    "impactStories": "Impact Stories",
-    "donate": "Donate",
-    "aboutUs": "About Us",
-    "contactUs": "Contact Us",
-    "contactTitle": "Contact Us",
-    "phone": "Phone: +254-712-345-678",
-    "email": "Email: info@fmas.co.ke",
-    "address": "P.O. Box 536 - 20115, Egerton-Njoro, Kenya"
+    "resources": "Resources",
+    "domain": "Domain",
+    "stayConnected": "Stay Connected",
+    "newsletter": "Newsletter",
+    "newsletterInput": "Enter your email",
+    "subscribeButton": "Subscribe",
+    "copyright": "@Arnold Onchieku Kebaso @FMAS - Flood Monitoring & Alert System"
   }
 }
