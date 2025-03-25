@@ -116,10 +116,7 @@ const Layout: React.FC = () => {
                   </Link>
                 </li>
               ))}
-            </ul>
-
-            {/* Logout button (only if user is logged in) */}
-            {user && (
+               {user && (
               <div className="p-6">
                 <button
                   onClick={handleLogout}
@@ -130,6 +127,9 @@ const Layout: React.FC = () => {
                 </button>
               </div>
             )}
+            </ul>
+
+           
           </nav>
         </aside>
 

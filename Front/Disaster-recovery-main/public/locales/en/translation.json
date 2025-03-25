@@ -14,55 +14,397 @@
     "FAQ": "FAQ",
     "alerts": "View Alerts"
   },
-  "hero": {
-    "title": "Be Prepared, Stay Safe",
-    "description": "Comprehensive Flood Monitoring and Disaster Management Solutions."
+  "home": {
+    "hero": {
+      "title": "Flood Monitoring & Alert System",
+      "description": "Empowering the Budalangi community with real-time flood alerts, intuitive reporting, and comprehensive resources for safer, more resilient living.",
+      "ctaDonate": "Donate",
+      "ctaViewAlerts": "View Alerts"
+    },
+    "whatWeDo": {
+      "title": "What We Do",
+      "floodMonitoring": {
+        "title": "Flood Monitoring",
+        "description": "Our system tracks water levels & weather patterns in real-time."
+      },
+      "floodAlerts": {
+        "title": "Flood Alerts",
+        "description": "Receive instant alerts via SMS, email, or push notifications."
+      },
+      "resourceAllocation": {
+        "title": "Resource Allocation",
+        "description": "We coordinate supplies & volunteers to areas most in need."
+      },
+      "floodResponse": {
+        "title": "Flood Response",
+        "description": "Collaborate with local agencies for quick & efficient response."
+      }
+    },
+    "donate": {
+      "title": "Help Us Save Lives",
+      "description": "Your donation fuels real-time monitoring, emergency responses, and community training—ensuring that those most vulnerable are protected when floods strike.",
+      "cta": "Donate Now"
+    },
+    "subscribe": {
+      "title": "Subscribe for Alerts",
+      "selectMethodLabel": "Select Subscription Method",
+      "chooseMethod": "-- Choose Method --",
+      "email": "Email",
+      "sms": "SMS",
+      "contactEmail": "Enter your Email",
+      "contactPhone": "Enter your Phone Number",
+      "emailPlaceholder": "jane@example.com",
+      "phonePlaceholder": "+254 700 000 000",
+      "selectLocationsLabel": "Select Locations",
+      "locationsPlaceholder": "Select locations...",
+      "button": "Subscribe",
+      "allFieldsRequired": "All fields are required!",
+      "submittedSuccess": "Subscription submitted successfully!",
+      "submittedFailed": "Subscription failed. Try again."
+    },
+    "report": {
+      "title": "Report Flood Incidents",
+      "description": "Submit detailed reports with images and locations to help us verify and alert the community faster.",
+      "button": "Report Now"
+    },
+    "publications": {
+      "title": "Publications & Videos",
+      "description": "Browse a selection of our most popular guides and tutorials. For more resources, click below.",
+      "floodHandbook": {
+        "title": "Flood Preparedness Handbook",
+        "description": "A comprehensive guide to preparing for floods.",
+        "cta": "Download"
+      },
+      "floodTutorial": {
+        "title": "Flood Reporting Tutorial",
+        "description": "Step-by-step video on how to submit flood reports.",
+        "cta": "Watch Video"
+      },
+      "emergencyProtocol": {
+        "title": "Emergency Response Protocol",
+        "description": "Official guidelines for local emergency response teams.",
+        "cta": "View"
+      },
+      "viewMore": "View More Resources"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "How can I report a flood incident?",
+        "answer": "You can submit a detailed report with images and location data through our Report page. The system verifies your report before generating alerts to the community."
+      },
+      "q2": {
+        "question": "How do I receive alerts?",
+        "answer": "Flood alerts are delivered through SMS, email, or push notifications. You can customize your preferences and choose multiple channels to ensure you never miss an important update."
+      },
+      "q3": {
+        "question": "Is my data secure?",
+        "answer": "We prioritize data security with encryption, role-based access, and compliance with data protection regulations. Your personal information remains confidential and protected."
+      },
+      "button": "View Full FAQ"
+    },
+    "impact": {
+      "title": "Our Impact",
+      "countyBranches": "County Branches",
+      "regionalOffices": "Regional Offices",
+      "membersVolunteers": "Members & Volunteers",
+      "beneficiariesSupported": "Beneficiaries Supported"
+    },
+    "contact": {
+      "title": "Get In Touch",
+      "description": "Have questions, need assistance, or want to learn more? Reach out to us anytime—we’re here to help.",
+      "button": "Contact Us"
+    }
   },
   "subscribe": {
-    "title": "Subscribe for Notifications",
-    "smsWarning" : "Kindly enable promotional messages to receive alerts",
-    "method": "Choose Notification Method",
-    "selectMethod": "Select a method",
-    "email": "Email",
-    "sms": "SMS",
-    "phonePlaceholder": "Enter your phone number",
-    "emailPlaceholder": "Enter your email",
-    "selectLocation": "Which location(s) would you like to receive alerts for?",
-    "subscribeButton": "Subscribe"
+    "smsWarning": "⚠️ Remember to dial *456*9*5# on your phone to enable promotional messages!"
   },
-  "whatWeDo": {
-    "title": "What We Do",
-    "floodMonitoring": "Flood Monitoring",
-    "floodAlert": "Flood Alert",
-    "resourceAllocation": "Resource Allocation",
-    "floodResponse": "Flood Response",
-    "description": "Learn more about our efforts."
+  "about": {
+    "hero": {
+      "title": "Flood Monitoring & Alert System",
+      "subtitle": "Empowering Budalangi Community with Real-Time Flood Protection",
+      "feature": "24/7 Community Protection"
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "Reduce flood impact through timely alerts, community reporting, and educational resources. Building a resilient, proactive Budalangi through technology and collaboration.",
+      "stat": "15+ Years Flood History Analyzed"
+    },
+    "security": {
+      "title": "Security & Reliability",
+      "items": {
+        "uptime": "Uptime",
+        "uptimeDesc": "99.9% System Availability",
+        "encryption": "Encryption",
+        "encryptionDesc": "Military-Grade Data Protection",
+        "certified": "Certified",
+        "certifiedDesc": "ISO 27001 Compliant",
+        "alerts": "Alerts",
+        "alertsDesc": "3-Second Notification Delivery"
+      },
+      "footer": "Our infrastructure undergoes regular security audits and stress tests to ensure uninterrupted service."
+    },
+    "features": {
+      "title": "Key Features & Capabilities",
+      "items": [
+        {
+          "title": "Real-Time Monitoring",
+          "content": "24/7 surveillance of water levels and weather patterns"
+        },
+        {
+          "title": "Community Reporting",
+          "content": "Image-based incident reports with GPS tagging"
+        },
+        {
+          "title": "Educational Hub",
+          "content": "Interactive flood preparedness resources"
+        },
+        {
+          "title": "Role-Based Access",
+          "content": "Dedicated portals for different user types"
+        },
+        {
+          "title": "Risk Mapping",
+          "content": "Interactive flood zone visualization"
+        },
+        {
+          "title": "Predictive Analytics",
+          "content": "AI-powered flood prediction models"
+        }
+      ]
+    },
+    "impact": {
+      "title": "Community Impact",
+      "description": "Since implementation, FMAS has transformed flood management in Budalangi:",
+      "stats": [
+        { "value": "95%", "label": "Alert Accuracy" },
+        { "value": "30min", "label": "Response Time" },
+        { "value": "10k+", "label": "Lives Protected" },
+        { "value": "24/7", "label": "Monitoring" }
+      ],
+      "testimonial": {
+        "title": "User Testimonial",
+        "quote": "FMAS warnings helped us evacuate safely last season. We're now better prepared.",
+        "author": "Local Farmer",
+        "affiliation": "Budalangi Community"
+      }
+    },
+    "cta": {
+      "title": "Join Our Flood Protection Network",
+      "description": "Get real-time alerts, contribute reports, and access life-saving resources",
+      "donate": "Donate",
+      "viewAlerts": "View Alerts"
+    }
   },
-  "analytics": {
-    "title": "Our Impact",
-    "countyBranches": "County Branches",
-    "regionalOffices": "Regional Offices",
-    "membersVolunteers": "Members & Volunteers",
-    "beneficiariesSupported": "Beneficiaries Supported"
+  "donate": {
+    "hero": {
+      "title": "Empower Disaster Response",
+      "subtitle": "Your generosity fuels our mission to provide immediate relief and build resilient communities"
+    },
+    "cards": {
+      "financialSupport": {
+        "title": "Financial Support",
+        "description": "Directly fund emergency responses and recovery programs",
+        "paymentTitle": "M-Pesa Payments:",
+        "number": "+254 758 132 658",
+        "paybill": "Paybill 123456",
+        "account": "Account: DISASTER RELIEF",
+        "button": "Give Now"
+      },
+      "goods": {
+        "title": "Essential Goods",
+        "description": "We urgently need these life-saving supplies:",
+        "supplies": [
+          "Medical Kits",
+          "Dry Food",
+          "Clean Water",
+          "Blankets"
+        ],
+        "dropOff": {
+          "title": "Drop-off Center:",
+          "address": "Budalangi Humanitarian HQ, Budalangi",
+          "hours": "Open 24/7"
+        }
+      },
+      "partnership": {
+        "title": "Partnership & Volunteering",
+        "description": "Join our network of change-makers",
+        "email": "partners@fmas.org",
+        "phone": "+254 758 132 658",
+        "button": "Become a Partner"
+      }
+    },
+    "impact": {
+      "title": "Your Impact Matters",
+      "description": "Every contribution helps us maintain 24/7 monitoring systems and deploy emergency teams within 30 minutes of disaster alerts",
+      "stats": [
+        "5,000+ Lives Saved",
+        "200+ Communities",
+        "85% Efficiency",
+        "24/7 Support"
+      ]
+    }
   },
-  "reportFlood": {
-    "title": "Report Flood Incidents",
-    "description": "Help us respond faster by reporting flood incidents in your area. Your input can save lives.",
-    "button": "Report Now"
+  "resources": {
+    "hero": {
+      "title": "Flood Preparedness Resources",
+      "subtitle": "Empower yourself with knowledge, tools, and strategies to stay safe during flood events.",
+      "videoNotSupported": "Your browser does not support the video tag."
+    },
+    "categories": {
+      "guides": "Guides",
+      "multimedia": "Multimedia",
+      "tools": "Tools"
+    },
+    "difficulty": {
+      "beginner": "Beginner",
+      "advanced": "Advanced"
+    },
+    "guides": {
+      "floodPreparednessHandbook": "Flood Preparedness Handbook",
+      "emergencyPlanHandbook": "Emergency Plan Handbook",
+      "subscriptionReportsHandbook": "Subscription Reports Handbook",
+      "elninoResponseProtocols": "Elnino Emergency Response Protocols"
+    },
+    "multimedia": {
+      "floodReportingTutorial": "Flood Reporting Tutorial",
+      "elninoPreparednessNews": "Elnino Preparedness Report News",
+      "floodResponseBudalangi": "Flood Response in Budalangi",
+      "kenyaRapidResponse": "Kenya's Rapid Response to Flooding Report News"
+    },
+    "tools": {
+      "floodRiskAssessmentTool": "Flood Risk Assessment Tool",
+      "evacuationRoutePlanner": "Evacuation Route Planner"
+    },
+    "essentialReadings": {
+      "floodFirstAidGuide": "Flood First Aid Guide",
+      "adultFirstAidCprAedCourse": "Adult First Aid/CPR/AED Course",
+      "evacuationPlanning": "Evacuation Planning"
+    },
+    "toolsInteractive": {
+      "riskAssessment": "Risk Assessment",
+      "riskAssessment_description": "Evaluate your current flood risk level based on location and historical data.",
+      "floodSimulator": "Flood Simulator",
+      "floodSimulator_description": "Visualize potential flood scenarios in your area.",
+      "preparationQuiz": "Preparation Quiz",
+      "preparationQuiz_description": "Test your flood preparedness knowledge.",
+      "launchButton": "Launch Tool"
+    },
+    "learningHub": {
+      "title": "Interactive Learning Hub",
+      "iframeTitle": "Educational Videos",
+      "essentialReading": {
+        "title": "Essential Reading"
+      },
+      "interactiveTools": {
+        "title": "Interactive Tools"
+      }
+    },
+    "newsletter": {
+      "title": "Stay Prepared",
+      "subtitle": "Get monthly updates with new resources and flood safety tips",
+      "inputPlaceholder": "Enter your email",
+      "button": "Subscribe"
+    }
+  },
+  "contact": {
+    "heroTitle": "Get in Touch",
+    "heroSubtitle": "Have questions or need assistance? Our team is here to help you 24/7.",
+    "form": {
+      "nameLabel": "Your Name",
+      "namePlaceholder": "John Doe",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "john@example.com",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "How can we help?",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Write your message here...",
+      "sendButton": "Send Message",
+      "sending": "Sending..."
+    },
+    "status": {
+      "success": "Message sent successfully!",
+      "error": "Failed to send message. Please try again."
+    },
+    "info": {
+      "title": "Contact Information",
+      "description": "Reach out to us through any of these channels. Our support team typically responds within 2 business hours.",
+      "locationTitle": "Our Location",
+      "locationText": "Njoro, Kenya",
+      "phoneTitle": "Call Us",
+      "phoneText": "+254 123 456 789",
+      "emailTitle": "Email Address",
+      "emailText": "fmas@gmail.com"
+    },
+    "emergency": {
+      "supportTitle": "24/7 Emergency Support",
+      "supportText": "For urgent flood-related emergencies, call our hotline:",
+      "hotline": "+254 789 123 456"
+    }
+  },
+  "faq": {
+    "pageTitle": "Frequently Asked Questions",
+    "pageSubtitle": "Find answers to common questions about FMAS",
+    "items": {
+      "1": {
+        "question": "1. What is the Flood Monitoring and Alert System (FMAS)?",
+        "answer": "FMAS is a cutting-edge platform designed for the Budalangi community, historically prone to severe flooding. It provides real-time flood information and actionable alerts so residents can prepare and respond effectively during flood emergencies."
+      },
+      "2": {
+        "question": "2. What are the mission and vision of FMAS?",
+        "answer": "Our mission is to reduce the impact of floods by providing timely alerts, facilitating easy incident reporting, and offering educational resources for flood preparedness. We envision a resilient, well-informed community that actively engages in flood management and disaster response."
+      },
+      "3": {
+        "question": "3. What challenges does the Budalangi community face?",
+        "answer": "Budalangi has long struggled with recurring floods, displacement, and damaged infrastructure. These hardships motivated the creation of FMAS, which specifically addresses local needs by analyzing historical flood patterns and tailoring solutions to longstanding issues."
+      },
+      "4": {
+        "question": "4. Which features does FMAS offer?",
+        "answer": "FMAS provides:\n• Real-time flood alerts (via SMS & email)\n• An intuitive incident reporting system (with images & location data)\n• Predictive analytics (hydrological & meteorological data)\n• Interactive geospatial maps (high-risk zones & safe routes)\n• Educational resources (step-by-step flood preparedness & safety measures)\nEach feature helps users stay safe, informed, and better prepared for flood events."
+      },
+      "5": {
+        "question": "5. How does FMAS work?",
+        "answer": "FMAS uses a role-based workflow: when a user reports a flood incident, administrators verify the data before generating alerts. The system supports offline capabilities like SMS alerts for areas with limited internet access, ensuring seamless communication among community members, local responders, and partners such as the Kenya Red Cross."
+      },
+      "6": {
+        "question": "6. What technology and architecture power FMAS?",
+        "answer": "FMAS is built with a React.js & TypeScript front-end and a Node.js & Express.js back-end. Data encryption, robust authentication, and third-party geospatial integrations ensure reliability, security, and real-time data access. This modern stack enables continuous improvements and rapid feature updates."
+      },
+      "7": {
+        "question": "7. Who are the key stakeholders and collaborators?",
+        "answer": "FMAS is supported by organizations like the National Disaster Management Unit (NDMU) and the Kenya Red Cross. Their collaboration enhances credibility, facilitates rapid emergency response, and fosters deeper community engagement in disaster management initiatives."
+      },
+      "8": {
+        "question": "8. Does FMAS provide educational resources?",
+        "answer": "Absolutely! FMAS goes beyond alerts by offering a dedicated educational section with downloadable guides, tutorial videos, and interactive modules on flood preparedness. Empowering the community with knowledge is a cornerstone of our project’s success."
+      },
+      "9": {
+        "question": "9. Are there future plans for expanding FMAS?",
+        "answer": "Yes. We aim to incorporate IoT sensors for real-time water monitoring, and possibly extend FMAS to manage other disasters like landslides or droughts. We actively gather user feedback and leverage technological advancements to make the system even more user-centric."
+      },
+      "10": {
+        "question": "10. How can I get involved?",
+        "answer": "You can subscribe to FMAS alerts, report flood incidents, and explore educational resources on the platform. Simply sign up for tailored notifications, share your insights with us, and help build a safer, more prepared community."
+      },
+      "11": {
+        "question": "11. How do I receive flood alerts?",
+        "answer": "You can receive alerts via SMS, email, or push notifications. Multiple channels ensure you get timely updates, even in low-connectivity situations. You can customize alert settings in your profile or account preferences."
+      },
+      "12": {
+        "question": "12. Is my data secure on FMAS?",
+        "answer": "We use data encryption, role-based access controls, and comply with relevant data protection regulations to keep your information safe. Our back-end implements strict security protocols to ensure the highest standards of user data privacy."
+      }
+    }
   },
   "footer": {
-    "quickLinks": "Quick Links",
-    "adminPortal": "Admin Portal",
-    "responderPortal": "Responder Portal",
+    "quickAccess": "Quick Access",
     "userDashboard": "User Dashboard",
-    "publications": "Publications",
-    "impactStories": "Impact Stories",
-    "donate": "Donate",
-    "aboutUs": "About Us",
-    "contactUs": "Contact Us",
-    "contactTitle": "Contact Us",
-    "phone": "Phone: +254-712-345-678",
-    "email": "Email: info@fmas.co.ke",
-    "address": "P.O. Box 536 - 20115, Egerton-Njoro, Kenya"
+    "resources": "Resources",
+    "domain": "Domain",
+    "stayConnected": "Stay Connected",
+    "newsletter": "Newsletter",
+    "newsletterInput": "Enter your email",
+    "subscribeButton": "Subscribe",
+    "copyright": "@Arnold Onchieku Kebaso @FMAS - Flood Monitoring & Alert System"
   }
 }

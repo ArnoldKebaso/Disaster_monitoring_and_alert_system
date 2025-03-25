@@ -14,55 +14,398 @@
     "FAQ": "Maswali Yanayoulizwa Sana",
     "alerts": "Tazama Onyo"
   },
-  "hero": {
-    "title": "Jiandae, Uwe Salama",
-    "description": "Ufuatiliaji wa Mafuriko na Usimamizi wa Maafa kwa Ufanisi."
+  "home": {
+    "hero": {
+      "title": "Mfumo wa Ufuatiliaji na Onyo la Mafuriko",
+      "description": "Kuwawezesha jamii ya Budalangi kupitia arifa za mafuriko kwa wakati halisi, taarifa za kina, na rasilimali za kukabiliana na maafa kwa ufanisi.",
+      "ctaDonate": "Changia",
+      "ctaViewAlerts": "Tazama Arifa"
+    },
+    "whatWeDo": {
+      "title": "Tunachofanya",
+      "floodMonitoring": {
+        "title": "Ufuatiliaji wa Mafuriko",
+        "description": "Mfumo wetu unafuata viwango vya maji na hali ya hewa kwa wakati halisi."
+      },
+      "floodAlerts": {
+        "title": "Arifa za Mafuriko",
+        "description": "Pokea arifa papo hapo kupitia SMS, barua pepe, au arifa za kusukuma."
+      },
+      "resourceAllocation": {
+        "title": "Ugawaji wa Rasilimali",
+        "description": "Tunashirikiana kugawa vifaa na wajitolea kwa maeneo yanayohitaji msaada zaidi."
+      },
+      "floodResponse": {
+        "title": "Majibu ya Mafuriko",
+        "description": "Shirikiana na mashirika ya ndani ili kujibu haraka na kwa ufanisi."
+      }
+    },
+    "donate": {
+      "title": "Tusaidie Kuokoa Maisha",
+      "description": "Changia zako zinaendesha ufuatiliaji wa wakati halisi, majibu ya dharura, na mafunzo kwa jamii—hakikisha wale walio katika hatari wanalindwa wakati mafuriko yanapogonga.",
+      "cta": "Changia Sasa"
+    },
+    "subscribe": {
+      "title": "Jisajili kwa Arifa",
+      "selectMethodLabel": "Chagua Njia ya Usajili",
+      "chooseMethod": "-- Chagua Njia --",
+      "email": "Barua Pepe",
+      "sms": "SMS",
+      "contactEmail": "Weka Barua Pepe Yako",
+      "contactPhone": "Weka Nambari ya Simu Yako",
+      "emailPlaceholder": "jane@example.com",
+      "phonePlaceholder": "+254 700 000 000",
+      "selectLocationsLabel": "Chagua Maeneo",
+      "locationsPlaceholder": "Chagua maeneo...",
+      "button": "Jisajili",
+      "allFieldsRequired": "Shamba zote zinahitajika!",
+      "submittedSuccess": "Usajili umefanikiwa!",
+      "submittedFailed": "Usajili umeshindikana. Jaribu tena."
+    },
+    "report": {
+      "title": "Ripoti Matukio ya Mafuriko",
+      "description": "Tuma ripoti za kina zenye picha na taarifa za eneo ili kutusaidia kuthibitisha na kuwafahamisha jamii haraka.",
+      "button": "Ripoti Sasa"
+    },
+    "publications": {
+      "title": "Machapisho na Video",
+      "description": "Angalia mkusanyiko wa miongozo na mafunzo maarufu. Kwa rasilimali zaidi, bonyeza hapa.",
+      "floodHandbook": {
+        "title": "Mwongozo wa Uandaa Mafuriko",
+        "description": "Mwongozo wa kina wa kujiandaa kwa mafuriko.",
+        "cta": "Pakua"
+      },
+      "floodTutorial": {
+        "title": "Mafunzo ya Ripoti za Mafuriko",
+        "description": "Video ya hatua kwa hatua jinsi ya kutuma ripoti za mafuriko.",
+        "cta": "Tazama Video"
+      },
+      "emergencyProtocol": {
+        "title": "Itifaki ya Majibu ya Dharura",
+        "description": "Mwongozo rasmi kwa timu za majibu ya dharura za ndani.",
+        "cta": "Angalia"
+      },
+      "viewMore": "Angalia Rasilimali Zaidi"
+    },
+    "faq": {
+      "title": "Maswali Yanayoulizwa Mara kwa Mara",
+      "q1": {
+        "question": "Ninawezaje kuripoti tukio la mafuriko?",
+        "answer": "Unaweza kutuma ripoti ya kina yenye picha na taarifa za eneo kupitia ukurasa wetu wa Ripoti. Mfumo unathibitisha ripoti yako kabla ya kutuma arifa kwa jamii."
+      },
+      "q2": {
+        "question": "Ninapokea arifa vipi?",
+        "answer": "Arifa za mafuriko hutolewa kupitia SMS, barua pepe, au arifa za kusukuma. Unaweza kubadilisha mipangilio yako ili usikose taarifa muhimu."
+      },
+      "q3": {
+        "question": "Taarifa zangu ziko salama?",
+        "answer": "Tunathamini usalama wa data kwa kutumia usimbuaji, ufikiaji kulingana na majukumu, na kufuata kanuni za ulinzi wa data. Taarifa zako binafsi ziko salama."
+      },
+      "button": "Angalia FAQ Kamili"
+    },
+    "impact": {
+      "title": "Athari Yetu",
+      "countyBranches": "Matawi ya Kaunti",
+      "regionalOffices": "Ofisi za Kanda",
+      "membersVolunteers": "Wanachama na Wajitolea",
+      "beneficiariesSupported": "Walionufaika"
+    },
+    "contact": {
+      "title": "Wasiliana Nasi",
+      "description": "Una maswali, unahitaji msaada, au unataka kujua zaidi? Wasiliana nasi wakati wowote—tuko hapa kusaidia.",
+      "button": "Wasiliana Nasi"
+    }
   },
   "subscribe": {
-    "title": "Jisajili kwa Arifa za Barua Pepe",
-    "smsWarning" : "Tafadhali wezesha ujumbe wa matangazo ili upokee arifa",
-    "method": "Chagua Njia ya Kupokea Arifa",
-    "selectMethod": "Chagua njia",
-    "email": "Barua Pepe",
-    "sms": "SMS",
-    "phonePlaceholder": "Weka nambari ya simu",
-    "emailPlaceholder": "Weka barua pepe",
-    "selectLocation": "Ni eneo au maeneo gani ungependa kupokea arifa?",
-    "subscribeButton": "Jisajili"
+    "smsWarning": "⚠️ Kumbuka kupiga simu *456*9*5# ili kuwezesha ujumbe wa matangazo!"
   },
-  "whatWeDo": {
-    "title": "Tunachofanya",
-    "floodMonitoring": "Ufuatiliaji wa Mafuriko",
-    "floodAlert": "Onyo la Mafuriko",
-    "resourceAllocation": "Ugawaji wa Rasilimali",
-    "floodResponse": "Majibu ya Mafuriko",
-    "description": "Jifunze zaidi kuhusu juhudi zetu."
+  "about": {
+    "hero": {
+      "title": "Mfumo wa Ufuatiliaji na Onyo la Mafuriko",
+      "subtitle": "Kuimarisha Jamii ya Budalangi na Ulinzi wa Mafuriko kwa Wakati Halisi",
+      "feature": "Ulinzi wa Jamii 24/7"
+    },
+    "mission": {
+      "title": "Dhamira Yetu",
+      "description": "Kupunguza athari za mafuriko kupitia arifa za wakati, ripoti za jamii, na rasilimali za elimu. Kujenga Budalangi yenye ustahimilivu kupitia teknolojia na ushirikiano.",
+      "stat": "Taarifa za Mabadiliko ya Mafuriko Zaidi ya Miaka 15"
+    },
+    "security": {
+      "title": "Usalama na Uaminifu",
+      "items": {
+        "uptime": "Uptime",
+        "uptimeDesc": "Upatikanaji wa Mfumo 99.9%",
+        "encryption": "Usimbuaji",
+        "encryptionDesc": "Ulinzi wa Data wa Kiwango cha Kijeshi",
+        "certified": "Yaliyethibitishwa",
+        "certifiedDesc": "Zifuatazo ISO 27001",
+        "alerts": "Arifa",
+        "alertsDesc": "Utoaji wa Arifa kwa Sekunde 3"
+      },
+      "footer": "Miundombinu yetu hufanyiwa ukaguzi wa usalama na majaribio mara kwa mara ili kuhakikisha huduma haivurugwi."
+    },
+    "features": {
+      "title": "Vipengele Muhimu na Uwezo",
+      "items": [
+        {
+          "title": "Ufuatiliaji wa Wakati Halisi",
+          "content": "Uangalizi wa 24/7 wa viwango vya maji na hali ya hewa"
+        },
+        {
+          "title": "Ripoti za Jamii",
+          "content": "Ripoti za matukio zenye picha na GPS"
+        },
+        {
+          "title": "Kituo cha Elimu",
+          "content": "Rasilimali za mafunzo ya kujiandaa kwa mafuriko"
+        },
+        {
+          "title": "Ufikiaji kulingana na Majukumu",
+          "content": "Lango maalum kwa aina tofauti za watumiaji"
+        },
+        {
+          "title": "Ramani ya Hatari",
+          "content": "Uonyeshaji wa maeneo hatarishi ya mafuriko"
+        },
+        {
+          "title": "Uchanganuzi wa Utabiri",
+          "content": "Mitindo ya utabiri wa mafuriko kwa kutumia AI"
+        }
+      ]
+    },
+    "impact": {
+      "title": "Athari kwa Jamii",
+      "description": "Tangu utekelezaji, FMAS imegeuza usimamizi wa mafuriko katika Budalangi:",
+      "stats": [
+        { "value": "95%", "label": "Usahihi wa Arifa" },
+        { "value": "30min", "label": "Muda wa Majibu" },
+        { "value": "10k+", "label": "Maisha Yaliyolindwa" },
+        { "value": "24/7", "label": "Ufuatiliaji" }
+      ],
+      "testimonial": {
+        "title": "Ushuhuda wa Mtumiaji",
+        "quote": "Arifa za FMAS zilitusaidia kuondoka salama msimu uliopita. Sasa tumejiandaa vizuri zaidi.",
+        "author": "Mkulima wa Kanda",
+        "affiliation": "Jamii ya Budalangi"
+      }
+    },
+    "cta": {
+      "title": "Jiunge na Mtandao wetu wa Ulinzi wa Mafuriko",
+      "description": "Pata arifa za wakati halisi, toa ripoti, na upate rasilimali za kuokoa maisha",
+      "donate": "Changia",
+      "viewAlerts": "Tazama Arifa"
+    }
   },
-  "analytics": {
-    "title": "Athari Yetu",
-    "countyBranches": "Matawi ya Kaunti",
-    "regionalOffices": "Ofisi za Kanda",
-    "membersVolunteers": "Wanachama na Wajitolea",
-    "beneficiariesSupported": "Walionufaika"
+  "donate": {
+    "hero": {
+      "title": "Wezesha Majibu ya Dharura",
+      "subtitle": "Ukarimu wako unaendesha dhamira yetu ya kutoa msaada wa haraka na kujenga jamii imara"
+    },
+    "cards": {
+      "financialSupport": {
+        "title": "Msaada wa Kifedha",
+        "description": "Fadhili majibu ya dharura na mipango ya urejeshaji",
+        "paymentTitle": "Malipo ya M-Pesa:",
+        "number": "+254 758 132 658",
+        "paybill": "Paybill 123456",
+        "account": "Akaunti: DISASTER RELIEF",
+        "button": "Toa Msaada Sasa"
+      },
+      "goods": {
+        "title": "Vifaa Muhimu",
+        "description": "Tunahitaji haraka vifaa hivi vya kuokoa maisha:",
+        "supplies": [
+          "Vifaa vya Matibabu",
+          "Chakula Kikavu",
+          "Maji Safi",
+          "Blanketi"
+        ],
+        "dropOff": {
+          "title": "Kituo cha Kuwasilisha:",
+          "address": "Makao ya Kibinadamu ya Budalangi, Budalangi",
+          "hours": "Fungua 24/7"
+        }
+      },
+      "partnership": {
+        "title": "Ushirikiano na Ujitolea",
+        "description": "Jiunge na mtandao wetu wa wabadilishaji",
+        "email": "partners@fmas.org",
+        "phone": "+254 758 132 658",
+        "button": "Jiunge Kama Mshirika"
+      }
+    },
+    "impact": {
+      "title": "Athari Yako Ni Muhimu",
+      "description": "Kila mchango unatusaidia kudumisha mifumo ya ufuatiliaji 24/7 na kupeleka timu za dharura ndani ya dakika 30 baada ya arifa ya maafa",
+      "stats": [
+        "Maisha 5,000+ Yaliyolindwa",
+        "Jamii 200+",
+        "Ufanisi 85%",
+        "Msaada 24/7"
+      ]
+    }
   },
-  "reportFlood": {
-    "title": "Ripoti Matukio ya Mafuriko",
-    "description": "Tusaidie kujibu haraka kwa kuripoti matukio ya mafuriko katika eneo lako. Mawazo yako yanaweza kuokoa maisha.",
-    "button": "Ripoti Sasa"
+  "resources": {
+    "hero": {
+      "title": "Rasilimali za Kujiandaa na Mafuriko",
+      "subtitle": "Jifunze kupitia maarifa, zana, na mikakati ili uwe salama wakati wa mafuriko.",
+      "videoNotSupported": "Kivinjari chako hakitegemei video."
+    },
+    "categories": {
+      "guides": "Miongozo",
+      "multimedia": "Mitandao ya Habari",
+      "tools": "Zana"
+    },
+    "difficulty": {
+      "beginner": "Mwanzo",
+      "advanced": "Za juu"
+    },
+    "guides": {
+      "floodPreparednessHandbook": "Mwongozo wa Kujiandaa na Mafuriko",
+      "emergencyPlanHandbook": "Mwongozo wa Mpango wa Dharura",
+      "subscriptionReportsHandbook": "Mwongozo wa Ripoti za Usajili",
+      "elninoResponseProtocols": "Itifaki za Majibu ya Dharura za El Niño"
+    },
+    "multimedia": {
+      "floodReportingTutorial": "Mafunzo ya Ripoti za Mafuriko",
+      "elninoPreparednessNews": "Habari za Kujiandaa kwa El Niño",
+      "floodResponseBudalangi": "Majibu ya Mafuriko katika Budalangi",
+      "kenyaRapidResponse": "Ripoti ya Majibu ya Haraka ya Kenya kwa Mafuriko"
+    },
+    "tools": {
+      "floodRiskAssessmentTool": "Zana ya Tathmini ya Hatari ya Mafuriko",
+      "evacuationRoutePlanner": "Mpangilio wa Njia za Uhamisho"
+    },
+    "essentialReadings": {
+      "floodFirstAidGuide": "Mwongozo wa Msaada wa Kwanza kwa Mafuriko",
+      "adultFirstAidCprAedCourse": "Kozi ya Msaada wa Kwanza/CPR/AED kwa Watu Wazima",
+      "evacuationPlanning": "Mipango ya Uhamisho"
+    },
+    "toolsInteractive": {
+      "riskAssessment": "Tathmini ya Hatari",
+      "riskAssessment_description": "Pima kiwango chako cha hatari ya mafuriko kulingana na eneo na historia.",
+      "floodSimulator": "Kichezo cha Mafuriko",
+      "floodSimulator_description": "Ona taswira ya matukio ya mafuriko katika eneo lako.",
+      "preparationQuiz": "Mtihani wa Kujiandaa",
+      "preparationQuiz_description": "Jaribu maarifa yako ya kujiandaa kwa mafuriko.",
+      "launchButton": "Anzisha Zana"
+    },
+    "learningHub": {
+      "title": "Kituo cha Kujifunza kinacho Shirikisha",
+      "iframeTitle": "Video za Elimu",
+      "essentialReading": {
+        "title": "Usomaji Muhimu"
+      },
+      "interactiveTools": {
+        "title": "Zana Zinazo Shirikisha"
+      }
+    },
+    "newsletter": {
+      "title": "Uwe Tayari",
+      "subtitle": "Pata taarifa za kila mwezi pamoja na rasilimali mpya na vidokezo vya usalama wakati wa mafuriko",
+      "inputPlaceholder": "Weka barua pepe yako",
+      "button": "Jisajili"
+    }
   },
+  "contact": {
+    "heroTitle": "Wasiliana Nasi",
+    "heroSubtitle": "Una maswali au unahitaji msaada? Timu yetu iko hapa kukusaidia 24/7.",
+    "form": {
+      "nameLabel": "Jina Lako",
+      "namePlaceholder": "John Doe",
+      "emailLabel": "Anwani ya Barua Pepe",
+      "emailPlaceholder": "john@example.com",
+      "subjectLabel": "Somo",
+      "subjectPlaceholder": "Tunawezaje kusaidia?",
+      "messageLabel": "Ujumbe",
+      "messagePlaceholder": "Andika ujumbe wako hapa...",
+      "sendButton": "Tuma Ujumbe",
+      "sending": "Inatuma..."
+    },
+    "status": {
+      "success": "Ujumbe umetumwa kwa mafanikio!",
+      "error": "Imeshindwa kutuma ujumbe. Tafadhali jaribu tena."
+    },
+    "info": {
+      "title": "Taarifa za Mawasiliano",
+      "description": "Wasiliana nasi kupitia njia hizi. Timu yetu ya msaada inajibu ndani ya saa 2 za kazi.",
+      "locationTitle": "Mahali Pa Kupatikana",
+      "locationText": "Njoro, Kenya",
+      "phoneTitle": "Piga Simu",
+      "phoneText": "+254 123 456 789",
+      "emailTitle": "Anwani ya Barua Pepe",
+      "emailText": "fmas@gmail.com"
+    },
+    "emergency": {
+      "supportTitle": "Msaada wa Dharura 24/7",
+      "supportText": "Kwa dharura zinazohusiana na mafuriko, piga simu kwa hotline yetu:",
+      "hotline": "+254 789 123 456"
+    }
+  },
+  "faq": {
+    "pageTitle": "Maswali Yanayoulizwa Mara kwa Mara",
+    "pageSubtitle": "Pata majibu ya maswali ya kawaida kuhusu FMAS",
+    "items": {
+      "1": {
+        "question": "1. FMAS ni nini (Mfumo wa Ufuatiliaji na Onyo la Mafuriko)?",
+        "answer": "FMAS ni jukwaa la kisasa lililoundwa kwa ajili ya jamii ya Budalangi, ambalo mara nyingi hukumbwa na mafuriko makubwa. Linatoa taarifa za mafuriko kwa wakati halisi na arifa zinazochukuliwa hatua ili wakazi waweze kujiandaa na kujibu kwa ufanisi wakati wa dharura za mafuriko."
+      },
+      "2": {
+        "question": "2. Dhamira na maono ya FMAS ni yapi?",
+        "answer": "Dhamira yetu ni kupunguza athari za mafuriko kwa kutoa arifa kwa wakati, kuwezesha kuripoti matukio kwa urahisi, na kutoa rasilimali za elimu za kujiandaa kwa mafuriko. Tunaona jamii yenye ustahimilivu, yenye taarifa, inayoshiriki kikamilifu katika usimamizi wa mafuriko na majibu ya dharura."
+      },
+      "3": {
+        "question": "3. Changamoto gani zinakabili jamii ya Budalangi?",
+        "answer": "Budalangi imekuwa ikikumbwa na mafuriko yanayojirudia, uhamishaji, na uharibifu wa miundombinu. Changamoto hizi ziliwahamasisha kuanzishwa kwa FMAS, ambayo inalenga mahitaji ya ndani kwa kuchambua mifumo ya mafuriko ya kihistoria na kuboresha suluhisho."
+      },
+      "4": {
+        "question": "4. FMAS inatoa vipengele vipi?",
+        "answer": "FMAS inatoa:\n• Arifa za mafuriko kwa wakati halisi (kupitia SMS na barua pepe)\n• Mfumo rahisi wa kuripoti matukio (na picha na taarifa za eneo)\n• Uchambuzi wa utabiri (data ya hidrolojia na meteorolojia)\n• Ramani za kijiografia za kushirikisha (eneo lenye hatari na njia salama)\n• Rasilimali za elimu (maelekezo ya hatua kwa hatua ya kujiandaa na usalama wakati wa mafuriko)\nKila kipengele husaidia watumiaji kuwa salama, na taarifa, na kujiandaa vyema kwa matukio ya mafuriko."
+      },
+      "5": {
+        "question": "5. FMAS inafanya kazi vipi?",
+        "answer": "FMAS inatumia mtiririko wa kazi kulingana na jukumu: wakati mtumiaji anaripoti tukio la mafuriko, wasimamizi wanathibitisha taarifa kabla ya kutuma arifa. Mfumo unaunga mkono uwezo wa nje ya mtandao kama arifa za SMS kwa maeneo yenye muunganisho mdogo, kuhakikisha mawasiliano mazuri kati ya wanajamii, wahusika wa majibu, na washirika kama Kenya Red Cross."
+      },
+      "6": {
+        "question": "6. Ni teknolojia na usanifu gani unaoendesha FMAS?",
+        "answer": "FMAS imetengenezwa kwa React.js na TypeScript kwa upande wa mbele na Node.js na Express.js kwa upande wa nyuma. Usimbuaji wa data, uthibitishaji thabiti, na ushirikiano na huduma za kijiografia unahakikisha uaminifu, usalama, na upatikanaji wa data kwa wakati halisi. Mfumo huu wa kisasa unaruhusu maboresho ya mara kwa mara na masasisho ya haraka."
+      },
+      "7": {
+        "question": "7. Wahusika na washirika wakuu ni nani?",
+        "answer": "FMAS inaungwa mkono na mashirika kama Kitengo cha Taifa cha Usimamizi wa Majanga (NDMU) na Kenya Red Cross. Ushirikiano wao unaongeza uaminifu, unarahisisha majibu ya dharura kwa haraka, na unakuza ushirikiano wa kina wa jamii katika mipango ya majanga."
+      },
+      "8": {
+        "question": "8. Je, FMAS inatoa rasilimali za elimu?",
+        "answer": "Hakika! FMAS inazidi kutoa arifa kwa kutoa sehemu maalum ya elimu yenye miongozo inayoweza kupakuliwa, video za mafunzo, na moduli za kushirikisha kuhusu kujiandaa kwa mafuriko. Kuwawezesha jamii kupitia elimu ni msingi wa mafanikio ya mradi wetu."
+      },
+      "9": {
+        "question": "9. Je, kuna mipango ya kupanua FMAS?",
+        "answer": "Ndiyo. Tunakusudia kuongeza sensa za IoT kwa ajili ya ufuatiliaji wa maji kwa wakati halisi, na labda kupanua FMAS kudhibiti majanga mengine kama kuanguka kwa ardhi au ukame. Tunakusanya maoni ya watumiaji na kutumia maendeleo ya kiteknolojia ili kufanya mfumo uwe wa mtumiaji zaidi."
+      },
+      "10": {
+        "question": "10. Ninawezaje kujihusisha?",
+        "answer": "Unaweza kujisajili kwa arifa za FMAS, kuripoti matukio ya mafuriko, na kuchunguza rasilimali za elimu kwenye jukwaa. Jiandikishe kwa arifa maalum, shiriki maoni yako nasi, na saidia kujenga jamii salama na iliyoandaa vizuri."
+      },
+      "11": {
+        "question": "11. Ninapokea arifa za mafuriko vipi?",
+        "answer": "Unaweza kupokea arifa kupitia SMS, barua pepe, au arifa za kusukuma. Njia nyingi zinahakikisha unapata taarifa kwa wakati, hata katika maeneo yenye muunganisho mdogo. Unaweza kubadilisha mipangilio ya arifa katika wasifu wako au mapendeleo ya akaunti."
+      },
+      "12": {
+        "question": "12. Je, data yangu iko salama kwenye FMAS?",
+        "answer": "Tunatumia usimbuaji wa data, udhibiti wa ufikiaji kulingana na majukumu, na tunafuata sheria za ulinzi wa data ili kuhakikisha taarifa zako ziko salama. Sehemu yetu ya nyuma inatekeleza itifaki kali za usalama ili kuhakikisha viwango vya juu vya faragha ya taarifa za watumiaji."
+      }
+    }
+  },
+  
   "footer": {
-    "quickLinks": "Viungo vya Haraka",
-    "adminPortal": "Lango la Msimamizi",
-    "responderPortal": "Lango la Wajibu",
+    "quickAccess": "Ufikiaji Haraka",
     "userDashboard": "Dashibodi ya Mtumiaji",
-    "publications": "Machapisho",
-    "impactStories": "Hadithi za Athari",
-    "donate": "Changia",
-    "aboutUs": "Kuhusu Sisi",
-    "contactUs": "Wasiliana Nasi",
-    "contactTitle": "Wasiliana Nasi",
-    "phone": "Simu: +254-712-345-678",
-    "email": "Barua pepe: info@fmas.co.ke",
-    "address": "Sanduku la Posta 536 - 20115, Egerton-Njoro, Kenya"
+    "resources": "Rasilimali",
+    "domain": "Eneo",
+    "stayConnected": "Endelea Kuwa Nje ya Mawasiliano",
+    "newsletter": "Jarida la Habari",
+    "newsletterInput": "Weka barua pepe yako",
+    "subscribeButton": "Jisajili",
+    "copyright": "© {year} @Arnold Onchieku Kebaso @FMAS - Mfumo wa Ufuatiliaji na Onyo la Mafuriko"
   }
 }

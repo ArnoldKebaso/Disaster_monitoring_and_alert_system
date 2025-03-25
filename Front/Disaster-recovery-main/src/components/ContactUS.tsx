@@ -8,8 +8,11 @@ import {
   Mail, MapPin, Phone, Send, AlertCircle, CheckCircle, 
   UserCircle, ArrowRight, BookOpenText 
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const ContactUs: React.FC = () => {
+  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -41,12 +44,12 @@ const ContactUs: React.FC = () => {
     try {
       await axios.post("http://localhost:3000/subscriptions/send-email", {
         to: "shikukudenno@gmail.com",
-        subject: `New Contact Form Submission: ${formData.subject}`,
+        subject: `${t("contact.form.subjectLabel")}: ${formData.subject}`,
         text: `
-          Name: ${formData.name}
-          Email: ${formData.email}
-          Subject: ${formData.subject}
-          Message: ${formData.message}
+          ${t("contact.form.nameLabel")}: ${formData.name}
+          ${t("contact.form.emailLabel")}: ${formData.email}
+          ${t("contact.form.subjectLabel")}: ${formData.subject}
+          ${t("contact.form.messageLabel")}: ${formData.message}
         `,
       });
 
@@ -77,10 +80,10 @@ const ContactUs: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-5xl font-black bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-4"
           >
-            Get in Touch
+            {t("contact.heroTitle")}
           </motion.h1>
           <p className="text-xl text-gray-600 w-full mx-auto">
-            Have questions or need assistance? Our team is here to help you 24/7.
+            {t("contact.heroSubtitle")}
           </p>
         </motion.div>
 
@@ -95,7 +98,7 @@ const ContactUs: React.FC = () => {
               {/* Name Input */}
               <motion.div variants={fadeIn}>
                 <label className="block text-sm font-semibold text-blue-900 mb-3">
-                  Your Name
+                  {t("contact.form.nameLabel")}
                 </label>
                 <div className="relative">
                   <UserCircle className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-400" />
@@ -106,7 +109,7 @@ const ContactUs: React.FC = () => {
                     onChange={handleChange}
                     required
                     className="w-full pl-12 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 transition-all"
-                    placeholder="John Doe"
+                    placeholder={t("contact.form.namePlaceholder")}
                   />
                 </div>
               </motion.div>
@@ -114,7 +117,7 @@ const ContactUs: React.FC = () => {
               {/* Email Input */}
               <motion.div variants={fadeIn}>
                 <label className="block text-sm font-semibold text-blue-900 mb-3">
-                  Email Address
+                  {t("contact.form.emailLabel")}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-400" />
@@ -125,7 +128,7 @@ const ContactUs: React.FC = () => {
                     onChange={handleChange}
                     required
                     className="w-full pl-12 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 transition-all"
-                    placeholder="john@example.com"
+                    placeholder={t("contact.form.emailPlaceholder")}
                   />
                 </div>
               </motion.div>
@@ -133,7 +136,7 @@ const ContactUs: React.FC = () => {
               {/* Subject Input */}
               <motion.div variants={fadeIn}>
                 <label className="block text-sm font-semibold text-blue-900 mb-3">
-                  Subject
+                  {t("contact.form.subjectLabel")}
                 </label>
                 <div className="relative">
                   <BookOpenText className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-400" />
@@ -144,7 +147,7 @@ const ContactUs: React.FC = () => {
                     onChange={handleChange}
                     required
                     className="w-full pl-12 pr-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 transition-all"
-                    placeholder="How can we help?"
+                    placeholder={t("contact.form.subjectPlaceholder")}
                   />
                 </div>
               </motion.div>
@@ -152,7 +155,7 @@ const ContactUs: React.FC = () => {
               {/* Message Input */}
               <motion.div variants={fadeIn}>
                 <label className="block text-sm font-semibold text-blue-900 mb-3">
-                  Message
+                  {t("contact.form.messageLabel")}
                 </label>
                 <div className="relative">
                   <textarea
@@ -162,7 +165,7 @@ const ContactUs: React.FC = () => {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 transition-all"
-                    placeholder="Write your message here..."
+                    placeholder={t("contact.form.messagePlaceholder")}
                   />
                 </div>
               </motion.div>
@@ -198,11 +201,11 @@ const ContactUs: React.FC = () => {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Sending...
+                      {t("contact.form.sending")}
                     </>
                   ) : (
                     <>
-                      Send Message
+                      {t("contact.form.sendButton")}
                       <ArrowRight className="w-5 h-5" />
                     </>
                   )}
@@ -218,7 +221,7 @@ const ContactUs: React.FC = () => {
                     className="inline-flex items-center bg-green-50 text-green-800 px-4 py-2 rounded-full"
                   >
                     <CheckCircle className="w-5 h-5 mr-2" />
-                    Message sent successfully!
+                    {t("contact.status.success")}
                   </motion.div>
                 )}
                 {submitStatus === "error" && (
@@ -228,7 +231,7 @@ const ContactUs: React.FC = () => {
                     className="inline-flex items-center bg-red-50 text-red-800 px-4 py-2 rounded-full"
                   >
                     <AlertCircle className="w-5 h-5 mr-2" />
-                    Failed to send message. Please try again.
+                    {t("contact.status.error")}
                   </motion.div>
                 )}
               </motion.div>
@@ -242,9 +245,11 @@ const ContactUs: React.FC = () => {
           >
             <div className="space-y-10">
               <div>
-                <h2 className="text-3xl font-bold mb-6">Contact Information</h2>
+                <h2 className="text-3xl font-bold mb-6">
+                  {t("contact.info.title")}
+                </h2>
                 <p className="text-lg text-cyan-100">
-                  Reach out to us through any of these channels. Our support team typically responds within 2 business hours.
+                  {t("contact.info.description")}
                 </p>
               </div>
 
@@ -255,8 +260,12 @@ const ContactUs: React.FC = () => {
                     <MapPin className="w-6 h-6 text-cyan-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold mb-1">Our Location</h3>
-                    <p className="text-cyan-100">Njoro, Kenya</p>
+                    <h3 className="text-lg font-semibold mb-1">
+                      {t("contact.info.locationTitle")}
+                    </h3>
+                    <p className="text-cyan-100">
+                      {t("contact.info.locationText")}
+                    </p>
                   </div>
                 </div>
 
@@ -266,8 +275,12 @@ const ContactUs: React.FC = () => {
                     <Phone className="w-6 h-6 text-cyan-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold mb-1">Call Us</h3>
-                    <p className="text-cyan-100">+254 123 456 789</p>
+                    <h3 className="text-lg font-semibold mb-1">
+                      {t("contact.info.phoneTitle")}
+                    </h3>
+                    <p className="text-cyan-100">
+                      {t("contact.info.phoneText")}
+                    </p>
                   </div>
                 </div>
 
@@ -277,8 +290,12 @@ const ContactUs: React.FC = () => {
                     <Send className="w-6 h-6 text-cyan-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold mb-1">Email Address</h3>
-                    <p className="text-cyan-100">fmas@gmail.com</p>
+                    <h3 className="text-lg font-semibold mb-1">
+                      {t("contact.info.emailTitle")}
+                    </h3>
+                    <p className="text-cyan-100">
+                      {t("contact.info.emailText")}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -288,10 +305,14 @@ const ContactUs: React.FC = () => {
                 <div className="absolute -top-8 -right-8 w-24 h-24 bg-cyan-400/20 rounded-full blur-xl" />
                 <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-blue-400/20 rounded-full blur-xl" />
                 <div className="border-t border-cyan-400/30 pt-8">
-                  <h3 className="text-lg font-semibold mb-4">24/7 Emergency Support</h3>
+                  <h3 className="text-lg font-semibold mb-4">
+                    {t("contact.emergency.supportTitle")}
+                  </h3>
                   <p className="text-cyan-100">
-                    For urgent flood-related emergencies, call our hotline:
-                    <span className="block text-xl font-bold mt-2">+254 789 123 456</span>
+                    {t("contact.emergency.supportText")}
+                    <span className="block text-xl font-bold mt-2">
+                      {t("contact.emergency.hotline")}
+                    </span>
                   </p>
                 </div>
               </div>

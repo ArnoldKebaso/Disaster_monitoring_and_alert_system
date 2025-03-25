@@ -1,5 +1,7 @@
 // src/pages/Home.tsx
 
+// src/pages/Home.tsx
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -50,30 +52,22 @@ import beneficiary from "../assets/beneficiary.png";
 import PdfThumb from "../assets/Budalangi3.jpg";
 import Pdf from "../assets/flood.png";
 import VideoThumb from "../assets/alert.png";
-import ContactComponent from "./ContactComponent";
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
 
-  // 
   // Carousel / Hero Section State
-  //
-  const heroImages = [Hero1, Hero2, Hero4, Hero5,Hero6];
+  const heroImages = [Hero1, Hero2, Hero4, Hero5, Hero6];
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-    }, 5000); // Slide changes every 5 seconds
+    }, 5000);
     return () => clearInterval(interval);
   }, [heroImages.length]);
 
-  // For the Ken Burns effect, we can simply animate scale from 1 to 1.1
-  // or use motion.div with a key per image
-
-  // ==============================
-  // Subscription Form
-  // ==============================
+  // Subscription Form State
   const [subscriptionMethod, setSubscriptionMethod] = useState("");
   const [contact, setContact] = useState("");
   const [selectedLocations, setSelectedLocations] = useState<
@@ -108,7 +102,7 @@ const Home: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!subscriptionMethod || !contact || selectedLocations.length === 0) {
-      setStatusMessage("All fields are required!");
+      setStatusMessage(t("home.subscribe.allFieldsRequired"));
       return;
     }
 
@@ -118,45 +112,39 @@ const Home: React.FC = () => {
         contact: contact,
         locations: selectedLocations.map((loc) => loc.value),
       });
-      alert("Subscription submitted successfully!");
+      alert(t("home.subscribe.submittedSuccess"));
       setStatusMessage(response.data.message);
       setSubscriptionMethod("");
       setContact("");
       setSelectedLocations([]);
     } catch (error) {
-      setStatusMessage("Subscription failed. Try again.");
+      setStatusMessage(t("home.subscribe.submittedFailed"));
     }
   };
 
-  // ==============================
-  // Short FAQ Section
-  // ==============================
+  // Short FAQ Section State
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index);
   };
 
+  // FAQ Data using translations
   const shortFAQ = [
     {
-      question: "How can I report a flood incident?",
-      answer:
-        "You can submit a detailed report with images and location data through our Report page. The system verifies your report before generating alerts to the community.",
+      question: t("home.faq.q1.question"),
+      answer: t("home.faq.q1.answer"),
     },
     {
-      question: "How do I receive alerts?",
-      answer:
-        "Flood alerts are delivered through SMS, email, or push notifications. You can customize your preferences and choose multiple channels to ensure you never miss an important update.",
+      question: t("home.faq.q2.question"),
+      answer: t("home.faq.q2.answer"),
     },
     {
-      question: "Is my data secure?",
-      answer:
-        "We prioritize data security with encryption, role-based access, and compliance with data protection regulations. Your personal information remains confidential and protected.",
+      question: t("home.faq.q3.question"),
+      answer: t("home.faq.q3.answer"),
     },
   ];
 
-  // ==============================
   // Animation Variants
-  // ==============================
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -200,7 +188,7 @@ const Home: React.FC = () => {
             variants={fadeInUp}
             className="text-4xl md:text-6xl font-black mb-6"
           >
-            Flood Monitoring & Alert System
+            {t("home.hero.title")}
           </motion.h1>
           <motion.p
             initial="hidden"
@@ -209,9 +197,7 @@ const Home: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-xl md:text-2xl max-w-2xl mx-auto mb-8"
           >
-            Empowering the Budalangi community with real-time flood alerts,
-            intuitive reporting, and comprehensive resources for safer, more
-            resilient living.
+            {t("home.hero.description")}
           </motion.p>
           <motion.div
             initial="hidden"
@@ -225,14 +211,14 @@ const Home: React.FC = () => {
               className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-300 shadow-lg flex items-center gap-2"
             >
               <HeartHandshake className="w-5 h-5" />
-              Donate
+              {t("home.hero.ctaDonate")}
             </Link>
             <Link
               to="/alerts"
               className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-300 shadow-lg flex items-center gap-2"
             >
               <AlertTriangle className="w-5 h-5" />
-              View Alerts
+              {t("home.hero.ctaViewAlerts")}
             </Link>
           </motion.div>
         </div>
@@ -242,33 +228,41 @@ const Home: React.FC = () => {
       <section className="py-16 bg-white/90 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold text-blue-900 mb-12 text-center">
-            What We Do
+            {t("home.whatWeDo.title")}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
-                title: "Flood Monitoring",
-                icon: <FaMapMarkerAlt className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
+                title: t("home.whatWeDo.floodMonitoring.title"),
+                icon: (
+                  <FaMapMarkerAlt className="w-12 h-12 mx-auto mb-4 text-blue-900" />
+                ),
                 image: monitorIcon,
-                text: "Our system tracks water levels & weather patterns in real-time.",
+                text: t("home.whatWeDo.floodMonitoring.description"),
               },
               {
-                title: "Flood Alerts",
-                icon: <FaBell className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
+                title: t("home.whatWeDo.floodAlerts.title"),
+                icon: (
+                  <FaBell className="w-12 h-12 mx-auto mb-4 text-blue-900" />
+                ),
                 image: alertIcon,
-                text: "Receive instant alerts via SMS, email, or push notifications.",
+                text: t("home.whatWeDo.floodAlerts.description"),
               },
               {
-                title: "Resource Allocation",
-                icon: <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
+                title: t("home.whatWeDo.resourceAllocation.title"),
+                icon: (
+                  <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-blue-900" />
+                ),
                 image: reourceImage,
-                text: "We coordinate supplies & volunteers to areas most in need.",
+                text: t("home.whatWeDo.resourceAllocation.description"),
               },
               {
-                title: "Flood Response",
-                icon: <FaShieldAlt className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
+                title: t("home.whatWeDo.floodResponse.title"),
+                icon: (
+                  <FaShieldAlt className="w-12 h-12 mx-auto mb-4 text-blue-900" />
+                ),
                 image: floodImage,
-                text: "Collaborate with local agencies for quick & efficient response.",
+                text: t("home.whatWeDo.floodResponse.description"),
               },
             ].map((item, index) => (
               <motion.div
@@ -307,7 +301,7 @@ const Home: React.FC = () => {
             variants={fadeInUp}
             className="text-4xl md:text-5xl font-bold mb-6"
           >
-            Help Us Save Lives
+            {t("home.donate.title")}
           </motion.h2>
           <motion.p
             initial="hidden"
@@ -316,25 +310,24 @@ const Home: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="text-lg md:text-xl mb-8 max-w-3xl mx-auto"
           >
-            Your donation fuels real-time monitoring, emergency responses, and
-            community training—ensuring that those most vulnerable are protected
-            when floods strike.
+            {t("home.donate.description")}
           </motion.p>
           <motion.div whileHover={{ scale: 1.05 }}>
             <Link
               to="/donate"
               className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-full text-lg transition-all duration-300 shadow-lg"
             >
-              Donate Now
+              {t("home.donate.cta")}
             </Link>
           </motion.div>
         </div>
       </section>
 
+      {/* SUBSCRIBE SECTION */}
       <section className="py-20 bg-blue-50">
         <div className="max-w-2xl mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight text-center text-blue-900">
-            Subscribe for Alerts
+            {t("home.subscribe.title")}
           </h2>
           <form
             className="bg-white p-8 rounded-xl shadow-lg border border-gray-200"
@@ -347,37 +340,37 @@ const Home: React.FC = () => {
                 className="mb-4 p-4 bg-yellow-100 rounded-lg border border-yellow-300"
               >
                 <p className="text-yellow-800 font-bold animate-pulse">
-                  ⚠️ Remember to dial <span className="underline">*456*9*5#</span> on your phone to enable promotional messages!
+                  {t("subscribe.smsWarning")}
                 </p>
               </motion.div>
             )}
 
             <div className="mb-6">
               <label className="block text-left text-blue-900 font-semibold mb-2">
-                Select Subscription Method
+                {t("home.subscribe.selectMethodLabel")}
               </label>
               <select
                 className="w-full px-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 appearance-none"
                 value={subscriptionMethod}
                 onChange={(e) => setSubscriptionMethod(e.target.value)}
               >
-                <option value="">-- Choose Method --</option>
-                <option value="email">Email</option>
-                <option value="sms">SMS</option>
+                <option value="">{t("home.subscribe.chooseMethod")}</option>
+                <option value="email">{t("home.subscribe.email")}</option>
+                <option value="sms">{t("home.subscribe.sms")}</option>
               </select>
             </div>
             <div className="mb-6">
               <label className="block text-left text-blue-900 font-semibold mb-2">
                 {subscriptionMethod === "email"
-                  ? "Enter your Email"
-                  : "Enter your Phone Number"}
+                  ? t("home.subscribe.contactEmail")
+                  : t("home.subscribe.contactPhone")}
               </label>
               <input
                 type="text"
                 placeholder={
                   subscriptionMethod === "email"
-                    ? "jane@example.com"
-                    : "+254 700 000 000"
+                    ? t("home.subscribe.emailPlaceholder")
+                    : t("home.subscribe.phonePlaceholder")
                 }
                 className="w-full px-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
                 value={contact}
@@ -387,7 +380,7 @@ const Home: React.FC = () => {
 
             <div className="mb-6">
               <label className="block text-left text-blue-900 font-semibold mb-2">
-                Select Locations
+                {t("home.subscribe.selectLocationsLabel")}
               </label>
               <Select
                 isMulti
@@ -395,7 +388,7 @@ const Home: React.FC = () => {
                 value={selectedLocations}
                 onChange={handleLocationChange}
                 classNamePrefix="select"
-                placeholder="Select locations..."
+                placeholder={t("home.subscribe.locationsPlaceholder")}
                 styles={{
                   control: (base) => ({
                     ...base,
@@ -432,7 +425,7 @@ const Home: React.FC = () => {
               className="w-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white py-4 px-8 rounded-xl font-bold shadow-lg transition-all"
               type="submit"
             >
-              Subscribe
+              {t("home.subscribe.button")}
             </motion.button>
 
             <p className="mt-4 text-green-600 font-medium text-center">
@@ -443,15 +436,17 @@ const Home: React.FC = () => {
       </section>
 
       {/* REPORT NOW SECTION */}
-      <section className="relative py-32 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${Hero2})` }}>
+      <section
+        className="relative py-32 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${Hero2})` }}
+      >
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-cyan-800/60" />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4">
           <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
-            Report Flood Incidents
+            {t("home.report.title")}
           </h2>
           <p className="text-xl text-cyan-100 mb-8 max-w-2xl mx-auto">
-            Submit detailed reports with images and locations to help us verify
-            and alert the community faster.
+            {t("home.report.description")}
           </p>
           <motion.div whileHover={{ scale: 1.05 }}>
             <Link
@@ -459,7 +454,7 @@ const Home: React.FC = () => {
               className="inline-flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold px-8 py-4 rounded-full shadow-lg hover:from-cyan-600 hover:to-blue-700 transition-all"
             >
               <AlertTriangle className="w-6 h-6 mr-2" />
-              Report Now
+              {t("home.report.button")}
             </Link>
           </motion.div>
         </div>
@@ -469,11 +464,10 @@ const Home: React.FC = () => {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold text-blue-900 mb-6 text-center">
-            Publications & Videos
+            {t("home.publications.title")}
           </h2>
           <p className="text-center text-gray-700 mb-12">
-            Browse a selection of our most popular guides and tutorials. For
-            more resources, click below.
+            {t("home.publications.description")}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Sample PDF */}
@@ -483,14 +477,14 @@ const Home: React.FC = () => {
             >
               <img
                 src={Pdf}
-                alt="Flood Preparedness PDF"
+                alt={t("home.publications.floodHandbook.title")}
                 className="w-full h-40 object-contain mb-4"
               />
               <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Flood Preparedness Handbook
+                {t("home.publications.floodHandbook.title")}
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                A comprehensive guide to preparing for floods.
+                {t("home.publications.floodHandbook.description")}
               </p>
               <a
                 href="/pdfs/EmergencyPlan.pdf"
@@ -498,7 +492,7 @@ const Home: React.FC = () => {
                 download
               >
                 <Download className="w-4 h-4 mr-2" />
-                Download
+                {t("home.publications.floodHandbook.cta")}
               </a>
             </motion.div>
             {/* Sample Video */}
@@ -508,14 +502,14 @@ const Home: React.FC = () => {
             >
               <img
                 src={VideoThumb}
-                alt="Flood Reporting Tutorial"
+                alt={t("home.publications.floodTutorial.title")}
                 className="w-full h-40 object-contain mb-4"
               />
               <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Flood Reporting Tutorial
+                {t("home.publications.floodTutorial.title")}
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                Step-by-step video on how to submit flood reports.
+                {t("home.publications.floodTutorial.description")}
               </p>
               <a
                 href="https://www.youtube.com/watch?v=i906ouUW-hw"
@@ -524,24 +518,24 @@ const Home: React.FC = () => {
                 className="inline-flex items-center bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-2 rounded-full font-medium"
               >
                 <Video className="w-4 h-4 mr-2" />
-                Watch Video
+                {t("home.publications.floodTutorial.cta")}
               </a>
             </motion.div>
-            {/* Another PDF or Video */}
+            {/* Third Publication */}
             <motion.div
               className="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-xl transition"
               whileHover={{ y: -5 }}
             >
               <img
                 src={PdfThumb}
-                alt="Emergency Response Protocol"
+                alt={t("home.publications.emergencyProtocol.title")}
                 className="w-full h-40 object-contain mb-4"
               />
               <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                Emergency Response Protocol
+                {t("home.publications.emergencyProtocol.title")}
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                Official guidelines for local emergency response teams.
+                {t("home.publications.emergencyProtocol.description")}
               </p>
               <a
                 href="https://reliefweb.int/report/kenya/kenya-el-nino-floods-2023-emergency-appeal-mdrke058"
@@ -550,16 +544,16 @@ const Home: React.FC = () => {
                 className="inline-flex items-center bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-2 rounded-full font-medium"
               >
                 <Download className="w-4 h-4 mr-2" />
-                View
+                {t("home.publications.emergencyProtocol.cta")}
               </a>
             </motion.div>
           </div>
           <div className="text-center mt-8">
             <Link
-              to="/resources"
+              to="/userResources"
               className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-full font-bold hover:from-cyan-600 hover:to-blue-700 transition"
             >
-              View More Resources
+              {t("home.publications.viewMore")}
             </Link>
           </div>
         </div>
@@ -569,7 +563,7 @@ const Home: React.FC = () => {
       <section className="py-16 bg-blue-50">
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-4xl font-bold text-blue-900 mb-6 text-center">
-            Frequently Asked Questions
+            {t("home.faq.title")}
           </h2>
           <div className="space-y-4">
             {shortFAQ.map((item, index) => (
@@ -615,7 +609,7 @@ const Home: React.FC = () => {
               to="/faq"
               className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-full font-bold hover:from-cyan-600 hover:to-blue-700 transition"
             >
-              View Full FAQ
+              {t("home.faq.button")}
             </Link>
           </div>
         </div>
@@ -624,17 +618,21 @@ const Home: React.FC = () => {
       {/* OUR IMPACT SECTION */}
       <section className="py-16 bg-gradient-to-br from-blue-900 to-cyan-800 text-white">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold mb-12 text-center">Our Impact</h2>
+          <h2 className="text-4xl font-bold mb-12 text-center">
+            {t("home.impact.title")}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
-                label: "County Branches",
+                label: t("home.impact.countyBranches"),
                 value: "12",
-                icon: <FaMap className="w-12 h-12 mx-auto mb-4 text-blue-900" />,
+                icon: (
+                  <FaMap className="w-12 h-12 mx-auto mb-4 text-blue-900" />
+                ),
                 image: county,
               },
               {
-                label: "Regional Offices",
+                label: t("home.impact.regionalOffices"),
                 value: "20",
                 icon: (
                   <FaUsers className="w-12 h-12 mx-auto mb-4 text-blue-900" />
@@ -642,7 +640,7 @@ const Home: React.FC = () => {
                 image: regional,
               },
               {
-                label: "Members & Volunteers",
+                label: t("home.impact.membersVolunteers"),
                 value: "5k+",
                 icon: (
                   <FaUsers className="w-12 h-12 mx-auto mb-4 text-blue-900" />
@@ -650,7 +648,7 @@ const Home: React.FC = () => {
                 image: volunteer,
               },
               {
-                label: "Beneficiaries Supported",
+                label: t("home.impact.beneficiariesSupported"),
                 value: "1k+",
                 icon: (
                   <FaHandHoldingHeart className="w-12 h-12 mx-auto mb-4 text-blue-900" />
@@ -687,23 +685,20 @@ const Home: React.FC = () => {
 
       {/* CONTACT US SNIPPET */}
       <section className="py-16 bg-blue-50">
-        {/* <ContactComponent /> */}
         <div className="max-w-3xl mx-auto text-center px-4">
           <h2 className="text-4xl font-bold text-blue-900 mb-6">
-            Get In Touch
+            {t("home.contact.title")}
           </h2>
           <p className="text-lg text-gray-700 mb-8">
-            Have questions, need assistance, or want to learn more? Reach out to
-            us anytime—we’re here to help.
+            {t("home.contact.description")}
           </p>
           <Link
             to="/contact"
             className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-full font-bold hover:from-cyan-600 hover:to-blue-700 transition"
           >
-            Contact Us
+            {t("home.contact.button")}
           </Link>
         </div>
-        
       </section>
 
       {/* Footer */}
@@ -713,6 +708,7 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
 
 
 // import React, { useState, useEffect } from "react";
