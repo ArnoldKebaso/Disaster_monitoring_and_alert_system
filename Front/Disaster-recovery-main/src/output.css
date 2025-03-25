@@ -1054,10 +1054,6 @@ body {
   max-height: 90vh;
 }
 
-.max-h-dvh {
-  max-height: 100dvh;
-}
-
 .min-h-screen {
   min-height: 100vh;
 }
