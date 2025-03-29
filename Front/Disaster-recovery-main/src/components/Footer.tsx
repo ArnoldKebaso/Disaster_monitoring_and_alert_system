@@ -57,9 +57,9 @@ const Footer: React.FC = () => {
                   icon: <BookOpen className="w-5 h-5" />,
                 },
                 {
-                  path: "/domain",
-                  name: t("footer.domain"),
-                  icon: <MapPin className="w-5 h-5" />,
+                  path: "/faq",
+                  name: t("footer.faq"),
+                  icon: <BookOpen className="w-5 h-5" />,
                 },
               ].map((link, index) => (
                 <Link
