@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Select, { MultiValue } from "react-select";
+import { toast } from "sonner";
+import { z } from "zod";
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -29,6 +31,7 @@ import {
   Phone,
   Download,
   Video,
+  Loader2,
   Plus,
   Minus,
 } from "lucide-react";
@@ -53,9 +56,29 @@ import PdfThumb from "../assets/Budalangi3.jpg";
 import Pdf from "../assets/flood.png";
 import VideoThumb from "../assets/alert.png";
 
+
+const newsletterSchema = z.object({
+  subscriptionMethod: z.enum(["email", "sms"], {
+    required_error: "Please select a subscription method",
+  }),
+  contact: z.string().nonempty({ message: "Contact is required" }),
+  selectedLocations: z.array(z.object({ value: z.string(), label: z.string() })).min(1, "Please select at least one location"),
+}).refine((data) => {
+  if (data.subscriptionMethod === "email") {
+    return z.string().email().safeParse(data.contact).success;
+  } else if (data.subscriptionMethod === "sms") {
+    // Example regex for Kenyan mobile: +2547XXXXXXXX
+    return /^\+2547\d{8}$/.test(data.contact);
+  }
+  return false;
+}, {
+  message: "Invalid contact format for the chosen subscription method",
+  path: ["contact"],
+});
+
 const Home: React.FC = () => {
   const { t } = useTranslation();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   // Carousel / Hero Section State
   const heroImages = [Hero1, Hero2, Hero4, Hero5, Hero6];
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -99,29 +122,51 @@ const Home: React.FC = () => {
     setSelectedLocations(selectedOptions as { value: string; label: string }[]);
   };
 
+  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!subscriptionMethod || !contact || selectedLocations.length === 0) {
-      setStatusMessage(t("home.subscribe.allFieldsRequired"));
+    // Build our subscription data object
+    const subscriptionData = {
+      subscriptionMethod: subscriptionMethod as "email" | "sms",
+      contact,
+      selectedLocations,
+    };
+
+    try {
+      // Validate using Zod
+      newsletterSchema.parse(subscriptionData);
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        error.errors.forEach((err) => toast.error(err.message));
+      }
       return;
     }
 
+    setIsSubmitting(true);
     try {
-      const response = await axios.post("http://localhost:3000/subscriptions", {
-        method: subscriptionMethod,
-        contact: contact,
-        locations: selectedLocations.map((loc) => loc.value),
-      });
-      alert(t("home.subscribe.submittedSuccess"));
-      setStatusMessage(response.data.message);
+      const response = await axios.post("http://localhost:3000/subscriptions",
+        {
+          method: subscriptionMethod,
+          contact: contact,
+          locations: selectedLocations.map((loc) => loc.value),
+        },
+        { withCredentials: true }
+      );
+      toast.success(t("home.subscribe.submittedSuccess"));
+      setStatusMessage(response.data.message || "Subscription successful!");
+      // Reset form fields
       setSubscriptionMethod("");
       setContact("");
       setSelectedLocations([]);
-    } catch (error) {
-      setStatusMessage(t("home.subscribe.submittedFailed"));
+    } catch (error: any) {
+      const errMsg = error.response?.data?.error || error.message;
+      toast.error(t("home.subscribe.submittedFailed"), { description: errMsg });
+      setStatusMessage("Subscription failed: " + errMsg);
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
   // Short FAQ Section State
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const toggleFAQ = (index: number) => {
@@ -323,7 +368,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* SUBSCRIBE SECTION */}
       <section className="py-20 bg-blue-50">
         <div className="max-w-2xl mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight text-center text-blue-900">
@@ -353,12 +397,14 @@ const Home: React.FC = () => {
                 className="w-full px-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 appearance-none"
                 value={subscriptionMethod}
                 onChange={(e) => setSubscriptionMethod(e.target.value)}
+                required
               >
                 <option value="">{t("home.subscribe.chooseMethod")}</option>
                 <option value="email">{t("home.subscribe.email")}</option>
                 <option value="sms">{t("home.subscribe.sms")}</option>
               </select>
             </div>
+
             <div className="mb-6">
               <label className="block text-left text-blue-900 font-semibold mb-2">
                 {subscriptionMethod === "email"
@@ -375,6 +421,7 @@ const Home: React.FC = () => {
                 className="w-full px-4 py-3 border-2 border-blue-100 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200"
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
+                required
               />
             </div>
 
@@ -419,18 +466,38 @@ const Home: React.FC = () => {
               />
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white py-4 px-8 rounded-xl font-bold shadow-lg transition-all"
-              type="submit"
-            >
-              {t("home.subscribe.button")}
-            </motion.button>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-cyan-600 to-blue-700 text-white py-4 px-8 rounded-full font-bold hover:from-cyan-700 hover:to-blue-800 transition-all disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="mr-2 animate-spin">⏳</span>
+                   submitting
+                  </>
+                ) : (
+                  t("home.subscribe.button")
+                )}
+              </button>
+              {/* <button
+                type="button"
+                onClick={() => {
+                  setSubscriptionMethod("");
+                  setContact("");
+                  setSelectedLocations([]);
+                  setStatusMessage("");
+                }}
+                className="w-full bg-gray-200 text-blue-600 py-4 px-8 rounded-full font-bold hover:bg-gray-300 transition-all"
+              >
+                {t("home.subscribe.clear")}
+              </button> */}
+            </div>
 
-            <p className="mt-4 text-green-600 font-medium text-center">
-              {statusMessage}
-            </p>
+            {statusMessage && (
+              <p className="mt-4 text-center text-sm text-gray-600">{statusMessage}</p>
+            )}
           </form>
         </div>
       </section>
