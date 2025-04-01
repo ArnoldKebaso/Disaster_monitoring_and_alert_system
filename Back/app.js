@@ -150,6 +150,7 @@ const emailRouter = require('./routes/emailRoutes');
 const logRoutes = require('./routes/logRoutes');
 const smsRoutes = require('./routes/smsRoutes');
 const adminCommunityReportsRoutes = require('./routes/adminCommunityReports');
+const subscriptionRoutes = require('./routes/subscriptionRoutes');
 
 const cors = require('cors');
 app.use(express.json());
@@ -217,7 +218,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', smsRoutes);
 app.use('/admin/community-reports', authMiddleware, adminCommunityReportsRoutes);
 app.use('/profile-photos', express.static(path.join(__dirname, 'uploads/profile-photos')));
-
+app.use('/newsletter-subscriptions', subscriptionRoutes);
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
