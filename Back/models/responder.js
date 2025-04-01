@@ -24,7 +24,9 @@ const Responder = sequelize.define('Responder', {
     tableName: 'responders',
 });
 
-// Define relationships
-Responder.belongsTo(User, { foreignKey: 'user_id' });
+// Association: A Responder belongs to a User.
+Responder.associate = models => {
+  Responder.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+};
 
 module.exports = Responder;
