@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./user');
 
 const Responder = sequelize.define('Responder', {
     responder_id: {
@@ -24,9 +23,10 @@ const Responder = sequelize.define('Responder', {
     tableName: 'responders',
 });
 
-// Association: A Responder belongs to a User.
 Responder.associate = models => {
+  // Each Responder belongs to one User.
   Responder.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
 };
 
 module.exports = Responder;
+

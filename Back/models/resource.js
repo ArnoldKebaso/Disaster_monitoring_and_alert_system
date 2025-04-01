@@ -15,10 +15,10 @@ const Resource = sequelize.define('Resource', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    // Replace location with location_id
+    // Use location_id instead of a free-text location
     location_id: {
         type: DataTypes.INTEGER,
-        comment: 'References the Locations table',
+        comment: 'Foreign key referencing Locations',
     },
     last_updated: {
         type: DataTypes.DATE,
@@ -34,12 +34,14 @@ const Resource = sequelize.define('Resource', {
     },
 });
 
-// Association: A Resource belongs to a Location (if applicable)
 Resource.associate = models => {
+  // Each Resource belongs to one Location.
   Resource.belongsTo(models.Location, { foreignKey: 'location_id', as: 'location' });
 };
 
 module.exports = Resource;
+
+
 
 
 // const { DataTypes } = require('sequelize');
