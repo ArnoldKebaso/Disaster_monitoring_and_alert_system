@@ -56,11 +56,18 @@ const User = sequelize.define('User', {
 
 module.exports = User;
 
+// User.associate = models => {
+//   User.hasMany(models.CommunityReport, {
+//     foreignKey: 'user_id',
+//     as: 'reports'
+//   });
+// };
+
 User.associate = models => {
-  User.hasMany(models.CommunityReport, {
-    foreignKey: 'user_id',
-    as: 'reports'
-  });
+  // A user can submit many community reports
+  User.hasMany(models.CommunityReport, { foreignKey: 'user_id', as: 'reports' });
+  // A user (e.g., admin) may verify many reports
+  User.hasMany(models.CommunityReport, { foreignKey: 'verified_by', as: 'verifiedReports' });
+  // A user may be a responder
+  User.hasMany(models.Responder, { foreignKey: 'user_id', as: 'responders' });
 };
-
-
