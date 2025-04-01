@@ -15,11 +15,11 @@ const Alert = sequelize.define('Alert', {
         type: DataTypes.ENUM('Low', 'Medium', 'High'),
         allowNull: false,
     },
-    // Use location_id as a foreign key
+    // Replace the free-text location with a foreign key
     location_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        comment: 'References the Locations table',
+        comment: 'Foreign key referencing the Locations table',
     },
     description: {
         type: DataTypes.TEXT,
@@ -52,12 +52,13 @@ const Alert = sequelize.define('Alert', {
     updatedAt: DataTypes.DATE,
 });
 
-// Association: An Alert belongs to a Location
 Alert.associate = models => {
+  // Each Alert belongs to one Location.
   Alert.belongsTo(models.Location, { foreignKey: 'location_id', as: 'location' });
 };
 
 module.exports = Alert;
+
 
 
 
