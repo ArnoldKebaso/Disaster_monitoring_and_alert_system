@@ -1,3 +1,4 @@
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
@@ -16,37 +17,14 @@ const Location = sequelize.define('Location', {
         defaultValue: 'low',
     },
     evacuation_routes: {
-        type: DataTypes.JSON,
-        comment: 'Array of evacuation route objects',
+        type: DataTypes.JSON, // Example: [{ "route_name": "Route A", "distance_km": 5 }]
     },
     key_facilities: {
-        type: DataTypes.JSON,
-        comment: 'Array of key facility objects (e.g., shelters)',
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-    },
+        type: DataTypes.JSON, // Example: [{ "type": "shelter", "name": "Shelter A", "capacity": 100 }]
+    }
 });
 
-Location.associate = models => {
-  // A Location has many Alerts, CommunityReports, Floods, and Resources.
-  Location.hasMany(models.Alert, { foreignKey: 'location_id', as: 'alerts' });
-  Location.hasMany(models.CommunityReport, { foreignKey: 'location_id', as: 'communityReports' });
-  Location.hasMany(models.Flood, { foreignKey: 'location_id', as: 'floods' });
-  Location.hasMany(models.Resource, { foreignKey: 'location_id', as: 'resources' });
-  // A Location can have one Demographics record.
-  Location.hasOne(models.Demographics, { foreignKey: 'location_id', as: 'demographics' });
-};
-
 module.exports = Location;
-
-
-
 
 // const { DataTypes } = require('sequelize');
 // const sequelize = require('../config/database');
@@ -66,11 +44,32 @@ module.exports = Location;
 //         defaultValue: 'low',
 //     },
 //     evacuation_routes: {
-//         type: DataTypes.JSON, // Example: [{ "route_name": "Route A", "distance_km": 5 }]
+//         type: DataTypes.JSON,
+//         comment: 'Array of evacuation route objects',
 //     },
 //     key_facilities: {
-//         type: DataTypes.JSON, // Example: [{ "type": "shelter", "name": "Shelter A", "capacity": 100 }]
-//     }
+//         type: DataTypes.JSON,
+//         comment: 'Array of key facility objects (e.g., shelters)',
+//     },
+//     createdAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//     },
+//     updatedAt: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//     },
 // });
 
+// Location.associate = models => {
+//   // A Location has many Alerts, CommunityReports, Floods, and Resources.
+//   Location.hasMany(models.Alert, { foreignKey: 'location_id', as: 'alerts' });
+//   Location.hasMany(models.CommunityReport, { foreignKey: 'location_id', as: 'communityReports' });
+//   Location.hasMany(models.Flood, { foreignKey: 'location_id', as: 'floods' });
+//   Location.hasMany(models.Resource, { foreignKey: 'location_id', as: 'resources' });
+//   // A Location can have one Demographics record.
+//   Location.hasOne(models.Demographics, { foreignKey: 'location_id', as: 'demographics' });
+// };
+
 // module.exports = Location;
+
