@@ -52,6 +52,9 @@ const Layout: React.FC = () => {
     { label: "Community Reports", path: "/adminCommunityReports", icon: <AlertTriangle className="w-5 h-5" /> },
     { label: "Reports", path: "/adminReport", icon: <FileBox className="w-5 h-5" /> },
     { label: "Subscribed Users", path: "/subscriptionReport", icon: <Users className="w-5 h-5" /> },
+    { label: "Flood analytics", path: "/floods", icon: <Users className="w-5 h-5" /> },
+    { label: "Demographics", path: "/demographics", icon: <Users className="w-5 h-5" /> },
+    { label: "Manage Resources", path: "/adminResources", icon: <Users className="w-5 h-5" /> },
   ];
 
   const menuItems = user?.role === "admin" ? adminMenuItems : userMenuItems;
