@@ -90,6 +90,9 @@ const App: React.FC = () => {
                 <Route path="/adminCommunityReports" element={<AdminCommunityReports />} />
                 <Route path="/adminReport" element={<AdminReportsDashboard />} />
                 <Route path="/subscriptionReport" element={<SubscriptionReportsDashboard />} />
+                <Route path="/adminResources" element={<ResourceComponent />} />
+                <Route path="/floods" element={<FloodComponent />} />
+                <Route path="/demographics" element={<DemographicComponent />} />
               </Route>
             </Route>
           </Routes>
