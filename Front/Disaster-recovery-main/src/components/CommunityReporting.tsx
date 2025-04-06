@@ -78,7 +78,7 @@ const CommunityReporting: React.FC = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/community-reports`);
+        const response = await axios.get('http://localhost:3000/community-reports');
         setReports(response.data);
       } catch (error) {
         toast.error("Error loading reports", {
@@ -110,7 +110,7 @@ const CommunityReporting: React.FC = () => {
     formData.append('image', image);
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/community-reports`, formData, {
+      await axios.post('http://localhost:3000/community-reports', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       });
@@ -127,7 +127,7 @@ const CommunityReporting: React.FC = () => {
       setImagePreview(null);
 
       // Refresh the reports list
-      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/community-reports`, {
+      const response = await axios.get('http://localhost:3000/community-reports', {
         withCredentials: true,
       });
       setReports(response.data);
@@ -493,10 +493,9 @@ const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title
 );
 
 export default CommunityReporting;
+
+
 // import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-
-
-
 // import axios from 'axios';
 // import { MapPin, Clock, CheckCircle, AlertTriangle, UploadCloud, Loader2, LocateFixed } from 'lucide-react';
 // import { Button } from './ui/button';
