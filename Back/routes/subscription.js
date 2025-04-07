@@ -8,8 +8,7 @@ const {
     sendEmailAlert,
     getSubscriptionLocationCounts,
     getSubscriptionMethodCounts,
-    getSubscriptionsByMonth,
-    
+    getSubscriptionsByMonth,    
 } = require("../controllers/subscriptionController.js");
 
 const router = express.Router();
@@ -18,46 +17,126 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Subscriptions
- *   description: Subscription management
+ *   description: Alert subscription management endpoints
+ * components:
+ *   schemas:
+ *     Subscription:
+ *       type: object
+ *       required:
+ *         - method
+ *         - contact
+ *         - locations
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 1
+ *         method:
+ *           type: string
+ *           enum: [email, sms, push]
+ *           example: "email"
+ *         contact:
+ *           type: string
+ *           example: "user@example.com"
+ *         locations:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ["Nairobi", "Mombasa"]
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2024-01-01T12:00:00Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2024-01-01T12:30:00Z"
+ *     AlertRequest:
+ *       type: object
+ *       required:
+ *         - to
+ *         - subject
+ *         - text
+ *         - alertType
+ *         - location
+ *       properties:
+ *         to:
+ *           type: string
+ *           format: email
+ *           example: "user@example.com"
+ *         subject:
+ *           type: string
+ *           example: "Flood Alert"
+ *         text:
+ *           type: string
+ *           example: "Severe flooding reported in your area"
+ *         alertType:
+ *           type: string
+ *           example: "flood"
+ *         location:
+ *           type: string
+ *           example: "Nairobi"
+ *         description:
+ *           type: string
+ *         severity:
+ *           type: string
+ *         water_levels:
+ *           type: object
+ *         evacuation_routes:
+ *           type: array
+ *           items: string
+ *         emergency_contacts:
+ *           type: array
+ *           items: string
+ *         precautionary_measures:
+ *           type: array
+ *           items: string
+ *         weather_forecast:
+ *           type: object
+ *     MethodCount:
+ *       type: object
+ *       properties:
+ *         label:
+ *           type: string
+ *           example: "email"
+ *         count:
+ *           type: integer
+ *           example: 15
+ *     LocationCount:
+ *       type: object
+ *       properties:
+ *         label:
+ *           type: string
+ *           example: "Nairobi"
+ *         count:
+ *           type: integer
+ *           example: 8
  */
 
 /**
  * @swagger
  * /subscriptions:
  *   post:
- *     summary: Subscribe a user
+ *     summary: Create a new subscription
  *     tags: [Subscriptions]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - method
- *               - contact
- *               - locations
- *             properties:
- *               method:
- *                 type: string
- *                 example: "email"
- *               contact:
- *                 type: string
- *                 example: "user@example.com"
- *               locations:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["location1", "location2"]
+ *             $ref: '#/components/schemas/Subscription'
  *     responses:
  *       201:
- *         description: Subscription successful
+ *         description: Subscription created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Subscription'
  *       400:
- *         description: Bad request
+ *         description: Invalid input data
  *       500:
- *         description: Internal server error
+ *         description: Server error
  */
-router.post("/", subscribeUser); // Fixed: Removed "/subscriptions"
+router.post("/", subscribeUser);
 
 /**
  * @swagger
@@ -67,38 +146,23 @@ router.post("/", subscribeUser); // Fixed: Removed "/subscriptions"
  *     tags: [Subscriptions]
  *     responses:
  *       200:
- *         description: A list of subscriptions
+ *         description: List of subscriptions
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     example: 1
- *                   method:
- *                     type: string
- *                     example: "email"
- *                   contact:
- *                     type: string
- *                     example: "user@example.com"
- *                   locations:
- *                     type: array
- *                     items:
- *                       type: string
- *                     example: ["location1", "location2"]
+ *                 $ref: '#/components/schemas/Subscription'
  *       500:
- *         description: Internal server error
+ *         description: Server error
  */
-router.get("/", getAllSubscriptions); // Fixed: Removed "/subscriptions"
+router.get("/", getAllSubscriptions);
 
 /**
  * @swagger
  * /subscriptions/{id}:
  *   put:
- *     summary: Update a subscription by ID
+ *     summary: Update a subscription
  *     tags: [Subscriptions]
  *     parameters:
  *       - in: path
@@ -106,54 +170,64 @@ router.get("/", getAllSubscriptions); // Fixed: Removed "/subscriptions"
  *         schema:
  *           type: integer
  *         required: true
- *         description: The subscription ID
+ *         description: Subscription ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               method:
- *                 type: string
- *                 example: "sms"
- *               contact:
- *                 type: string
- *                 example: "user@example.com"
- *               locations:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["location1", "location2"]
+ *             $ref: '#/components/schemas/Subscription'
  *     responses:
  *       200:
- *         description: Subscription updated successfully
+ *         description: Updated subscription
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Subscription'
  *       404:
  *         description: Subscription not found
  *       500:
- *         description: Internal server error
+ *         description: Server error
  */
-router.put("/:id", updateSubscription); // Fixed: Removed "/subscriptions"
+router.put("/:id", updateSubscription);
 
 /**
  * @swagger
  * /subscriptions/by-location:
  *   get:
- *     summary: Get subscriptions grouped by location
+ *     summary: Get subscriptions by location
  *     tags: [Subscriptions]
+ *     parameters:
+ *       - in: query
+ *         name: location
+ *         schema:
+ *           type: string
+ *         description: Filter subscriptions by location
  *     responses:
  *       200:
- *         description: Subscriptions grouped by location
+ *         description: Subscription data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - type: object
+ *                   additionalProperties:
+ *                     type: array
+ *                     items:
+ *                       $ref: '#/components/schemas/Subscription'
+ *                 - type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Subscription'
  *       500:
- *         description: Internal server error
+ *         description: Server error
  */
-router.get('/by-location', getSubscriptionsByLocation); 
+router.get('/by-location', getSubscriptionsByLocation);
 
 /**
  * @swagger
  * /subscriptions/{id}:
  *   delete:
- *     summary: Delete a subscription by ID
+ *     summary: Delete a subscription
  *     tags: [Subscriptions]
  *     parameters:
  *       - in: path
@@ -161,25 +235,42 @@ router.get('/by-location', getSubscriptionsByLocation);
  *         schema:
  *           type: integer
  *         required: true
- *         description: The subscription ID
+ *         description: Subscription ID
  *     responses:
- *       200:
- *         description: Subscription deleted successfully
+ *       204:
+ *         description: Subscription deleted
  *       404:
  *         description: Subscription not found
  *       500:
- *         description: Internal server error
+ *         description: Server error
  */
 router.delete("/:id", deleteSubscription);
+
+/**
+ * @swagger
+ * /subscriptions/send-email:
+ *   post:
+ *     summary: Send email alert
+ *     tags: [Subscriptions]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AlertRequest'
+ *     responses:
+ *       200:
+ *         description: Email sent successfully
+ *       500:
+ *         description: Failed to send email
+ */
 router.post('/send-email', sendEmailAlert);
-
-
 
 /**
  * @swagger
  * /subscriptions/analytics/method-counts:
  *   get:
- *     summary: Get subscription counts by method
+ *     summary: Get subscription method analytics
  *     tags: [Subscriptions]
  *     responses:
  *       200:
@@ -189,21 +280,17 @@ router.post('/send-email', sendEmailAlert);
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   label:
- *                     type: string
- *                   count:
- *                     type: number
-*/
+ *                 $ref: '#/components/schemas/MethodCount'
+ *       500:
+ *         description: Server error
+ */
 router.get('/analytics/method-counts', getSubscriptionMethodCounts);
-
 
 /**
  * @swagger
  * /subscriptions/analytics/location-counts:
  *   get:
- *     summary: Get subscription counts by location
+ *     summary: Get subscription location analytics
  *     tags: [Subscriptions]
  *     responses:
  *       200:
@@ -213,15 +300,45 @@ router.get('/analytics/method-counts', getSubscriptionMethodCounts);
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   label:
- *                     type: string
- *                   count:
- *                     type: number
+ *                 $ref: '#/components/schemas/LocationCount'
+ *       500:
+ *         description: Server error
  */
 router.get('/analytics/location-counts', getSubscriptionLocationCounts);
-router.get('/filter/month', getSubscriptionsByMonth);
 
+/**
+ * @swagger
+ * /subscriptions/filter/month:
+ *   get:
+ *     summary: Filter subscriptions by month
+ *     tags: [Subscriptions]
+ *     parameters:
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *         required: true
+ *       - in: query
+ *         name: month
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 12
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Filtered subscriptions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Subscription'
+ *       400:
+ *         description: Invalid year/month parameters
+ *       500:
+ *         description: Server error
+ */
+router.get('/filter/month', getSubscriptionsByMonth);
 
 module.exports = router;
