@@ -347,7 +347,7 @@ Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
         {/* Dashboard Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Alert Management Console</h1>
+            <h1 className="text-3xl font-bold mb-2">Flood Alerts Management Console</h1>
             <div className="relative">
               <input
                 type="text"
