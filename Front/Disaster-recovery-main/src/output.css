@@ -1578,6 +1578,11 @@ body {
   border-color: rgb(219 234 254 / var(--tw-border-opacity, 1));
 }
 
+.border-blue-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(191 219 254 / var(--tw-border-opacity, 1));
+}
+
 .border-blue-50 {
   --tw-border-opacity: 1;
   border-color: rgb(239 246 255 / var(--tw-border-opacity, 1));
@@ -1780,6 +1785,10 @@ body {
   background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
 }
 
+.bg-gray-100\/80 {
+  background-color: rgb(243 244 246 / 0.8);
+}
+
 .bg-gray-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1));
@@ -1884,6 +1893,10 @@ body {
 
 .bg-red-100\/50 {
   background-color: rgb(254 226 226 / 0.5);
+}
+
+.bg-red-100\/80 {
+  background-color: rgb(254 226 226 / 0.8);
 }
 
 .bg-red-100\/90 {
