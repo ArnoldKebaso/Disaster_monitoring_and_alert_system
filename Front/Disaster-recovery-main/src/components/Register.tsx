@@ -1,3 +1,4 @@
+// src/components/Register.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -5,6 +6,7 @@ import { toast } from 'sonner';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { z } from 'zod';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 
 const locationOptions = [
   { value: "Bumadeya", label: "Bumadeya" },
@@ -24,11 +26,9 @@ const locationOptions = [
   { value: "South Bunyala", label: "South Bunyala" },
 ];
 
-
 const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.string().email("Invalid email address"),
-  // Kenyan mobile number: +2547XXXXXXXX (10 digits after +254)
   phone: z.string().regex(/^\+2547\d{8}$/, "Invalid Kenyan mobile number. Format: +2547XXXXXXXX"),
   password: z.string().min(12, "Password must be at least 12 characters")
     .refine(val => /[A-Z]/.test(val), "Password must include at least one uppercase letter")
@@ -52,11 +52,12 @@ const Register: React.FC = () => {
     location: '',
     role: 'viewer', // Always viewer for registration
   });
-  // Track whether the location was detected automatically
+  // Track whether location is detected automatically
   const [locationSource, setLocationSource] = useState<"manual" | "detected">("manual");
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -88,11 +89,8 @@ const Register: React.FC = () => {
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           );
           const data = await response.json();
-          // Use a property such as city, town or village if available; fallback to display_name.
+          // Use city, town, or village; fallback to display_name.
           let detected = data.address.city || data.address.town || data.address.village || data.display_name;
-          
-          // Optional: Check if detected matches one of our location options.
-          // For simplicity, we assume that the detected location is acceptable.
           setFormData(prev => ({ ...prev, location: detected }));
           setLocationSource("detected");
           toast.success(`Location detected: ${detected}`);
@@ -127,8 +125,9 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
-      // Validate form data
+      // Validate form data with Zod
       registerSchema.parse(formData);
       // Optionally, you might check username uniqueness via an API call.
       await axios.post('http://localhost:3000/register', formData);
@@ -140,6 +139,8 @@ const Register: React.FC = () => {
       } else {
         toast.error(error.response?.data?.error || "Registration failed");
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -262,9 +263,17 @@ const Register: React.FC = () => {
             <input type="hidden" name="role" value="viewer" />
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition-colors font-semibold"
+              disabled={isSubmitting}
+              className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition-colors font-semibold flex items-center justify-center gap-2"
             >
-              Register
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                  Registering...
+                </>
+              ) : (
+                "Register"
+              )}
             </button>
           </form>
           <p className="mt-6 text-center text-gray-600">
