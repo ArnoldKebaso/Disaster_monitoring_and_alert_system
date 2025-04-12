@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
         },
       ],
     },
-    { path: "/userReSources", name: "Resources", key: "resources-user" },
+    { path: "/userReSources",  name: t("navbar.Resources"), key: "resources-user" },
     { path: "/contact", name: t("navbar.contact"), key: "contact" },
     { path: "/faq", name: t("navbar.FAQ"), key: "contact" },
   ];
