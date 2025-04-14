@@ -238,15 +238,3 @@ Usage
     *   Toggle between English and Swahili interfaces for ease of use.
         
 
-Testing
--------
-
-FMAS is rigorously tested to ensure reliability and performance. Testing strategies include:
-
-*   **Unit Testing:**Validate individual API endpoints and UI components using Jest, Mocha, and React Testing Library.
-    
-*   **Integration Testing:**Use Postman and Selenium to verify interactions between the front-end, back-end, and database.
-    
-*   **Performance Testing:**Simulate high user loads using Apache JMeter.
-    
-*   **User Acceptance Testing (UAT):**Collaborate with stakeholders (e.g., Kenya Red Cross, NDMU) to ensure the system meets real-world needs.
