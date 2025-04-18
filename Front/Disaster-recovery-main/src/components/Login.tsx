@@ -1,4 +1,4 @@
-// src/components/Login.tsx
+// Import necessary libraries and components
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -8,50 +8,59 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { showError, showSuccess } from '../utils/toastHelpers';
 
+// Define the Login component
 const Login: React.FC = () => {
+  // State variables for form inputs and UI behavior
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { user, login } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
 
+  // Extract user and login function from AuthContext
+  const { user, login } = useAuth();
+  const navigate = useNavigate(); // Navigation hook for programmatic routing
+  const location = useLocation(); // Get current route location
+
+  // Handle form submission for login
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault(); // Prevent default form submission
+    setIsLoading(true); // Show loading indicator
     try {
-      await login(email, password);
-      showSuccess('Login successful! Redirecting...');
+      await login(email, password); // Attempt login with provided credentials
+      showSuccess('Login successful! Redirecting...'); // Show success message
     } catch (error) {
+      // Show error message with retry option
       toast.error('Login failed', {
         description: 'Please check your email and password and try again.',
         action: {
           label: 'Retry',
-          onClick: () => handleSubmit(e)
+          onClick: () => handleSubmit(e),
         },
       });
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Hide loading indicator
     }
   };
 
+  // Redirect user after successful login
   useEffect(() => {
     if (user) {
-      const redirectPath = user.role === 'admin' 
-        ? '/subscriptions' 
-        : (location.state as { from?: { pathname: string } })?.from?.pathname || '/dashboard';
-      
-      const redirectTimer = setTimeout(() => navigate(redirectPath), 1500);
-      return () => clearTimeout(redirectTimer);
+      const redirectPath = user.role === 'admin'
+        ? '/subscriptions' // Redirect admin to subscriptions page
+        : (location.state as { from?: { pathname: string } })?.from?.pathname || '/dashboard'; // Redirect regular user to dashboard or previous page
+
+      const redirectTimer = setTimeout(() => navigate(redirectPath), 1500); // Delay redirection for better UX
+      return () => clearTimeout(redirectTimer); // Cleanup timer on component unmount
     }
   }, [user, navigate, location]);
 
+  // Handle Google Sign-In
   const handleGoogleSignIn = () => {
     try {
-      window.location.href = 'http://localhost:3000/auth/google';
-      toast.info('Redirecting to Google authentication...');
+      window.location.href = 'http://localhost:3000/auth/google'; // Redirect to Google authentication
+      toast.info('Redirecting to Google authentication...'); // Show info message
     } catch (error) {
+      // Show error message if Google authentication fails
       toast.error('Google authentication failed', {
         description: 'Please try again or use email/password.',
       });
@@ -60,13 +69,15 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Navbar /> {/* Render Navbar component */}
       <main className="flex-grow flex items-center justify-center p-4 mb-12">
         <div className="w-full max-w-lg mx-auto p-10 border rounded-xl shadow-xl">
           <h2 className="text-3xl font-bold mb-8 text-center">Welcome Back</h2>
           
+          {/* Login form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
+              {/* Email input */}
               <div>
                 <label htmlFor="email" className="block text-lg text-gray-700 mb-2">Email</label>
                 <input
@@ -79,6 +90,7 @@ const Login: React.FC = () => {
                 />
               </div>
               
+              {/* Password input with toggle visibility */}
               <div className="relative">
                 <label htmlFor="password" className="block text-lg text-gray-700 mb-2">Password</label>
                 <input
@@ -91,7 +103,7 @@ const Login: React.FC = () => {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
                   className="absolute right-3 top-12 text-gray-500 hover:text-gray-700"
                 >
                   {showPassword ? <EyeOff size={24} /> : <Eye size={24} />}
@@ -99,17 +111,20 @@ const Login: React.FC = () => {
               </div>
             </div>
 
+            {/* Submit button */}
             <button 
               type="submit" 
               className="w-full bg-blue-600 text-white p-3 rounded-lg text-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-              disabled={isLoading}
+              disabled={isLoading} // Disable button while loading
             >
-              {isLoading && <Loader2 className="w-6 h-6 animate-spin" />}
+              {isLoading && <Loader2 className="w-6 h-6 animate-spin" />} {/* Loading spinner */}
               {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>
 
+          {/* Additional options */}
           <div className="mt-8 space-y-6 text-center">
+            {/* Forgot password link */}
             <Link 
               to="/forgot-password" 
               className="text-blue-600 hover:text-blue-800 text-lg font-medium"
@@ -117,6 +132,7 @@ const Login: React.FC = () => {
               Forgot Password?
             </Link>
             
+            {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300"></div>
@@ -126,11 +142,13 @@ const Login: React.FC = () => {
               </div>
             </div>
 
+            {/* Google Sign-In button */}
             <button
               onClick={handleGoogleSignIn}
               className="w-full bg-white text-gray-700 p-3 rounded-lg text-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 border-2 border-gray-200"
             >
               <svg className="w-6 h-6" viewBox="0 0 24 24">
+                {/* Google logo */}
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -151,6 +169,7 @@ const Login: React.FC = () => {
               Sign in with Google
             </button>
 
+            {/* Register link */}
             <p className="mt-4 text-lg">
               Don't have an account?{' '}
               <Link to="/register" className="text-blue-600 hover:text-blue-800 font-medium">
@@ -160,7 +179,7 @@ const Login: React.FC = () => {
           </div>
         </div>
       </main>
-      <Footer />
+      <Footer /> {/* Render Footer component */}
     </div>
   );
 };
