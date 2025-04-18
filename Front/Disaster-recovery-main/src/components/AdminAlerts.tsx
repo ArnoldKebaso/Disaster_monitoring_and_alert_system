@@ -9,11 +9,17 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * Constants for filter options
+ */
 const AlertTypes = ['All Types', 'RiverFlood', 'FlashFlood', 'UrbanFlood', 'CoastalFlood', 'ElNinoFlooding'];
 const Severities = ['All Severities', 'Low', 'Medium', 'High'];
 const TimeFilters = ['All Time', '24h', '48h', '7d'];
 const StatusOptions = ['active', 'resolved', 'archived'];
 
+/**
+ * Interface defining the structure of an Alert object
+ */
 interface Alert {
   alert_id: number;
   alert_type: string;
@@ -30,7 +36,19 @@ interface Alert {
   updatedAt: string;
 }
 
+/**
+ * AdminAlerts Component - Provides an admin interface for managing flood alerts
+ * 
+ * Features:
+ * - View, filter, and search alerts by location
+ * - Create, edit, archive, and delete alerts
+ * - Detailed alert viewing
+ * - Admin-specific functionality toggle
+ * 
+ * @param {boolean} isAdmin - Determines if admin features should be shown (default: true)
+ */
 const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
+  // State management
   const [searchQuery, setSearchQuery] = useState('');
   const [activeType, setActiveType] = useState('All Types');
   const [activeSeverity, setActiveSeverity] = useState('All Severities');
@@ -46,14 +64,18 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
   const [locationsLoading, setLocationsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch initial data for locations and alerts
+  /**
+   * Fetch initial data (locations and alerts) on component mount
+   */
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
+        // Fetch available locations
         const locationsResponse = await fetch('http://localhost:3000/alerts/locales');
         const locationsData = await locationsResponse.json();
         setLocations(Array.isArray(locationsData) ? locationsData : []);
         
+        // Fetch all alerts
         const alertsResponse = await fetch('http://localhost:3000/alerts');
         const alertsData = await alertsResponse.json();
         setAlerts(alertsData);
@@ -68,7 +90,9 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     fetchInitialData();
   }, []);
 
-  // Fetch alerts on change of selected location or archived toggle
+  /**
+   * Fetch alerts when selected location or archived toggle changes
+   */
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
@@ -87,16 +111,32 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     fetchAlerts();
   }, [selectedLocation, showArchived]);
 
+  /**
+   * Format timestamp to readable date string
+   * @param {string} timestamp - The timestamp to format
+   * @returns {string} Formatted date string
+   */
   const formatDate = (timestamp: string) => new Date(timestamp).toLocaleString();
 
+  /**
+   * Mapping of time filters to milliseconds
+   */
   const timeFilterMap = {
     '24h': 24 * 60 * 60 * 1000,
     '48h': 48 * 60 * 60 * 1000,
     '7d': 7 * 24 * 60 * 60 * 1000,
   };
+
+  /**
+   * Navigate to create alert page
+   */
   const handleClick = () => {
-    navigate('/createAlert'); // Navigate to the create alert page
+    navigate('/createAlert');
   };
+
+  /**
+   * Filter alerts based on current filter selections
+   */
   const filteredAlerts = alerts.filter(alert => {
     const location = alert.location?.toLowerCase() || '';
     const search = searchQuery.toLowerCase();
@@ -113,6 +153,10 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     return matchesSearch && matchesType && matchesSeverity && matchesMonth && matchesTime;
   });
 
+  /**
+   * Delete an alert
+   * @param {number} alertId - ID of the alert to delete
+   */
   const handleDelete = async (alertId: number) => {
     try {
       await fetch(`http://localhost:3000/alerts/${alertId}`, { method: 'DELETE' });
@@ -122,6 +166,10 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     }
   };
 
+  /**
+   * Archive an alert
+   * @param {number} alertId - ID of the alert to archive
+   */
   const handleArchive = async (alertId: number) => {
     try {
       const response = await fetch(`http://localhost:3000/alerts/${alertId}/archive`, {
@@ -140,6 +188,10 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     }
   };
 
+  /**
+   * Unarchive an alert
+   * @param {number} alertId - ID of the alert to unarchive
+   */
   const handleUnarchive = async (alertId: number) => {
     try {
       const response = await fetch(`http://localhost:3000/alerts/${alertId}/unarchive`, {
@@ -158,6 +210,10 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     }
   };
 
+  /**
+   * Update an alert
+   * @param {Alert} updatedAlert - The updated alert object
+   */
   const handleUpdate = async (updatedAlert: Alert) => {
     try {
       const response = await fetch(`http://localhost:3000/alerts/${updatedAlert.alert_id}`, {
@@ -173,10 +229,12 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     }
   };
 
+  // Show loading state while data is being fetched
   if (locationsLoading || loading) {
     return <div className="text-center text-gray-500 p-6">Loading data...</div>;
   }
 
+  // ===================== LOCATION SELECTION SCREEN =====================
   if (!selectedLocation) {
     return (
       <div className="p-6 bg-gray-50 min-h-screen">
@@ -191,7 +249,11 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
           </div>
           <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
             {locations.map(location => (
-              <Card key={location} onClick={() => setSelectedLocation(location)} className="cursor-pointer hover:shadow-lg">
+              <Card 
+                key={location} 
+                onClick={() => setSelectedLocation(location)} 
+                className="cursor-pointer hover:shadow-lg"
+              >
                 <CardContent className="p-4">
                   <h3 className="text-lg font-bold text-gray-800 mb-2">{location}</h3>
                   <p className="text-sm text-gray-600">
@@ -206,9 +268,11 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
     );
   }
 
+  // ===================== MAIN ALERTS SCREEN =====================
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-4xl font-bold text-gray-800">
             Alerts for {selectedLocation}
@@ -228,15 +292,17 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
             </Button>
             {isAdmin && (
               <Button onClick={handleClick} className="bg-green-600 hover:bg-green-700">
-              <Plus className="mr-2 h-4 w-4" /> Create Alert
-            </Button>
+                <Plus className="mr-2 h-4 w-4" /> Create Alert
+              </Button>
             )}
           </div>
         </div>
 
         {/* Filters Section */}
         <div className="mb-8 space-y-4">
+          {/* Top Filter Row */}
           <div className="flex flex-wrap gap-4">
+            {/* Search Input */}
             <div className="flex-1 relative">
               <Input
                 placeholder="Search alerts..."
@@ -247,6 +313,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             </div>
 
+            {/* Archived Toggle (Admin Only) */}
             {isAdmin && (
               <div className="flex items-center gap-2">
                 <Label htmlFor="archived-toggle">Show Archived</Label>
@@ -258,6 +325,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
               </div>
             )}
 
+            {/* Month Selector */}
             <Select value={selectedMonth} onValueChange={setSelectedMonth}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select Month" />
@@ -275,6 +343,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
               </SelectContent>
             </Select>
 
+            {/* Time Range Selector */}
             <Select value={selectedTime} onValueChange={setSelectedTime}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select Time Range" />
@@ -301,6 +370,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
             </Button>
           </div>
 
+          {/* Alert Type Filter Buttons */}
           <div className="flex flex-wrap gap-2">
             {AlertTypes.map(type => (
               <Button
@@ -313,6 +383,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
             ))}
           </div>
 
+          {/* Severity Filter Buttons */}
           <div className="flex flex-wrap gap-2">
             {Severities.map(severity => (
               <Button
@@ -330,12 +401,15 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredAlerts.map(alert => (
             <Card key={alert.alert_id} className="relative hover:shadow-lg">
+              {/* Archived Badge */}
               {alert.status === 'archived' && (
                 <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">
                   Archived
                 </div>
               )}
+              
               <CardContent className="p-4">
+                {/* Alert Header */}
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center">
                     <AlertTriangle
@@ -352,6 +426,8 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
                       <p className="text-sm text-gray-600">{alert.location}</p>
                     </div>
                   </div>
+                  
+                  {/* Admin Actions */}
                   {isAdmin && (
                     <div className="flex gap-2">
                       <Button variant="ghost" size="icon" onClick={() => setEditingAlert(alert)} title="Edit">
@@ -383,6 +459,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
                   )}
                 </div>
 
+                {/* Alert Details */}
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-gray-600">
                     Severity: <span className="font-bold">{alert.severity}</span>
@@ -400,7 +477,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
           ))}
         </div>
 
-        {/* Edit Alert Modal */}
+        {/* ===================== EDIT ALERT MODAL ===================== */}
         {editingAlert && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
@@ -412,6 +489,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
               </div>
 
               <div className="grid grid-cols-2 gap-6">
+                {/* Left Column */}
                 <div className="space-y-4">
                   <div>
                     <Label>Alert Type</Label>
@@ -473,6 +551,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
                   </div>
                 </div>
 
+                {/* Right Column */}
                 <div className="space-y-4">
                   <div>
                     <Label>Description</Label>
@@ -506,6 +585,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
                 </div>
               </div>
 
+              {/* Modal Footer */}
               <div className="flex justify-end gap-4 mt-6">
                 <Button variant="outline" onClick={() => setEditingAlert(null)}>
                   Cancel
@@ -518,7 +598,7 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
           </div>
         )}
 
-        {/* Details Modal */}
+        {/* ===================== ALERT DETAILS MODAL ===================== */}
         {selectedAlert && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
@@ -565,6 +645,12 @@ const AdminAlerts: React.FC<{ isAdmin?: boolean }> = ({ isAdmin = true }) => {
   );
 };
 
+/**
+ * DetailItem Component - Displays a label-value pair in a consistent format
+ * 
+ * @param {string} label - The label text
+ * @param {string} value - The value text
+ */
 const DetailItem: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <div className="text-sm">
     <span className="font-bold text-gray-800">{label}:</span>
