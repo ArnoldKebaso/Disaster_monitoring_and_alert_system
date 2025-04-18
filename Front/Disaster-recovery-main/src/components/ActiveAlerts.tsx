@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Search,
-  AlertTriangle,
-  Clock,
-  X,
-} from "lucide-react";
+import { Search, AlertTriangle, Clock, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -18,6 +13,9 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../lib/utils";
 
+/**
+ * Constants for filter options
+ */
 const AlertTypes = [
   "All Types",
   "RiverFlood",
@@ -29,7 +27,18 @@ const AlertTypes = [
 const Severities = ["All Severities", "Low", "Medium", "High"];
 const TimeFilters = ["All Time", "24h", "48h", "7d"];
 
+/**
+ * ActiveAlerts Component - Displays a list of flood alerts with filtering capabilities
+ * 
+ * Features:
+ * - Location selection screen
+ * - Comprehensive filtering (search, type, severity, time range)
+ * - Alert details modal
+ * - Responsive design
+ * - Animations with Framer Motion
+ */
 const ActiveAlerts: React.FC = () => {
+  // State management
   const [searchQuery, setSearchQuery] = useState("");
   const [activeType, setActiveType] = useState("All Types");
   const [activeSeverity, setActiveSeverity] = useState("All Severities");
@@ -42,7 +51,10 @@ const ActiveAlerts: React.FC = () => {
   const [selectedAlert, setSelectedAlert] = useState<any>(null);
   const [locationsLoading, setLocationsLoading] = useState(true);
 
-  // Fetch initial locations and alerts
+  /**
+   * Fetch initial data (locations and alerts) on component mount
+   * and when selectedLocation changes
+   */
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -68,7 +80,9 @@ const ActiveAlerts: React.FC = () => {
     fetchInitialData();
   }, [selectedLocation]);
 
-  // Fetch alerts when location changes
+  /**
+   * Fetch alerts when location changes
+   */
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
@@ -88,16 +102,27 @@ const ActiveAlerts: React.FC = () => {
     fetchAlerts();
   }, [selectedLocation]);
 
+  /**
+   * Format timestamp to readable date string
+   * @param timestamp - The timestamp to format
+   * @returns Formatted date string
+   */
   const formatDate = (timestamp: string) => {
     return new Date(timestamp).toLocaleString();
   };
 
+  /**
+   * Time filter mapping to milliseconds
+   */
   const timeFilterMap = {
     "24h": 24 * 60 * 60 * 1000,
     "48h": 48 * 60 * 60 * 1000,
     "7d": 7 * 24 * 60 * 60 * 1000,
   };
 
+  /**
+   * Filter alerts based on current filter selections
+   */
   const filteredAlerts = alerts.filter((alert) => {
     const matchesSearch = alert.location.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = activeType === "All Types" || alert.alert_type === activeType;
@@ -117,14 +142,22 @@ const ActiveAlerts: React.FC = () => {
     return matchesSearch && matchesType && matchesSeverity && matchesMonth && matchesTime;
   });
 
+  /**
+   * Handle viewing alert details
+   * @param alert - The alert to view details for
+   */
   const handleViewDetails = (alert: any) => {
     setSelectedAlert(alert);
   };
 
+  /**
+   * Close the details modal
+   */
   const closeDetailsModal = () => {
     setSelectedAlert(null);
   };
 
+  // Show loading state while data is being fetched
   if (locationsLoading || loading) {
     return (
       <div className="flex items-center justify-center h-screen text-gray-500 p-6">
@@ -133,7 +166,7 @@ const ActiveAlerts: React.FC = () => {
     );
   }
 
-  // -------------- Location selection screen --------------
+  // ===================== LOCATION SELECTION SCREEN =====================
   if (!selectedLocation) {
     return (
       <div className="bg-gray-50 min-h-screen">
@@ -166,11 +199,11 @@ const ActiveAlerts: React.FC = () => {
     );
   }
 
-  // -------------- Main alerts screen --------------
+  // ===================== MAIN ALERTS SCREEN =====================
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 py-6 space-y-8">
-        {/* Header for selected location */}
+        {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -202,9 +235,9 @@ const ActiveAlerts: React.FC = () => {
           animate={{ opacity: 1 }}
           className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-200 space-y-6"
         >
-          {/* Row 1: Search + Month + Time */}
+          {/* Filter Row 1: Search + Month + Time */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Search */}
+            {/* Search Input */}
             <div className="relative">
               <Input
                 placeholder="Search alerts..."
@@ -215,7 +248,7 @@ const ActiveAlerts: React.FC = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
             </div>
 
-            {/* Month */}
+            {/* Month Selector */}
             <Select value={selectedMonth} onValueChange={setSelectedMonth}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Month" />
@@ -233,7 +266,7 @@ const ActiveAlerts: React.FC = () => {
               </SelectContent>
             </Select>
 
-            {/* Time Range */}
+            {/* Time Range Selector */}
             <Select value={selectedTime} onValueChange={setSelectedTime}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Time Range" />
@@ -248,7 +281,7 @@ const ActiveAlerts: React.FC = () => {
             </Select>
           </div>
 
-          {/* Row 2: Alert Types */}
+          {/* Filter Row 2: Alert Type Buttons */}
           <div className="flex flex-wrap gap-2">
             {AlertTypes.map((type) => (
               <Button
@@ -262,7 +295,7 @@ const ActiveAlerts: React.FC = () => {
             ))}
           </div>
 
-          {/* Row 3: Severities */}
+          {/* Filter Row 3: Severity Buttons */}
           <div className="flex flex-wrap gap-2">
             {Severities.map((severity) => (
               <Button
@@ -298,6 +331,7 @@ const ActiveAlerts: React.FC = () => {
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
+                      {/* Severity Indicator */}
                       <div
                         className={cn(
                           "p-2 rounded-lg",
@@ -353,7 +387,7 @@ const ActiveAlerts: React.FC = () => {
           ))}
         </div>
 
-        {/* Details Modal */}
+        {/* Alert Details Modal */}
         <AnimatePresence>
           {selectedAlert && (
             <motion.div
@@ -424,6 +458,11 @@ const ActiveAlerts: React.FC = () => {
   );
 };
 
+/**
+ * DetailItem Component - Displays a label-value pair in a consistent format
+ * @param label - The label text
+ * @param value - The value text
+ */
 const DetailItem: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <div className="text-sm">
     <span className="font-medium text-gray-500">{label}</span>
@@ -431,6 +470,11 @@ const DetailItem: React.FC<{ label: string; value: string }> = ({ label, value }
   </div>
 );
 
+/**
+ * Section Component - Creates a titled section with consistent styling
+ * @param title - The section title
+ * @param children - The content to display within the section
+ */
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({
   title,
   children,
@@ -444,7 +488,6 @@ const Section: React.FC<{ title: string; children: React.ReactNode }> = ({
 );
 
 export default ActiveAlerts;
-
 
 
 

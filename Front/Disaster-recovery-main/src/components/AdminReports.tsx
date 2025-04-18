@@ -13,6 +13,9 @@ import {
   SelectItem
 } from './ui/select';
 
+/**
+ * Interface defining the structure of a Community Report
+ */
 interface Report {
   report_id: number;
   report_type: string;
@@ -25,13 +28,26 @@ interface Report {
   } | null;
 }
 
+/**
+ * Interface for analytics data showing counts by location or report type
+ */
 interface AnalyticsData {
   location?: string;
   report_type?: string;
   count: number;
 }
 
+/**
+ * AdminReportsDashboard Component - Provides analytics and filtering for community reports
+ * 
+ * Features:
+ * - Visual analytics charts for report types and locations
+ * - Month and location filtering
+ * - PDF report generation
+ * - Tabular view of filtered reports
+ */
 const AdminReportsDashboard: React.FC = () => {
+  // State management
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [selectedLocation, setSelectedLocation] = useState<string>('');
   const [filteredReports, setFilteredReports] = useState<Report[]>([]);
@@ -40,22 +56,30 @@ const AdminReportsDashboard: React.FC = () => {
   const [locations, setLocations] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  // Ref for PDF generation
   const pdfRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * Generate and download a PDF report of the current dashboard view
+   */
   const handleDownloadPDF = async () => {
     const element = pdfRef.current;
     if (!element) return;
 
     try {
+      // Convert dashboard to canvas
       const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
       } as any);
       
+      // Create PDF
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgWidth = 190;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Add image to PDF and download
       pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
       pdf.save(`community-report-${new Date().toISOString()}.pdf`);
     } catch (error) {
@@ -64,10 +88,15 @@ const AdminReportsDashboard: React.FC = () => {
     }
   };
 
-  // Fetch initial analytics data
+  // ===================== DATA FETCHING EFFECTS =====================
+
+  /**
+   * Fetch initial analytics data on component mount
+   */
   useEffect(() => {
     const fetchAnalyticsData = async () => {
       try {
+        // Fetch both report types and locations in parallel
         const [typesRes, locationsRes] = await Promise.all([
           axios.get('http://localhost:3000/community-reports/analytics/frequent-types'),
           axios.get('http://localhost:3000/community-reports/analytics/frequent-locations')
@@ -76,7 +105,7 @@ const AdminReportsDashboard: React.FC = () => {
         setFrequentTypes(typesRes.data);
         setFrequentLocations(locationsRes.data);
         
-        // Combine backend locations with the defined location options
+        // Combine backend locations with predefined options
         const allLocations = Array.from(
           new Set([
             ...locationsRes.data.map((loc: AnalyticsData) => loc.location || ''),
@@ -93,7 +122,9 @@ const AdminReportsDashboard: React.FC = () => {
     fetchAnalyticsData();
   }, []);
 
-  // Handle month filter
+  /**
+   * Fetch reports when month filter changes
+   */
   useEffect(() => {
     const fetchMonthlyReports = async () => {
       if (!selectedMonth) return;
@@ -113,7 +144,9 @@ const AdminReportsDashboard: React.FC = () => {
     fetchMonthlyReports();
   }, [selectedMonth]);
 
-  // Handle location filter
+  /**
+   * Fetch reports when location filter changes
+   */
   useEffect(() => {
     const fetchLocationReports = async () => {
       if (!selectedLocation) return;
@@ -132,13 +165,22 @@ const AdminReportsDashboard: React.FC = () => {
     fetchLocationReports();
   }, [selectedLocation]);
 
-  // Clear filters: resets both month and location
+  // ===================== UTILITY FUNCTIONS =====================
+
+  /**
+   * Clear all active filters
+   */
   const handleClearFilters = () => {
     setSelectedMonth('');
     setSelectedLocation('');
     setFilteredReports([]);
   };
 
+  /**
+   * Format timestamp to readable date string
+   * @param {string} timestamp - The timestamp to format
+   * @returns {string} Formatted date string
+   */
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', {
@@ -150,17 +192,20 @@ const AdminReportsDashboard: React.FC = () => {
     });
   };
 
-  // Location options (defined as needed)
+  // Predefined location options
   const locationOptions = [
     { value: "Bumadeya", label: "Bumadeya" },
     { value: "Budalangi Central", label: "Budalangi Central" },
-    // ... include all your location options here
+    // ... other location options
   ];
+
+  // ===================== RENDER =====================
 
   return (
     <div className="p-6 space-y-6">
-      {/* Filters */}
+      {/* Filters Section */}
       <div className="flex gap-4 flex-wrap">
+        {/* Month Filter */}
         <div className="w-64">
           <label className="block text-sm font-medium mb-2">Filter by Month</label>
           <input
@@ -171,6 +216,7 @@ const AdminReportsDashboard: React.FC = () => {
           />
         </div>
         
+        {/* Location Filter */}
         <div className="w-64">
           <label className="block text-sm font-medium mb-2">Filter by Location</label>
           <Select value={selectedLocation} onValueChange={setSelectedLocation}>
@@ -197,6 +243,7 @@ const AdminReportsDashboard: React.FC = () => {
           </button>
         </div>
 
+        {/* PDF Download Button */}
         <div className="w-64 flex items-end">
           <button 
             onClick={handleDownloadPDF}
@@ -207,9 +254,11 @@ const AdminReportsDashboard: React.FC = () => {
         </div>
       </div>
       
+      {/* Dashboard Content (PDF target) */}
       <div ref={pdfRef} className="p-6 space-y-6">
         {/* Analytics Charts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Report Types Chart */}
           <Card>
             <CardHeader>
               <CardTitle>Most Frequent Report Types</CardTitle>
@@ -226,6 +275,7 @@ const AdminReportsDashboard: React.FC = () => {
             </CardContent>
           </Card>
 
+          {/* Locations Chart */}
           <Card>
             <CardHeader>
               <CardTitle>Most Frequent Locations</CardTitle>
