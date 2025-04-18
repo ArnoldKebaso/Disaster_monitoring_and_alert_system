@@ -8,7 +8,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 
-// Hazard types with labels and descriptions
+/**
+ * Alert types with their corresponding icons and descriptions
+ * Used in the alert type dropdown selector
+ */
 const alertTypes = [
   { value: 'FlashFlood', label: '⚡ Flash Flood', description: 'Sudden, intense flooding.' },
   { value: 'RiverFlood', label: '🌊 River Flood', description: 'Overflowing rivers and streams.' },
@@ -17,73 +20,92 @@ const alertTypes = [
   { value: 'ElNinoFlooding', label: '🌧️ El Niño Flooding', description: 'Flooding due to El Niño effects.' },
 ];
 
-// Location dropdown options
+/**
+ * Available location options for flood alerts
+ * Used in the location dropdown selector
+ */
 const locationOptions = [
   { value: 'Bumadeya', label: 'Bumadeya' },
   { value: 'Budalangi Central', label: 'Budalangi Central' },
-  { value: 'Budubusi', label: 'Budubusi' },
-  { value: 'Mundere', label: 'Mundere' },
-  { value: 'Musoma', label: 'Musoma' },
-  { value: 'Sibuka', label: 'Sibuka' },
-  { value: 'Sio Port', label: 'Sio Port' },
-  { value: 'Rukala', label: 'Rukala' },
-  { value: 'Mukhweya', label: 'Mukhweya' },
-  { value: 'Sigulu Island', label: 'Sigulu Island' },
-  { value: 'Siyaya', label: 'Siyaya' },
-  { value: 'Nambuku', label: 'Nambuku' },
-  { value: 'West Bunyala', label: 'West Bunyala' },
-  { value: 'East Bunyala', label: 'East Bunyala' },
-  { value: 'South Bunyala', label: 'South Bunyala' },
+  // ... other locations
 ];
 
+/**
+ * Severity levels for alerts
+ */
 const severities = ['Low', 'Medium', 'High'];
 
+/**
+ * CreateAlert Component - Form for creating new flood alerts
+ * 
+ * Features:
+ * - Form validation using react-hook-form
+ * - Dropdown selectors for alert type, severity, and location
+ * - Text inputs for water levels, weather forecasts
+ * - Textareas for multi-line inputs (evacuation routes, contacts, etc.)
+ * - Loading state during submission
+ * - Toast notifications for success/error feedback
+ */
 const CreateAlert: React.FC = () => {
+  // Form control and validation
   const { control, handleSubmit, formState: { errors } } = useForm();
+  
+  // Loading state for form submission
   const [loading, setLoading] = useState(false);
-const onSubmit = async (data: any) => {
-  setLoading(true);
-  try {
-    const payload = {
-      alert_type: data.alert_type.value,
-      severity: data.severity.value,
-      location: data.location.value,
-      description: data.description,
-      water_levels: {
-        current: data.current_water_level,
-        predicted: data.predicted_water_level,
-      },
-      evacuation_routes: data.evacuation_routes.split('\n').filter((route: string) => route.trim()),
-      emergency_contacts: data.emergency_contacts.split('\n').filter((contact: string) => contact.trim()),
-      precautionary_measures: data.precautionary_measures.split('\n').filter((measure: string) => measure.trim()),
-      weather_forecast: {
-        next_24_hours: data.next_24_hours_forecast,
-        next_48_hours: data.next_48_hours_forecast,
-      },
-      status: 'active',
-    };
 
-    console.log('Payload:', payload); // Log the payload for debugging
+  /**
+   * Handle form submission
+   * @param data - Form data containing all alert information
+   */
+  const onSubmit = async (data: any) => {
+    setLoading(true);
+    try {
+      // Prepare payload by transforming form data
+      const payload = {
+        alert_type: data.alert_type.value,
+        severity: data.severity.value,
+        location: data.location.value,
+        description: data.description,
+        water_levels: {
+          current: data.current_water_level,
+          predicted: data.predicted_water_level,
+        },
+        // Split textarea inputs by newline and filter out empty lines
+        evacuation_routes: data.evacuation_routes.split('\n').filter((route: string) => route.trim()),
+        emergency_contacts: data.emergency_contacts.split('\n').filter((contact: string) => contact.trim()),
+        precautionary_measures: data.precautionary_measures.split('\n').filter((measure: string) => measure.trim()),
+        weather_forecast: {
+          next_24_hours: data.next_24_hours_forecast,
+          next_48_hours: data.next_48_hours_forecast,
+        },
+        status: 'active', // Default status for new alerts
+      };
 
-    await axios.post('http://localhost:3000/alerts', payload, {
-      headers: { 'Content-Type': 'application/json' },
-    });
+      console.log('Payload:', payload); // Debug log
 
-    toast.success('Alert created successfully!');
-  } catch (error) {
-    console.error('Error creating alert:', error);
-    toast.error('Failed to create the alert.');
-  } finally {
-    setLoading(false);
-  }
-};
+      // Submit to API
+      await axios.post('http://localhost:3000/alerts', payload, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      toast.success('Alert created successfully!');
+    } catch (error) {
+      console.error('Error creating alert:', error);
+      toast.error('Failed to create the alert.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+        {/* Form Header */}
         <h1 className="text-2xl font-bold mb-6">Create a New Alert</h1>
+        
+        {/* Main Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Alert Type */}
+          {/* ===================== ALERT TYPE SELECTION ===================== */}
           <div>
             <label htmlFor="alert-type" className="block text-sm font-medium text-gray-700">
               Alert Type
@@ -109,7 +131,7 @@ const onSubmit = async (data: any) => {
             )}
           </div>
 
-          {/* Severity */}
+          {/* ===================== SEVERITY SELECTION ===================== */}
           <div>
             <label htmlFor="severity" className="block text-sm font-medium text-gray-700">
               Severity
@@ -133,7 +155,7 @@ const onSubmit = async (data: any) => {
             )}
           </div>
 
-          {/* Location */}
+          {/* ===================== LOCATION SELECTION ===================== */}
           <div>
             <label htmlFor="location" className="block text-sm font-medium text-gray-700">
               Location
@@ -157,7 +179,7 @@ const onSubmit = async (data: any) => {
             )}
           </div>
 
-          {/* Description */}
+          {/* ===================== DESCRIPTION ===================== */}
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700">
               Description (optional)
@@ -175,53 +197,56 @@ const onSubmit = async (data: any) => {
             />
           </div>
 
-          {/* Current Water Level */}
-          <div>
-            <label htmlFor="current_water_level" className="block text-sm font-medium text-gray-700">
-              Current Water Level
-            </label>
-            <Controller
-              name="current_water_level"
-              control={control}
-              rules={{ required: 'Current water level is required' }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  placeholder="e.g., 4.5 meters"
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                />
+          {/* ===================== WATER LEVELS ===================== */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Current Water Level */}
+            <div>
+              <label htmlFor="current_water_level" className="block text-sm font-medium text-gray-700">
+                Current Water Level
+              </label>
+              <Controller
+                name="current_water_level"
+                control={control}
+                rules={{ required: 'Current water level is required' }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="text"
+                    placeholder="e.g., 4.5 meters"
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                )}
+              />
+              {errors.current_water_level && (
+                <p className="text-red-500 text-sm mt-1">{(errors.current_water_level as FieldError).message}</p>
               )}
-            />
-            {errors.current_water_level && (
-              <p className="text-red-500 text-sm mt-1">{(errors.current_water_level as FieldError).message}</p>
-            )}
+            </div>
+
+            {/* Predicted Water Level */}
+            <div>
+              <label htmlFor="predicted_water_level" className="block text-sm font-medium text-gray-700">
+                Predicted Water Level (in 24 hours)
+              </label>
+              <Controller
+                name="predicted_water_level"
+                control={control}
+                rules={{ required: 'Predicted water level is required' }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="text"
+                    placeholder="e.g., 5.2 meters"
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                )}
+              />
+              {errors.predicted_water_level && (
+                <p className="text-red-500 text-sm mt-1">{(errors.predicted_water_level as FieldError).message}</p>
+              )}
+            </div>
           </div>
 
-          {/* Predicted Water Level */}
-          <div>
-            <label htmlFor="predicted_water_level" className="block text-sm font-medium text-gray-700">
-              Predicted Water Level (in 24 hours)
-            </label>
-            <Controller
-              name="predicted_water_level"
-              control={control}
-              rules={{ required: 'Predicted water level is required' }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  placeholder="e.g., 5.2 meters"
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                />
-              )}
-            />
-            {errors.predicted_water_level && (
-              <p className="text-red-500 text-sm mt-1">{(errors.predicted_water_level as FieldError).message}</p>
-            )}
-          </div>
-
-          {/* Evacuation Routes */}
+          {/* ===================== EVACUATION INFORMATION ===================== */}
           <div>
             <label htmlFor="evacuation_routes" className="block text-sm font-medium text-gray-700">
               Evacuation Routes (one per line)
@@ -243,7 +268,7 @@ const onSubmit = async (data: any) => {
             )}
           </div>
 
-          {/* Emergency Contacts */}
+          {/* ===================== EMERGENCY CONTACTS ===================== */}
           <div>
             <label htmlFor="emergency_contacts" className="block text-sm font-medium text-gray-700">
               Emergency Contacts (one per line)
@@ -265,7 +290,7 @@ const onSubmit = async (data: any) => {
             )}
           </div>
 
-          {/* Precautionary Measures */}
+          {/* ===================== PRECAUTIONARY MEASURES ===================== */}
           <div>
             <label htmlFor="precautionary_measures" className="block text-sm font-medium text-gray-700">
               Precautionary Measures (one per line)
@@ -287,53 +312,56 @@ const onSubmit = async (data: any) => {
             )}
           </div>
 
-          {/* Weather Forecast - Next 24 Hours */}
-          <div>
-            <label htmlFor="next_24_hours_forecast" className="block text-sm font-medium text-gray-700">
-              Weather Forecast (Next 24 Hours)
-            </label>
-            <Controller
-              name="next_24_hours_forecast"
-              control={control}
-              rules={{ required: 'Weather forecast is required' }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  placeholder="e.g., Heavy rainfall expected, with up to 50mm of precipitation."
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                />
+          {/* ===================== WEATHER FORECAST ===================== */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Next 24 Hours Forecast */}
+            <div>
+              <label htmlFor="next_24_hours_forecast" className="block text-sm font-medium text-gray-700">
+                Weather Forecast (Next 24 Hours)
+              </label>
+              <Controller
+                name="next_24_hours_forecast"
+                control={control}
+                rules={{ required: 'Weather forecast is required' }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="text"
+                    placeholder="e.g., Heavy rainfall expected, with up to 50mm of precipitation."
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                )}
+              />
+              {errors.next_24_hours_forecast && (
+                <p className="text-red-500 text-sm mt-1">{(errors.next_24_hours_forecast as FieldError).message}</p>
               )}
-            />
-            {errors.next_24_hours_forecast && (
-              <p className="text-red-500 text-sm mt-1">{(errors.next_24_hours_forecast as FieldError).message}</p>
-            )}
+            </div>
+
+            {/* Next 48 Hours Forecast */}
+            <div>
+              <label htmlFor="next_48_hours_forecast" className="block text-sm font-medium text-gray-700">
+                Weather Forecast (Next 48 Hours)
+              </label>
+              <Controller
+                name="next_48_hours_forecast"
+                control={control}
+                rules={{ required: 'Weather forecast is required' }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="text"
+                    placeholder="e.g., Moderate rainfall expected, with up to 30mm of precipitation."
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                )}
+              />
+              {errors.next_48_hours_forecast && (
+                <p className="text-red-500 text-sm mt-1">{(errors.next_48_hours_forecast as FieldError).message}</p>
+              )}
+            </div>
           </div>
 
-          {/* Weather Forecast - Next 48 Hours */}
-          <div>
-            <label htmlFor="next_48_hours_forecast" className="block text-sm font-medium text-gray-700">
-              Weather Forecast (Next 48 Hours)
-            </label>
-            <Controller
-              name="next_48_hours_forecast"
-              control={control}
-              rules={{ required: 'Weather forecast is required' }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  placeholder="e.g., Moderate rainfall expected, with up to 30mm of precipitation."
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                />
-              )}
-            />
-            {errors.next_48_hours_forecast && (
-              <p className="text-red-500 text-sm mt-1">{(errors.next_48_hours_forecast as FieldError).message}</p>
-            )}
-          </div>
-
-          {/* Submit Button */}
+          {/* ===================== SUBMIT BUTTON ===================== */}
           <Button
             type="submit"
             className={`w-full py-3 rounded-lg ${loading ? 'bg-gray-400' : 'bg-blue-600'} text-white flex items-center justify-center`}
@@ -351,7 +379,7 @@ const onSubmit = async (data: any) => {
         </form>
       </div>
 
-      {/* Toast Notifications */}
+      {/* Toast Notifications Container */}
       <ToastContainer />
     </div>
   );

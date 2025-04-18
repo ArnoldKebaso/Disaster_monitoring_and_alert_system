@@ -10,9 +10,22 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+/**
+ * ContactUs Component - Provides a multilingual contact page with form submission
+ * 
+ * Features:
+ * - Localized content using react-i18next
+ * - Animated contact form with validation
+ * - Email submission functionality
+ * - Contact information section
+ * - Responsive design
+ * - Loading states and submission feedback
+ */
 const ContactUs: React.FC = () => {
+  // Translation hook for multilingual support
   const { t } = useTranslation();
 
+  // Form state management
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,9 +33,11 @@ const ContactUs: React.FC = () => {
     message: "",
   });
 
+  // Submission state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
+  // Animation variants for Framer Motion
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -32,16 +47,25 @@ const ContactUs: React.FC = () => {
     visible: { transition: { staggerChildren: 0.1 } }
   };
 
+  /**
+   * Handle form input changes
+   * @param e - Change event from input or textarea
+   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  /**
+   * Handle form submission
+   * @param e - Form submission event
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
     try {
+      // Send email via API with translated labels
       await axios.post("http://localhost:3000/subscriptions/send-email", {
         to: "shikukudenno@gmail.com",
         subject: `${t("contact.form.subjectLabel")}: ${formData.subject}`,
@@ -53,6 +77,7 @@ const ContactUs: React.FC = () => {
         `,
       });
 
+      // On success: reset form and show success message
       setSubmitStatus("success");
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (error) {
@@ -67,13 +92,14 @@ const ContactUs: React.FC = () => {
     <div className="min-h-screen w-full bg-gradient-to-b from-blue-50 to-cyan-50">
       <Navbar />
       
+      {/* Main Content Container */}
       <motion.div
         initial="hidden"
         animate="visible"
         variants={staggerChildren}
         className="w-full px-6 md:px-16 py-16"
       >
-        {/* Header Section */}
+        {/* ===================== HEADER SECTION ===================== */}
         <motion.div variants={fadeIn} className="w-full text-center mb-20">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
@@ -87,15 +113,15 @@ const ContactUs: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Contact Container */}
+        {/* ===================== CONTACT CONTAINER ===================== */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
+          {/* ========== CONTACT FORM SECTION ========== */}
           <motion.div
             variants={fadeIn}
             className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12"
           >
             <form onSubmit={handleSubmit} className="space-y-8">
-              {/* Name Input */}
+              {/* Name Input Field */}
               <motion.div variants={fadeIn}>
                 <label className="block text-sm font-semibold text-blue-900 mb-3">
                   {t("contact.form.nameLabel")}
@@ -114,7 +140,7 @@ const ContactUs: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Email Input */}
+              {/* Email Input Field */}
               <motion.div variants={fadeIn}>
                 <label className="block text-sm font-semibold text-blue-900 mb-3">
                   {t("contact.form.emailLabel")}
@@ -133,7 +159,7 @@ const ContactUs: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Subject Input */}
+              {/* Subject Input Field */}
               <motion.div variants={fadeIn}>
                 <label className="block text-sm font-semibold text-blue-900 mb-3">
                   {t("contact.form.subjectLabel")}
@@ -152,7 +178,7 @@ const ContactUs: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Message Input */}
+              {/* Message Textarea Field */}
               <motion.div variants={fadeIn}>
                 <label className="block text-sm font-semibold text-blue-900 mb-3">
                   {t("contact.form.messageLabel")}
@@ -181,6 +207,7 @@ const ContactUs: React.FC = () => {
                 >
                   {isSubmitting ? (
                     <>
+                      {/* Loading Spinner */}
                       <svg
                         className="animate-spin h-5 w-5 text-white"
                         xmlns="http://www.w3.org/2000/svg"
@@ -238,12 +265,13 @@ const ContactUs: React.FC = () => {
             </form>
           </motion.div>
 
-          {/* Contact Information */}
+          {/* ========== CONTACT INFORMATION SECTION ========== */}
           <motion.div
             variants={fadeIn}
             className="bg-gradient-to-br from-blue-900 to-cyan-800 rounded-3xl shadow-2xl p-8 lg:p-12 text-white"
           >
             <div className="space-y-10">
+              {/* Contact Info Header */}
               <div>
                 <h2 className="text-3xl font-bold mb-6">
                   {t("contact.info.title")}
@@ -253,8 +281,9 @@ const ContactUs: React.FC = () => {
                 </p>
               </div>
 
+              {/* Contact Methods */}
               <div className="space-y-8">
-                {/* Location */}
+                {/* Location Information */}
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-white/10 rounded-full">
                     <MapPin className="w-6 h-6 text-cyan-400" />
@@ -269,7 +298,7 @@ const ContactUs: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Phone */}
+                {/* Phone Information */}
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-white/10 rounded-full">
                     <Phone className="w-6 h-6 text-cyan-400" />
@@ -284,7 +313,7 @@ const ContactUs: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Email */}
+                {/* Email Information */}
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-white/10 rounded-full">
                     <Send className="w-6 h-6 text-cyan-400" />
@@ -300,10 +329,13 @@ const ContactUs: React.FC = () => {
                 </div>
               </div>
 
-              {/* Decorative Elements */}
+              {/* Emergency Support Section */}
               <div className="mt-12 relative">
+                {/* Decorative Elements */}
                 <div className="absolute -top-8 -right-8 w-24 h-24 bg-cyan-400/20 rounded-full blur-xl" />
                 <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-blue-400/20 rounded-full blur-xl" />
+                
+                {/* Emergency Content */}
                 <div className="border-t border-cyan-400/30 pt-8">
                   <h3 className="text-lg font-semibold mb-4">
                     {t("contact.emergency.supportTitle")}
