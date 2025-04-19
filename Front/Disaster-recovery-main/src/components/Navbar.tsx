@@ -1,4 +1,4 @@
-// src/components/Navbar.tsx
+// Import necessary libraries and components
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -16,14 +16,21 @@ import {
 } from "lucide-react";
 
 const Navbar: React.FC = () => {
+  // State for toggling the mobile menu
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // State for tracking which submenu is open
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+
+  // Translation hook for multi-language support
   const { t, i18n } = useTranslation();
 
+  // Toggle language between English and Swahili
   const toggleLanguage = () => {
     i18n.changeLanguage(i18n.language === "en" ? "sw" : "en");
   };
 
+  // Animation variants for the mobile menu
   const menuVariants = {
     open: {
       opacity: 1,
@@ -37,6 +44,7 @@ const Navbar: React.FC = () => {
     },
   };
 
+  // Define navigation links
   const navLinks = [
     { path: "/", name: t("navbar.home"), key: "home" },
     { path: "/about", name: t("navbar.about"), key: "about" },
@@ -51,19 +59,20 @@ const Navbar: React.FC = () => {
         },
       ],
     },
-    { path: "/userReSources",  name: t("navbar.Resources"), key: "resources-user" },
+    { path: "/userReSources", name: t("navbar.Resources"), key: "resources-user" },
     { path: "/contact", name: t("navbar.contact"), key: "contact" },
     { path: "/faq", name: t("navbar.FAQ"), key: "contact" },
   ];
 
+  // Toggle submenu visibility
   const toggleSubmenu = (key: string) => {
     setOpenSubmenu(openSubmenu === key ? null : key);
   };
 
   return (
     <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
+      initial={{ y: -100 }} // Initial animation state
+      animate={{ y: 0 }} // Final animation state
       className="bg-gradient-to-r from-blue-900 to-cyan-800 text-white shadow-xl w-full"
     >
       <div className="w-full px-6 py-4">
@@ -84,8 +93,8 @@ const Navbar: React.FC = () => {
               <div
                 key={link.key || link.path || index}
                 className="relative group"
-                onMouseEnter={() => link.subLinks && setOpenSubmenu(link.key!)}
-                onMouseLeave={() => link.subLinks && setOpenSubmenu(null)}
+                onMouseEnter={() => link.subLinks && setOpenSubmenu(link.key!)} // Open submenu on hover
+                onMouseLeave={() => link.subLinks && setOpenSubmenu(null)} // Close submenu on mouse leave
               >
                 {link.path ? (
                   <Link
@@ -128,7 +137,7 @@ const Navbar: React.FC = () => {
           {/* Right: Language Toggle and Mobile Menu */}
           <div className="flex items-center gap-4">
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05 }} // Hover animation
               onClick={toggleLanguage}
               className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all"
             >
@@ -138,7 +147,7 @@ const Navbar: React.FC = () => {
 
             <button
               className="lg:hidden text-white p-2"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => setIsMenuOpen(!isMenuOpen)} // Toggle mobile menu
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -165,7 +174,7 @@ const Navbar: React.FC = () => {
                       <Link
                         to={link.path}
                         className="block px-4 py-3 hover:bg-white/10 rounded-lg"
-                        onClick={() => setIsMenuOpen(false)}
+                        onClick={() => setIsMenuOpen(false)} // Close menu on link click
                       >
                         {link.name}
                       </Link>
@@ -173,7 +182,7 @@ const Navbar: React.FC = () => {
                       <div className="px-4 py-3">
                         <button
                           className="flex items-center justify-between w-full"
-                          onClick={() => toggleSubmenu(link.key!)}
+                          onClick={() => toggleSubmenu(link.key!)} // Toggle submenu
                         >
                           <span>{link.name}</span>
                           {openSubmenu === link.key ? (
@@ -195,7 +204,7 @@ const Navbar: React.FC = () => {
                                   key={subLink.name || subIndex}
                                   to={subLink.path}
                                   className="block px-4 py-2 text-sm hover:bg-white/10 rounded-lg"
-                                  onClick={() => setIsMenuOpen(false)}
+                                  onClick={() => setIsMenuOpen(false)} // Close menu on link click
                                 >
                                   {subLink.name}
                                 </Link>

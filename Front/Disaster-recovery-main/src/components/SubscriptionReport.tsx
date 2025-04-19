@@ -1,3 +1,4 @@
+// Import necessary libraries and components
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
@@ -7,52 +8,55 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '.
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
+// Define the structure of a subscription
 interface Subscription {
   id: number;
-  method: 'email' | 'sms';
-  contact: string;
-  locations: string[];
-  createdAt: string;
+  method: 'email' | 'sms'; // Subscription method
+  contact: string; // Contact information (email or phone number)
+  locations: string[]; // Associated locations
+  createdAt: string; // Creation timestamp
 }
 
+// Define the structure of analytics data
 interface AnalyticsData {
-  label: string;
-  count: number;
+  label: string; // Label for the data (e.g., "email", "sms")
+  count: number; // Count of subscriptions
 }
 
 const SubscriptionReport: React.FC = () => {
-  const [selectedMonth, setSelectedMonth] = useState<string>('');
-  const [selectedLocation, setSelectedLocation] = useState<string>('');
-  const [filteredSubscriptions, setFilteredSubscriptions] = useState<Subscription[]>([]);
-  const [methodDistribution, setMethodDistribution] = useState<AnalyticsData[]>([]);
-  const [locationDistribution, setLocationDistribution] = useState<AnalyticsData[]>([]);
-  const [locations, setLocations] = useState<string[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const pdfRef = useRef<HTMLDivElement>(null);
+  // State variables for filters, subscriptions, and analytics data
+  const [selectedMonth, setSelectedMonth] = useState<string>(''); // Selected month filter
+  const [selectedLocation, setSelectedLocation] = useState<string>(''); // Selected location filter
+  const [filteredSubscriptions, setFilteredSubscriptions] = useState<Subscription[]>([]); // Filtered subscriptions
+  const [methodDistribution, setMethodDistribution] = useState<AnalyticsData[]>([]); // Method distribution data
+  const [locationDistribution, setLocationDistribution] = useState<AnalyticsData[]>([]); // Location distribution data
+  const [locations, setLocations] = useState<string[]>([]); // List of available locations
+  const [error, setError] = useState<string | null>(null); // Error message
+  const pdfRef = useRef<HTMLDivElement>(null); // Reference for the PDF export
 
-  // Download PDF function remains unchanged
+  // Function to download the report as a PDF
   const handleDownloadPDF = async () => {
     const element = pdfRef.current;
     if (!element) return;
 
     try {
       const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
+        scale: 2, // Increase resolution
+        useCORS: true, // Enable cross-origin resource sharing
       } as any);
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 190;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-      pdf.save(`subscription-report-${new Date().toISOString()}.pdf`);
+      const imgData = canvas.toDataURL('image/png'); // Convert canvas to image
+      const pdf = new jsPDF('p', 'mm', 'a4'); // Create a new PDF document
+      const imgWidth = 190; // Image width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Calculate image height
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight); // Add image to PDF
+      pdf.save(`subscription-report-${new Date().toISOString()}.pdf`); // Save the PDF
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Failed to generate PDF. Please try again.');
     }
   };
 
-  // Fetch analytics data
+  // Fetch analytics data for methods and locations
   useEffect(() => {
     const fetchAnalyticsData = async () => {
       try {
@@ -61,6 +65,7 @@ const SubscriptionReport: React.FC = () => {
           axios.get('http://localhost:3000/subscriptions/analytics/location-counts')
         ]);
 
+        // Validate and format method distribution data
         const validMethods = methodsRes.data
           .filter((item: any) => 
             typeof item.label === 'string' && 
@@ -71,6 +76,7 @@ const SubscriptionReport: React.FC = () => {
             count: Number(item.count) || 0
           }));
 
+        // Validate and format location distribution data
         const validLocations = locationsRes.data
           .filter((item: any) => typeof item.label === 'string' && item.label.trim() !== '')
           .map((item: any) => ({
@@ -78,11 +84,12 @@ const SubscriptionReport: React.FC = () => {
             count: Number(item.count) || 0
           }));
 
-        setMethodDistribution(validMethods);
-        setLocationDistribution(validLocations);
+        setMethodDistribution(validMethods); // Update method distribution state
+        setLocationDistribution(validLocations); // Update location distribution state
         
+        // Extract unique locations
         const allLocations = validLocations.map(item => item.label).filter(l => l.trim() !== '');
-        setLocations(Array.from(new Set(allLocations)));
+        setLocations(Array.from(new Set(allLocations))); // Remove duplicates
       } catch (err) {
         setError('Failed to load analytics data');
         console.error('API Error:', err);
@@ -92,16 +99,16 @@ const SubscriptionReport: React.FC = () => {
     fetchAnalyticsData();
   }, []);
 
-  // Month filter effect
+  // Fetch subscriptions for the selected month
   useEffect(() => {
     const fetchMonthlySubscriptions = async () => {
       if (!selectedMonth) return;
       try {
-        const [year, month] = selectedMonth.split('-');
+        const [year, month] = selectedMonth.split('-'); // Split year and month
         const response = await axios.get(
           `http://localhost:3000/subscriptions/filter/month?year=${year}&month=${month}`
         );
-        setFilteredSubscriptions(response.data);
+        setFilteredSubscriptions(response.data); // Update filtered subscriptions
       } catch (err) {
         setError('Failed to load monthly subscriptions');
         console.error('Monthly filter error:', err);
@@ -111,7 +118,7 @@ const SubscriptionReport: React.FC = () => {
     fetchMonthlySubscriptions();
   }, [selectedMonth]);
 
-  // Location filter effect
+  // Fetch subscriptions for the selected location
   useEffect(() => {
     const fetchLocationSubscriptions = async () => {
       if (!selectedLocation) return;
@@ -119,7 +126,7 @@ const SubscriptionReport: React.FC = () => {
         const response = await axios.get(
           `http://localhost:3000/subscriptions/by-location?location=${encodeURIComponent(selectedLocation)}`
         );
-        setFilteredSubscriptions(response.data);
+        setFilteredSubscriptions(response.data); // Update filtered subscriptions
       } catch (err) {
         setError('Failed to load location subscriptions');
         console.error('Location filter error:', err);
@@ -129,13 +136,14 @@ const SubscriptionReport: React.FC = () => {
     fetchLocationSubscriptions();
   }, [selectedLocation]);
 
-  // Clear Filters function
+  // Clear all filters
   const handleClearFilters = () => {
-    setSelectedMonth('');
-    setSelectedLocation('');
-    setFilteredSubscriptions([]); // Optionally clear the table or re-fetch unfiltered data
+    setSelectedMonth(''); // Clear month filter
+    setSelectedLocation(''); // Clear location filter
+    setFilteredSubscriptions([]); // Clear filtered subscriptions
   };
 
+  // Format a timestamp into a readable date
   const formatDate = (timestamp: string) => {
     return new Date(timestamp).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -146,8 +154,9 @@ const SubscriptionReport: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Filters */}
+      {/* Filters Section */}
       <div className="flex gap-4 flex-wrap">
+        {/* Month Filter */}
         <div className="w-64">
           <label className="block text-sm font-medium mb-2">Filter by Month</label>
           <input
@@ -158,6 +167,7 @@ const SubscriptionReport: React.FC = () => {
           />
         </div>
 
+        {/* Location Filter */}
         <div className="w-64">
           <label className="block text-sm font-medium mb-2">Filter by Location</label>
           <Select value={selectedLocation} onValueChange={setSelectedLocation}>
@@ -174,7 +184,7 @@ const SubscriptionReport: React.FC = () => {
           </Select>
         </div>
 
-        {/* Clear Filter Button */}
+        {/* Clear Filters Button */}
         <div className="w-64 flex items-end">
           <button 
             onClick={handleClearFilters}
@@ -184,6 +194,7 @@ const SubscriptionReport: React.FC = () => {
           </button>
         </div>
 
+        {/* Download PDF Button */}
         <div className="w-64 flex items-end">
           <button 
             onClick={handleDownloadPDF}
@@ -197,6 +208,7 @@ const SubscriptionReport: React.FC = () => {
       <div ref={pdfRef} className="p-6 space-y-6">
         {/* Analytics Charts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Method Distribution Chart */}
           <Card>
             <CardHeader>
               <CardTitle>Subscription Methods Distribution</CardTitle>
@@ -213,6 +225,7 @@ const SubscriptionReport: React.FC = () => {
             </CardContent>
           </Card>
 
+          {/* Location Distribution Chart */}
           <Card>
             <CardHeader>
               <CardTitle>Subscription Locations Distribution</CardTitle>
