@@ -1,3 +1,11 @@
+// DisasterDetails.tsx
+// This component serves as the homepage for the disaster recovery system.
+// Features include:
+// - A responsive navigation bar with links to various sections.
+// - A hero section with calls to action for donations and alerts.
+// - A subscription form for users to subscribe to alerts via email or SMS.
+// - Sections showcasing the organization's activities, analytics, and reporting options.
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -5,42 +13,47 @@ import axios from 'axios';
 import Select, { MultiValue } from "react-select";
 
 const Home: React.FC = () => {
+  // State for managing the mobile menu toggle
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // State for subscription form inputs
   const { t, i18n} = useTranslation() as any;
-const [subscriptionMethod, setSubscriptionMethod] = useState("");
+  const [subscriptionMethod, setSubscriptionMethod] = useState("");
   const [contact, setContact] = useState("");
   const [selectedLocations, setSelectedLocations] = useState<{ value: string; label: string }[]>([]);
   const [statusMessage, setStatusMessage] = useState("");
 
-const locationOptions = [
-  { value: "Bumadeya", label: "Bumadeya" },
-  { value: "Budalangi Central", label: "Budalangi Central" },
-  { value: "Budubusi", label: "Budubusi" },
-  { value: "Mundere", label: "Mundere" },
-  { value: "Musoma", label: "Musoma" },
-  { value: "Sibuka", label: "Sibuka" },
-  { value: "Sio Port", label: "Sio Port" },
-  { value: "Rukala", label: "Rukala" },
-  { value: "Mukhweya", label: "Mukhweya" },
-  { value: "Sigulu Island", label: "Sigulu Island" },
-  { value: "Siyaya", label: "Siyaya" },
-  { value: "Nambuku", label: "Nambuku" },
-  { value: "West Bunyala", label: "West Bunyala" },
-  { value: "East Bunyala", label: "East Bunyala" },
-  { value: "South Bunyala", label: "South Bunyala" },
-  { value: "Makunda", label: "Makunda" },
-  { value: "Runyu", label: "Runyu" },
-  { value: "Khajula", label: "Khajula" },
-  { value: "Lunyofu", label: "Lunyofu" },
-  { value: "Nangina", label: "Nangina" },
-  { value: "Nyandenge", label: "Nyandenge" },
-  { value: "Sango", label: "Sango" },
-  { value: "Namala", label: "Namala" },
-  { value: "Rugunga", label: "Rugunga" },
-  { value: "Bukoma", label: "Bukoma" },
-  { value: "Nyandenga", label: "Nyandenga" },
-];
+  // Location options for the subscription form
+  const locationOptions = [
+    { value: "Bumadeya", label: "Bumadeya" },
+    { value: "Budalangi Central", label: "Budalangi Central" },
+    { value: "Budubusi", label: "Budubusi" },
+    { value: "Mundere", label: "Mundere" },
+    { value: "Musoma", label: "Musoma" },
+    { value: "Sibuka", label: "Sibuka" },
+    { value: "Sio Port", label: "Sio Port" },
+    { value: "Rukala", label: "Rukala" },
+    { value: "Mukhweya", label: "Mukhweya" },
+    { value: "Sigulu Island", label: "Sigulu Island" },
+    { value: "Siyaya", label: "Siyaya" },
+    { value: "Nambuku", label: "Nambuku" },
+    { value: "West Bunyala", label: "West Bunyala" },
+    { value: "East Bunyala", label: "East Bunyala" },
+    { value: "South Bunyala", label: "South Bunyala" },
+    { value: "Makunda", label: "Makunda" },
+    { value: "Runyu", label: "Runyu" },
+    { value: "Khajula", label: "Khajula" },
+    { value: "Lunyofu", label: "Lunyofu" },
+    { value: "Nangina", label: "Nangina" },
+    { value: "Nyandenge", label: "Nyandenge" },
+    { value: "Sango", label: "Sango" },
+    { value: "Namala", label: "Namala" },
+    { value: "Rugunga", label: "Rugunga" },
+    { value: "Bukoma", label: "Bukoma" },
+    { value: "Nyandenga", label: "Nyandenga" },
+  ];
 
+  // Handle form submission for subscriptions
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!subscriptionMethod || !contact || selectedLocations.length === 0) {
@@ -52,26 +65,28 @@ const locationOptions = [
       const response = await axios.post("http://localhost:3000/subscriptions", {
         method: subscriptionMethod,
         contact: contact,
-        locations: selectedLocations.map((loc) => loc.value), // Extract values
+        locations: selectedLocations.map((loc) => loc.value),
       });
 
       setStatusMessage(response.data.message);
       setSubscriptionMethod("");
       setContact("");
-      setSelectedLocations([]); // Reset selection
+      setSelectedLocations([]);
     } catch (error) {
       setStatusMessage("Subscription failed. Try again.");
     }
   };
 
-  // Handle multiple selections
-const handleLocationChange = (selectedOptions: MultiValue<{ value: string; label: string }>) => {
-  setSelectedLocations(selectedOptions as { value: string; label: string }[]);
-};
+  // Handle location selection in the multi-select dropdown
+  const handleLocationChange = (selectedOptions: MultiValue<{ value: string; label: string }>) => {
+    setSelectedLocations(selectedOptions as { value: string; label: string }[]);
+  };
 
-const toggleLanguage = () => {
+  // Toggle language between English and Swahili
+  const toggleLanguage = () => {
     i18n.changeLanguage(i18n.language === "en" ? "sw" : "en");
   };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
@@ -81,13 +96,13 @@ const toggleLanguage = () => {
           <div className="text-2xl font-extrabold tracking-wide">
             {t("navbar.title")}
           </div>
+          {/* Language Toggle Button */}
           <button
             onClick={toggleLanguage}
             className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-4 rounded-md transition"
           >
             {t("languageToggle")}
           </button>
-        
           {/* Hamburger Menu for Mobile */}
           <button
             className="lg:hidden focus:outline-none text-white"
@@ -112,7 +127,6 @@ const toggleLanguage = () => {
               />
             </svg>
           </button>
-
           {/* Links */}
           <ul
             className={`lg:flex lg:items-center lg:gap-8 ${

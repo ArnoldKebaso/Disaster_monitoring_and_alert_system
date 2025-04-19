@@ -1,12 +1,13 @@
-// src/pages/UserProfile.tsx
+// Import necessary libraries and components
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2, Camera } from "lucide-react";
+import { Eye, EyeOff, Loader2, Camera, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
-import { LogOut } from "lucide-react";
+
+// Define location options for the dropdown
 const locationOptions = [
   { value: "Bumadeya", label: "Bumadeya" },
   { value: "Budalangi Central", label: "Budalangi Central" },
@@ -25,11 +26,11 @@ const locationOptions = [
   { value: "South Bunyala", label: "South Bunyala" },
 ];
 
-
-
 const UserProfile: React.FC = () => {
-  const { user, logout } = useAuth();
-   const navigate = useNavigate();
+  const { user, logout } = useAuth(); // Access user and logout function from AuthContext
+  const navigate = useNavigate(); // Navigation hook for programmatic routing
+
+  // State variables for profile data, password data, and UI behavior
   const [profile, setProfile] = useState({
     username: "",
     email: "",
@@ -42,19 +43,20 @@ const UserProfile: React.FC = () => {
     newPassword: "",
     confirmNewPassword: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [locationSource, setLocationSource] = useState<"manual" | "detected">("manual");
+  const [isLoading, setIsLoading] = useState(false); // Loading state for form submissions
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false); // Toggle visibility for current password
+  const [showNewPassword, setShowNewPassword] = useState(false); // Toggle visibility for new password
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Toggle visibility for confirm password
+  const [locationSource, setLocationSource] = useState<"manual" | "detected">("manual"); // Track location source
 
+  // Fetch user profile data on component mount
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/user/${user?.id}`, {
           withCredentials: true,
         });
-        setProfile(response.data);
+        setProfile(response.data); // Update profile state with fetched data
       } catch (error) {
         toast.error("Failed to load profile data");
       }
@@ -63,6 +65,7 @@ const UserProfile: React.FC = () => {
     if (user) fetchProfile();
   }, [user]);
 
+  // Handle changes to profile input fields
   const handleProfileChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -70,6 +73,7 @@ const UserProfile: React.FC = () => {
     setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle profile photo upload
   const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.[0]) return;
 
@@ -97,6 +101,7 @@ const UserProfile: React.FC = () => {
     }
   };
 
+  // Handle profile update form submission
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -114,9 +119,11 @@ const UserProfile: React.FC = () => {
     }
   };
 
+  // Handle password change form submission
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate password fields
     if (
       !passwordData.currentPassword ||
       !passwordData.newPassword ||
@@ -158,7 +165,7 @@ const UserProfile: React.FC = () => {
         newPassword: "",
         confirmNewPassword: "",
       });
-      logout();
+      logout(); // Log out the user after password change
     } catch (error: any) {
       const message = error.response?.data?.error || "Password change failed";
       if (error.response?.status === 401) {
@@ -170,7 +177,9 @@ const UserProfile: React.FC = () => {
       setIsLoading(false);
     }
   };
- const handleLogout = async () => {
+
+  // Handle user logout
+  const handleLogout = async () => {
     try {
       await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
       logout();
@@ -180,6 +189,7 @@ const UserProfile: React.FC = () => {
     }
   };
 
+  // Detect user's current location using geolocation
   const handleLocateUser = () => {
     if (!navigator.geolocation) {
       toast.error("Geolocation Error", {
@@ -187,15 +197,7 @@ const UserProfile: React.FC = () => {
       });
       return;
     }
-    const handleLogout = async () => {
-      try {
-        await axios.post("http://localhost:3000/logout", {}, { withCredentials: true });
-        logout();
-        navigate("/login");
-      } catch (error) {
-        console.error("Logout failed:", error);
-      }
-    };
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -257,6 +259,7 @@ const UserProfile: React.FC = () => {
 
       {/* Profile Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+        {/* Profile photo and user details */}
         <div className="flex flex-col sm:flex-row items-center gap-6 mb-8">
           <div className="relative group">
             <img
@@ -286,6 +289,7 @@ const UserProfile: React.FC = () => {
           </div>
         </div>
 
+        {/* Profile update form */}
         <form
           onSubmit={handleProfileSubmit}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -357,6 +361,7 @@ const UserProfile: React.FC = () => {
         </h2>
         <form onSubmit={handlePasswordSubmit} className="space-y-6">
           <div className="space-y-4">
+            {/* Current password input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Current Password
@@ -389,6 +394,8 @@ const UserProfile: React.FC = () => {
                 </button>
               </div>
             </div>
+
+            {/* New password input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 New Password
@@ -419,6 +426,8 @@ const UserProfile: React.FC = () => {
                 </button>
               </div>
             </div>
+
+            {/* Confirm new password input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Confirm New Password
@@ -452,6 +461,8 @@ const UserProfile: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Submit button */}
           <button
             type="submit"
             disabled={isLoading}
@@ -464,17 +475,19 @@ const UserProfile: React.FC = () => {
             )}
           </button>
         </form>
+
+        {/* Logout button */}
         {user && (
-              <div className="p-6">
-                <button
-                  onClick={handleLogout}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg text-base transition-all duration-200 flex items-center justify-center gap-2"
-                >
-                  <LogOut className="w-5 h-5" />
-                  Logout
-                </button>
-              </div>
-            )}
+          <div className="p-6">
+            <button
+              onClick={handleLogout}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg text-base transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              <LogOut className="w-5 h-5" />
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     </motion.div>
   );

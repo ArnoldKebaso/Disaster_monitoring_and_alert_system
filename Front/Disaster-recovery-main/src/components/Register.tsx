@@ -1,4 +1,4 @@
-// src/components/Register.tsx
+// Import necessary libraries and components
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import Footer from '../components/Footer';
 import { z } from 'zod';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 
+// Define location options for the dropdown
 const locationOptions = [
   { value: "Bumadeya", label: "Bumadeya" },
   { value: "Budalangi Central", label: "Budalangi Central" },
@@ -26,6 +27,7 @@ const locationOptions = [
   { value: "South Bunyala", label: "South Bunyala" },
 ];
 
+// Define validation schema using Zod
 const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.string().email("Invalid email address"),
@@ -42,7 +44,7 @@ const registerSchema = z.object({
 });
 
 const Register: React.FC = () => {
-  // Extend formData to include phone, confirmPassword and location
+  // State for form data
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -50,28 +52,34 @@ const Register: React.FC = () => {
     confirmPassword: '',
     phone: '',
     location: '',
-    role: 'viewer', // Always viewer for registration
+    role: 'viewer', // Default role for registration
   });
-  // Track whether location is detected automatically
+
+  // State for tracking location source (manual or detected)
   const [locationSource, setLocationSource] = useState<"manual" | "detected">("manual");
+
+  // State for UI behavior
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate(); // Navigation hook for programmatic routing
+
+  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
-    // If user manually changes the location, set source to manual.
-    if(name === 'location'){
+    // Set location source to manual if the user changes the location manually
+    if (name === 'location') {
       setLocationSource("manual");
     }
   };
 
+  // Handle location detection using geolocation API
   const handleLocateUser = () => {
     if (!navigator.geolocation) {
       toast.error('Geolocation Error', {
@@ -79,18 +87,17 @@ const Register: React.FC = () => {
       });
       return;
     }
-    
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
         try {
-          // Use Nominatim reverse geocoding to get location name
+          // Fetch location details using reverse geocoding
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           );
           const data = await response.json();
-          // Use city, town, or village; fallback to display_name.
-          let detected = data.address.city || data.address.town || data.address.village || data.display_name;
+          const detected = data.address.city || data.address.town || data.address.village || data.display_name;
           setFormData(prev => ({ ...prev, location: detected }));
           setLocationSource("detected");
           toast.success(`Location detected: ${detected}`);
@@ -123,18 +130,20 @@ const Register: React.FC = () => {
     );
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      // Validate form data with Zod
+      // Validate form data using Zod schema
       registerSchema.parse(formData);
-      // Optionally, you might check username uniqueness via an API call.
+      // Submit registration data to the server
       await axios.post('http://localhost:3000/register', formData);
       toast.success("Registered successfully!");
-      navigate('/login');
+      navigate('/login'); // Redirect to login page
     } catch (error: any) {
       if (error instanceof z.ZodError) {
+        // Display validation errors
         error.errors.forEach(err => toast.error(err.message));
       } else {
         toast.error(error.response?.data?.error || "Registration failed");
@@ -146,7 +155,7 @@ const Register: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Navbar /> {/* Render Navbar component */}
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="w-full max-w-md mx-auto p-8 border rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
@@ -192,7 +201,7 @@ const Register: React.FC = () => {
               />
               <button 
                 type="button" 
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
                 className="absolute right-3 top-10 text-sm text-blue-500"
               >
                 {showPassword ? "Hide" : "Show"}
@@ -212,7 +221,7 @@ const Register: React.FC = () => {
               />
               <button 
                 type="button" 
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)} // Toggle confirm password visibility
                 className="absolute right-3 top-10 text-sm text-blue-500"
               >
                 {showConfirmPassword ? "Hide" : "Show"}
@@ -243,7 +252,7 @@ const Register: React.FC = () => {
                   onChange={handleChange}
                   className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-500"
                   required
-                  disabled={locationSource === "detected"}
+                  disabled={locationSource === "detected"} // Disable dropdown if location is detected
                 >
                   <option value="">Select your location</option>
                   {locationOptions.map((loc) => (
@@ -252,7 +261,7 @@ const Register: React.FC = () => {
                 </select>
                 <button
                   type="button"
-                  onClick={handleLocateUser}
+                  onClick={handleLocateUser} // Detect location
                   className="bg-green-600 text-white p-3 rounded hover:bg-green-700 transition-colors font-semibold"
                 >
                   Detect
@@ -263,7 +272,7 @@ const Register: React.FC = () => {
             <input type="hidden" name="role" value="viewer" />
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting} // Disable button while submitting
               className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition-colors font-semibold flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
@@ -284,7 +293,7 @@ const Register: React.FC = () => {
           </p>
         </div>
       </main>
-      <Footer />
+      <Footer /> {/* Render Footer component */}
     </div>
   );
 };

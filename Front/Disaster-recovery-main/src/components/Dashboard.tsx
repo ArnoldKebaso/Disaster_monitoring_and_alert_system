@@ -1,62 +1,72 @@
 // UserCommunityReports.tsx
 import React, { useState, useEffect } from 'react';
-import { X, Search, MapPin, Clock, AlertCircle, User } from 'lucide-react';
+import { X, Search, MapPin, Clock, AlertCircle } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import ReactPaginate from 'react-paginate';
 
+// Define the shape of a community report object
 interface CommunityReport {
-  report_id: number;
-  report_type: string;
-  location: string;
-  description: string;
-  image_url: string | null;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
+  report_id: number;          // Unique identifier for the report
+  report_type: string;        // Type/category of the report
+  location: string;           // Location where the report was filed
+  description: string;        // Detailed description of the report
+  image_url: string | null;   // URL for an optional image attached to the report
+  status: string;             // Current status (e.g., pending, verified, rejected)
+  createdAt: string;          // Timestamp when the report was created
+  updatedAt: string;          // Timestamp when the report was last updated
 }
 
+// Number of reports to show per page for pagination
 const ITEMS_PER_PAGE = 6;
 
 const UserCommunityReports: React.FC = () => {
-  const [reports, setReports] = useState<CommunityReport[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [selectedReport, setSelectedReport] = useState<CommunityReport | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  // State hooks
+  const [reports, setReports] = useState<CommunityReport[]>([]); // All fetched reports
+  const [loading, setLoading] = useState(true);                 // Loading indicator
+  const [currentPage, setCurrentPage] = useState(0);            // Current pagination page
+  const [selectedReport, setSelectedReport] = useState<CommunityReport | null>(null); // Report selected for detail view
+  const [searchQuery, setSearchQuery] = useState('');           // Text for filtering reports
 
+  // Fetch reports from backend API
   const fetchReports = async () => {
     try {
-      const response = await fetch('http://localhost:3000/community-reports', {
-        credentials: 'include',
-      });
+      const response = await fetch('http://localhost:3000/community-reports', { credentials: 'include' });
       const data = await response.json();
+      // Sort by creation date, newest first
       const sorted = data.sort((a: CommunityReport, b: CommunityReport) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       setReports(sorted);
     } catch (error) {
+      // Show error toast on failure
       toast.error('Failed to load community reports');
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchReports(); }, []);
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchReports();
+  }, []);
 
+  // Filter reports based on search query (location or description)
   const filteredReports = reports.filter(report =>
     report.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
     report.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Calculate pagination
   const pageCount = Math.ceil(filteredReports.length / ITEMS_PER_PAGE);
   const currentReports = filteredReports.slice(
     currentPage * ITEMS_PER_PAGE,
     (currentPage + 1) * ITEMS_PER_PAGE
   );
 
+  // Helper to choose badge color based on report status
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800';
@@ -66,6 +76,7 @@ const UserCommunityReports: React.FC = () => {
     }
   };
 
+  // Show spinner while loading data
   if (loading) return (
     <div className="flex justify-center items-center h-screen">
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -99,6 +110,7 @@ const UserCommunityReports: React.FC = () => {
             >
               <Card className="hover:shadow-lg transition-shadow duration-200">
                 <CardContent className="p-4">
+                  {/* Header with type and status badge */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <AlertCircle className="h-6 w-6 text-blue-500" />
@@ -109,6 +121,7 @@ const UserCommunityReports: React.FC = () => {
                         </span>
                       </div>
                     </div>
+                    {/* Details button opens modal */}
                     <Button
                       variant="ghost"
                       size="sm"
@@ -119,6 +132,7 @@ const UserCommunityReports: React.FC = () => {
                     </Button>
                   </div>
 
+                  {/* Optional image preview */}
                   {report.image_url && (
                     <div className="relative h-64 mb-4 rounded-lg overflow-hidden">
                       <img
@@ -130,8 +144,10 @@ const UserCommunityReports: React.FC = () => {
                     </div>
                   )}
 
+                  {/* Description snippet */}
                   <p className="text-gray-600 line-clamp-3 mb-4">{report.description}</p>
 
+                  {/* Location and date */}
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <MapPin className="h-4 w-4 flex-shrink-0" />
                     <span className="truncate">{report.location}</span>
@@ -146,7 +162,7 @@ const UserCommunityReports: React.FC = () => {
           ))}
         </div>
 
-        {/* Pagination */}
+        {/* Pagination Controls */}
         <div className="mt-8">
           <ReactPaginate
             previousLabel={'Previous'}
@@ -171,6 +187,7 @@ const UserCommunityReports: React.FC = () => {
           >
             <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
+                {/* Modal header with close button */}
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold text-gray-800">Report Details</h2>
                   <Button
@@ -183,6 +200,7 @@ const UserCommunityReports: React.FC = () => {
                   </Button>
                 </div>
 
+                {/* Report details grid */}
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <DetailItem label="Report Type" value={selectedReport.report_type} />
@@ -201,10 +219,12 @@ const UserCommunityReports: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Full description section */}
                 <Section title="Description">
                   <p className="text-gray-800 whitespace-pre-wrap">{selectedReport.description}</p>
                 </Section>
 
+                {/* Full image evidence section */}
                 {selectedReport.image_url && (
                   <Section title="Visual Evidence">
                     <div className="relative w-full h-96 rounded-xl overflow-hidden border border-gray-200">
@@ -221,6 +241,7 @@ const UserCommunityReports: React.FC = () => {
           </motion.div>
         )}
 
+        {/* No results message */}
         {currentReports.length === 0 && (
           <div className="text-center py-12 text-gray-500">
             No flood reports found matching your search
@@ -231,6 +252,7 @@ const UserCommunityReports: React.FC = () => {
   );
 };
 
+// Helper component to render individual detail rows
 const DetailItem: React.FC<{ label: string; value: string | number }> = ({ label, value }) => (
   <div className="text-sm">
     <span className="font-medium text-gray-600">{label}:</span>
@@ -238,6 +260,7 @@ const DetailItem: React.FC<{ label: string; value: string | number }> = ({ label
   </div>
 );
 
+// Section wrapper with title and content
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div className="mt-6">
     <h3 className="text-lg font-semibold text-gray-800 mb-3">{title}</h3>

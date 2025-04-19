@@ -1,4 +1,6 @@
 // src/pages/Resources.tsx
+
+// Import necessary libraries and components
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "./Navbar";
@@ -18,32 +20,34 @@ import {
 import { useTranslation } from "react-i18next";
 
 const Resources: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(); // Translation hook for multi-language support
 
+  // Animation variants for fade-in effect
   const fadeIn = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.8 } },
   };
 
+  // Animation variants for staggering child animations
   const staggerChildren = {
     visible: { transition: { staggerChildren: 0.1 } },
   };
 
-  const [selectedTool, setSelectedTool] = useState<string | null>(null);
-  const YT_PLAYLIST_ID = "PLigZgrpPbvnvB2Qn4GZVaiSjhsJJa3KXx"; // Replace with actual ID
+  const [selectedTool, setSelectedTool] = useState<string | null>(null); // State for selected interactive tool
+  const YT_PLAYLIST_ID = "PLigZgrpPbvnvB2Qn4GZVaiSjhsJJa3KXx"; // YouTube playlist ID
 
-  // Resource sections – note that the category text is translated via keys.
+  // Define resource sections with categories and items
   const resources = [
     {
-      category: "guides", // translation key: resources.categories.guides
+      category: "guides", // Translation key for guides category
       items: [
         {
-          title: "resources.guides.floodPreparednessHandbook",
-          icon: BookOpen,
-          link: "/pdfs/EmergencyPlan.pdf",
-          type: "PDF",
-          difficulty: "resources.difficulty.beginner",
-          action: "download",
+          title: "resources.guides.floodPreparednessHandbook", // Translation key for title
+          icon: BookOpen, // Icon for the resource
+          link: "/pdfs/EmergencyPlan.pdf", // Link to the resource
+          type: "PDF", // Resource type
+          difficulty: "resources.difficulty.beginner", // Difficulty level
+          action: "download", // Action type (download or external link)
         },
         {
           title: "resources.guides.emergencyPlanHandbook",
@@ -72,14 +76,14 @@ const Resources: React.FC = () => {
       ],
     },
     {
-      category: "multimedia", // translation key: resources.categories.multimedia
+      category: "multimedia", // Translation key for multimedia category
       items: [
         {
           title: "resources.multimedia.floodReportingTutorial",
           icon: Video,
           link: "/videos/Reporting.mp4",
           type: "Video",
-          duration: "12:30",
+          duration: "12:30", // Duration of the video
           action: "download",
         },
         {
@@ -109,7 +113,7 @@ const Resources: React.FC = () => {
       ],
     },
     {
-      category: "tools", // translation key: resources.categories.tools
+      category: "tools", // Translation key for tools category
       items: [
         {
           title: "resources.tools.floodRiskAssessmentTool",
@@ -129,7 +133,7 @@ const Resources: React.FC = () => {
     },
   ];
 
-  // Essential Readings – each item uses a translation key for its title.
+  // Define essential readings with translation keys for titles
   const essentialReadings = [
     {
       title: t("resources.essentialReadings.floodFirstAidGuide"),
@@ -145,29 +149,30 @@ const Resources: React.FC = () => {
     },
   ];
 
-  // Interactive Tools – using keys for each tool
+  // Define interactive tools with translation keys for labels
   const interactiveTools = [
     { key: "riskAssessment", label: t("resources.toolsInteractive.riskAssessment") },
     { key: "floodSimulator", label: t("resources.toolsInteractive.floodSimulator") },
     { key: "preparationQuiz", label: t("resources.toolsInteractive.preparationQuiz") },
   ];
 
+  // Handle resource actions (download or open external link)
   const handleResourceAction = (item: any) => {
     if (item.action === "download") {
       const link = document.createElement("a");
       link.href = item.link;
-      link.download = t(item.title);
+      link.download = t(item.title); // Use translated title as filename
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } else if (item.action === "external") {
-      window.open(item.link, "_blank");
+      window.open(item.link, "_blank"); // Open external link in a new tab
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-cyan-50">
-      <Navbar />
+      <Navbar /> {/* Render Navbar component */}
 
       {/* Main Content */}
       <motion.main
@@ -392,7 +397,7 @@ const Resources: React.FC = () => {
         </motion.div>
       </motion.main>
 
-      <Footer />
+      <Footer /> {/* Render Footer component */}
     </div>
   );
 };
