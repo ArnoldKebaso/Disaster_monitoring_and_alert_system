@@ -1,4 +1,6 @@
 // src/components/SubscriptionList.tsx
+
+// Import necessary libraries and components
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -15,12 +17,14 @@ import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 
+// Define the structure of a subscription
 interface Subscription {
   id: number;
-  method: string;
-  contact: string;
+  method: string; // "email" or "sms"
+  contact: string; // Contact information (email or phone number)
 }
 
+// Define the structure of an alert
 interface Alert {
   alert_id: number;
   alert_type: string;
@@ -43,12 +47,14 @@ interface Alert {
   updatedAt: string;
 }
 
+// Define the structure of a sent alert
 interface SentAlert {
   email: boolean;
   sms: boolean;
-  timestamp?: string;
+  timestamp?: string; // Timestamp of when the alert was sent
 }
 
+// Define the structure of an alert log
 interface AlertLog {
   id: string;
   method: "email" | "sms";
@@ -72,40 +78,44 @@ interface AlertLog {
   status: "success" | "failed";
 }
 
+// Number of items to display per page
 const ITEMS_PER_PAGE = 5;
 
+// Custom hook for managing alert logs
 const useAlertLogger = () => {
   const [logs, setLogs] = useState<AlertLog[]>([]);
+
+  // Function to log an alert
   const logAlert = (log: Omit<AlertLog, "id">) => {
     const newLog = {
-      id: Math.random().toString(36).substring(7),
+      id: Math.random().toString(36).substring(7), // Generate a random ID
       ...log,
     };
     setLogs((prevLogs) => [...prevLogs, newLog]);
   };
+
   return { logs, logAlert };
 };
 
 const SubscriptionList: React.FC = () => {
+  // State variables for managing subscriptions, alerts, and UI behavior
   const [subscriptionsByLocation, setSubscriptionsByLocation] = useState<{
     [key: string]: Subscription[];
   }>({});
-  const { logs, logAlert } = useAlertLogger();
-  const [isEmailLoading, setIsEmailLoading] = useState<{ [key: string]: boolean }>(
-    {}
-  );
-  const [isSmsLoading, setIsSmsLoading] = useState<{ [key: string]: boolean }>(
-    {}
-  );
+  const { logs, logAlert } = useAlertLogger(); // Use custom hook for logging alerts
+  const [isEmailLoading, setIsEmailLoading] = useState<{ [key: string]: boolean }>({});
+  const [isSmsLoading, setIsSmsLoading] = useState<{ [key: string]: boolean }>({});
   const [sentAlerts, setSentAlerts] = useState<{ [key: string]: SentAlert }>({});
-  const [darkMode, setDarkMode] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(0);
+  const [darkMode, setDarkMode] = useState(false); // Toggle dark mode
+  const [searchQuery, setSearchQuery] = useState(""); // Search query for filtering locations
+  const [currentPage, setCurrentPage] = useState(0); // Current page for pagination
 
+  // Fetch subscriptions when the component mounts
   useEffect(() => {
     fetchSubscriptions();
   }, []);
 
+  // Fetch subscriptions grouped by location
   const fetchSubscriptions = async () => {
     try {
       const response = await axios.get("http://localhost:3000/subscriptions/by-location");
@@ -116,17 +126,22 @@ const SubscriptionList: React.FC = () => {
     }
   };
 
+  // Filter locations based on the search query
   const filteredLocations = Object.entries(subscriptionsByLocation).filter(
     ([location]) =>
       location.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Calculate total pages for pagination
   const totalPages = Math.ceil(filteredLocations.length / ITEMS_PER_PAGE);
+
+  // Get locations for the current page
   const paginatedLocations = filteredLocations.slice(
     currentPage * ITEMS_PER_PAGE,
     (currentPage + 1) * ITEMS_PER_PAGE
   );
 
+  // Mark an alert as sent for a specific location and method
   const markAsSent = (location: string, method: "email" | "sms") => {
     setSentAlerts((prev) => ({
       ...prev,
@@ -138,6 +153,7 @@ const SubscriptionList: React.FC = () => {
     }));
   };
 
+  // Fetch alert data for a specific location
   const fetchAlertData = async (location: string): Promise<Alert | null> => {
     try {
       const response = await axios.get(
@@ -153,6 +169,7 @@ const SubscriptionList: React.FC = () => {
     }
   };
 
+  // Handle sending email alerts for a specific location
   const handleSendEmailAlert = async (location: string) => {
     setIsEmailLoading((prev) => ({ ...prev, [location]: true }));
     const alertData = await fetchAlertData(location);
@@ -161,6 +178,8 @@ const SubscriptionList: React.FC = () => {
       setIsEmailLoading((prev) => ({ ...prev, [location]: false }));
       return;
     }
+
+    // Prepare email content
     const subject = `Flood Alert for ${location}`;
     const text = `
 Alert Type: ${alertData.alert_type}
@@ -175,6 +194,8 @@ Weather Forecast: Next 24 Hours - ${alertData.weather_forecast.next_24_hours}, N
 Status: ${alertData.status}
 Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
     `;
+
+    // Send email alerts to all email subscribers for the location
     const subscriptions = subscriptionsByLocation[location].filter(
       (sub) => sub.method === "email"
     );
@@ -232,6 +253,7 @@ Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
     alert(`Email alerts sent successfully for ${location}!`);
   };
 
+  // Handle sending SMS alerts for a specific location
   const handleSendSmsAlert = async (location: string) => {
     setIsSmsLoading((prev) => ({ ...prev, [location]: true }));
     const alertData = await fetchAlertData(location);
@@ -317,6 +339,7 @@ Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
     alert(`SMS alerts sent successfully for ${location}!`);
   };
 
+  // Confirm sending an alert (email or SMS) for a specific location
   const confirmSendAlert = (type: "email" | "sms", location: string) => {
     toast(`Confirm ${type.toUpperCase()} alert for ${location}?`, {
       action: {
@@ -330,7 +353,7 @@ Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
     });
   };
 
-  // Pagination Controls
+  // Pagination controls
   const handlePreviousPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 0));
   };
@@ -338,8 +361,6 @@ Last Updated: ${new Date(alertData.updatedAt).toLocaleString()}
   const handleNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
   };
-
-  
 
   return (
     <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"} min-h-screen`}>

@@ -1,3 +1,4 @@
+// Import necessary libraries and components
 import React, { useState, useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -19,7 +20,7 @@ import {
   Compass,
 } from "lucide-react";
 
-// Define the FloodAlert interface
+// Define the FloodAlert interface for flood alert data
 interface FloodAlert {
   alert_id: number;
   alert_type: string;
@@ -33,13 +34,13 @@ interface FloodAlert {
   emergency_contacts: string[];
 }
 
-// Extend window interface if needed
+// Extend window interface if needed for browser-specific behavior
 interface Window {
   chrome?: any;
   safari?: any;
 }
 
-// Define custom Leaflet icons for better visual hierarchy
+// Define custom Leaflet icons for map markers
 const floodIcon = L.icon({
   iconUrl: floodIconUrl,
   iconSize: [38, 38],
@@ -61,7 +62,7 @@ const routeIcon = L.icon({
   popupAnchor: [0, -32],
 });
 
-// Coordinates for known locations
+// Define coordinates for known locations
 interface LocationCoordinates {
   [key: string]: {
     lat: number;
@@ -88,6 +89,7 @@ const locationCoordinates: LocationCoordinates = {
 };
 
 const SafetyMaps: React.FC = () => {
+  // State variables for map, user location, and flood alerts
   const [map, setMap] = useState<L.Map | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [markerLayer, setMarkerLayer] = useState<L.LayerGroup | null>(null);
@@ -97,6 +99,7 @@ const SafetyMaps: React.FC = () => {
   const [floodAlerts, setFloodAlerts] = useState<FloodAlert[]>([]);
   const navigate = useNavigate();
 
+  // Initialize the map and add flood alert markers
   useEffect(() => {
     if (!floodAlerts.length) return;
 
@@ -114,7 +117,7 @@ const SafetyMaps: React.FC = () => {
     const layerGroup = L.layerGroup().addTo(mapInstance);
     setMarkerLayer(layerGroup);
 
-    // Add markers for each flood alert with popups
+    // Add markers for each flood alert
     floodAlerts.forEach((alert) => {
       const location = locationCoordinates[alert.location];
       if (location) {
@@ -132,8 +135,8 @@ const SafetyMaps: React.FC = () => {
     };
   }, [floodAlerts]);
 
+  // Fetch flood alerts from the API
   useEffect(() => {
-    // Fetch flood alerts from the API
     const fetchAlerts = async () => {
       try {
         const response = await fetch("http://localhost:3000/alerts");
@@ -147,6 +150,7 @@ const SafetyMaps: React.FC = () => {
     fetchAlerts();
   }, []);
 
+  // Create popup content for flood alerts
   const createAlertPopupContent = (alert: FloodAlert) => `
     <div class="popup-content">
       <h3 class="font-bold text-red-600 mb-2">${alert.location}</h3>
@@ -161,6 +165,7 @@ const SafetyMaps: React.FC = () => {
     </div>
   `;
 
+  // Get color for severity levels
   const getSeverityColor = (severity: string) => {
     switch (severity.toLowerCase()) {
       case "high":
@@ -172,6 +177,7 @@ const SafetyMaps: React.FC = () => {
     }
   };
 
+  // Show evacuation routes for a specific flood alert
   const showEvacuationRoutes = async (alert: FloodAlert) => {
     if (!map || !markerLayer || !userLocation) return;
 
@@ -229,6 +235,7 @@ const SafetyMaps: React.FC = () => {
     }
   };
 
+  // Calculate route using OpenRouteService API
   const calculateRoute = async (
     start: [number, number],
     end: [number, number]
@@ -242,6 +249,7 @@ const SafetyMaps: React.FC = () => {
     );
   };
 
+  // Get route instruction for a specific step
   const getRouteInstruction = (index: number) => {
     const instructions = [
       "Head northeast on Main Road",
@@ -252,6 +260,7 @@ const SafetyMaps: React.FC = () => {
     return instructions[index] || "Continue following the marked route";
   };
 
+  // Locate the user's current position
   const handleLocateUser = () => {
     if (!navigator.geolocation) {
       console.error("Geolocation is not supported by your browser");
@@ -323,6 +332,7 @@ const SafetyMaps: React.FC = () => {
     );
   };
 
+  // Handle search for a specific location
   const handleSearch = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!map || !markerLayer) return;
