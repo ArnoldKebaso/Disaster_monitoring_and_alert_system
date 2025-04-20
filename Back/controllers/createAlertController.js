@@ -15,10 +15,10 @@ const createAlert = async (req, res) => {
 
     try {
         const newAlert = await Alert.create({
-            alert_type,
-            severity,
-            location,
-            description,
+            alert_type, // Ensure this field is included
+            severity,// Ensure this field is included
+            location, // Ensure this field is included
+            description, // Ensure this field is included
             water_levels, // Ensure this field is included
             evacuation_routes, // Ensure this field is included
             emergency_contacts, // Ensure this field is included
