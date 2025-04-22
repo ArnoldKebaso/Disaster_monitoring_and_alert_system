@@ -1,29 +1,30 @@
+// Import required modules and initialize Express app
 var express = require('express')
 var cors = require('cors')
 var app = express()
 const sequelize = require('../config/database');
 const { Op } = require('sequelize');
 
-
-app.use(cors()); // This should be placed before any routes
-app.use(express.json());
+// Middleware setup
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json()); // Parse JSON request bodies
 app.use(cors({
-  origin: 'http://localhost:3001', // Frontend URL
+  origin: 'http://localhost:3001', // Allow requests from frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 }));
 
-
+// Import models
 const CommunityReport = require('../models/community_report');
 const User = require('../models/user');
 
-// Get all community reports
+// Get all community reports with associated user details
 const getAllReports = async (req, res) => {
   try {
     const reports = await CommunityReport.findAll({
       include: [{
         model: User,
-        attributes: ['user_id', 'username', 'email', 'phone', 'location'] 
+        attributes: ['user_id', 'username', 'email', 'phone', 'location'] // Include specific user fields
       }]
     });
     res.status(200).json(reports);
@@ -32,14 +33,13 @@ const getAllReports = async (req, res) => {
   }
 };
 
-
-// Get report by ID
+// Get a specific report by its ID
 const getReportById = async (req, res) => {
   try {
     const report = await CommunityReport.findByPk(req.params.id, {
       include: [{
         model: User,
-        attributes: ['user_id', 'username', 'email', 'phone', 'location']
+        attributes: ['user_id', 'username', 'email', 'phone', 'location'] // Include specific user fields
       }]
     });
     if (!report) return res.status(404).json({ error: 'Report not found' });
@@ -49,7 +49,7 @@ const getReportById = async (req, res) => {
   }
 };
 
-// Modify createReport controller to include user info from auth
+// Create a new report, associating it with the authenticated user
 const createReport = async (req, res) => {
   // Get user ID from authentication middleware
   const userId = req.user.id;
@@ -80,37 +80,31 @@ const createReport = async (req, res) => {
   }
 };
 
-
-
-// Update a report by ID
+// Update an existing report by its ID
 const updateReport = async (req, res) => {
   try {
     const report = await CommunityReport.findByPk(req.params.id);
     if (!report) return res.status(404).json({ error: 'Report not found' });
-    
-    const updatedReport = await report.update(req.body);
+    const updatedReport = await report.update(req.body); // Update report with request body
     res.status(200).json(updatedReport);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-// Delete a report by ID
+// Delete a report by its ID
 const deleteReport = async (req, res) => {
   try {
     const report = await CommunityReport.findByPk(req.params.id);
     if (!report) return res.status(404).json({ error: 'Report not found' });
-    
-    await report.destroy();
-    res.status(204).send();
+    await report.destroy(); // Delete the report
+    res.status(204).send(); // Send no content response
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-
-
-// Add these controller functions
+// Get reports created within a specific month and year
 const getReportsByMonth = async (req, res) => {
   try {
     const { year, month } = req.query;
@@ -126,18 +120,17 @@ const getReportsByMonth = async (req, res) => {
     const reports = await CommunityReport.findAll({
       where: {
         createdAt: {
-          [Op.between]: [startDate, endDate]
+          [Op.between]: [startDate, endDate] // Filter reports by date range
         }
       },
       include: [{
         model: User,
-        attributes: ['user_id', 'username', 'email'] // Only include necessary user fields
+        attributes: ['user_id', 'username', 'email'] // Include specific user fields
       }],
       attributes: {
-        exclude: ['updatedAt'], // Remove this if you need updatedAt
+        exclude: ['updatedAt'], // Exclude updatedAt field
         include: [
-          // Explicitly specify table for createdAt
-          [sequelize.fn('DATE_FORMAT', sequelize.col('CommunityReport.createdAt'), '%Y-%m-%d'), 'formatted_date']
+          [sequelize.fn('DATE_FORMAT', sequelize.col('CommunityReport.createdAt'), '%Y-%m-%d'), 'formatted_date'] // Format createdAt
         ]
       }
     });
@@ -148,67 +141,55 @@ const getReportsByMonth = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-// communityController.js
 
+// Get the most frequent report types
 const getFrequentReportTypes = async (req, res) => {
   try {
-    console.log('Attempting to fetch frequent report types...');
-
     const frequentTypes = await CommunityReport.findAll({
       attributes: [
         'report_type',
-        [sequelize.fn('COUNT', sequelize.col('report_id')), 'count']
+        [sequelize.fn('COUNT', sequelize.col('report_id')), 'count'] // Count occurrences of each report type
       ],
-      group: ['report_type'],
-      order: [[sequelize.literal('count'), 'DESC']],
-      limit: 5
+      group: ['report_type'], // Group by report type
+      order: [[sequelize.literal('count'), 'DESC']], // Order by count in descending order
+      limit: 5 // Limit to top 5 report types
     });
-
-    console.log('Frequent types query result:', JSON.stringify(frequentTypes, null, 2));
-
     res.status(200).json(frequentTypes);
   } catch (error) {
-    console.error('Error in getFrequentReportTypes:', error);
-    console.error('Full error stack:', error.stack);
-    res.status(500).json({
-      error: 'Failed to fetch frequent report types',
-      details: error.message
-    });
+    res.status(500).json({ error: error.message });
   }
 };
 
+// Get the most frequent locations for reports
 const getFrequentLocations = async (req, res) => {
   try {
     const frequentLocations = await CommunityReport.findAll({
       attributes: [
         'location',
-        [sequelize.fn('COUNT', sequelize.col('report_id')), 'count']
+        [sequelize.fn('COUNT', sequelize.col('report_id')), 'count'] // Count occurrences of each location
       ],
-      group: ['location'],
-      order: [[sequelize.literal('count'), 'DESC']],
-      // Remove limit to get all locations
+      group: ['location'], // Group by location
+      order: [[sequelize.literal('count'), 'DESC']] // Order by count in descending order
     });
-
     res.status(200).json(frequentLocations);
   } catch (error) {
-    console.error('Error in getFrequentLocations:', error);
     res.status(500).json({ error: error.message });
   }
 };
 
-// Get reports by location
+// Get all reports for a specific location
 const getReportsByLocation = async (req, res) => {
   try {
-    const { location } = req.query;
+    const { location } = req.query; // Extract location from query parameters
     const reports = await CommunityReport.findAll({
-      where: { location },
-      include: User
+      where: { location }, // Filter reports by location
+      include: User // Include associated user details
     });
-
     res.status(200).json(reports);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { getAllReports, getReportById, createReport, updateReport, deleteReport, getReportsByMonth, getFrequentReportTypes, getFrequentLocations, getReportsByLocation};
+// Export all controller functions
+module.exports = { getAllReports, getReportById, createReport, updateReport, deleteReport, getReportsByMonth, getFrequentReportTypes, getFrequentLocations, getReportsByLocation };
