@@ -2,52 +2,51 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-
+// Register a new user
 const registerUser = async (req, res) => {
   try {
-    // Destructure all expected fields.
-    // Even if a role is passed, override it to 'viewer'
+    // Extract user details from the request body
     const { username, email, password, phone, location } = req.body;
-    
+
+    // Hash the password for security
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user with the role set to 'viewer'
     const user = await User.create({
       username,
       email,
       password: hashedPassword,
-      phone,       // Save the phone number
-      location,    // Save the selected or detected location
-      role: 'viewer'  // Always force viewer role on registration
+      phone,
+      location,
+      role: 'viewer' // Force the role to 'viewer'
     });
-    
+
+    // Respond with the created user's details
     res.status(201).json({
       id: user.user_id,
       email: user.email,
       role: user.role
     });
   } catch (error) {
+    // Handle errors during registration
     res.status(400).json({ error: error.message });
   }
 };
-// Login user and generate JWt
 
+// Login a user and generate a JWT token
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log('Login attempt for:', email);
 
+    // Find the user by email
     const user = await User.findOne({ where: { email } });
-    if (!user) {
-      console.log('User not found:', email);
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
+    // Verify the password
     const validPass = await bcrypt.compare(password, user.password);
-    if (!validPass) {
-      console.log('Invalid password for:', email);
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+    if (!validPass) return res.status(401).json({ error: 'Invalid credentials' });
 
-    // Generate a new token (JWT)
+    // Generate a JWT token
     const token = jwt.sign(
       { id: user.user_id, role: user.role },
       process.env.JWT_SECRET,
@@ -56,32 +55,29 @@ const loginUser = async (req, res) => {
 
     // Hash the token before storing it
     const hashedToken = await bcrypt.hash(token, 10);
-
-    // Update the user's currentToken with the hashed token
     await user.update({ currentToken: hashedToken });
 
-    // Set the token cookie with a global path.
+    // Set the token as a cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 3600000, // 1 hour
-      path: '/',      // available on every route
+      path: '/', // Available on all routes
     });
 
-    console.log('Successful login for:', email);
-    res.json({ 
+    // Respond with success message and user details
+    res.json({
       message: 'Login successful',
       user: { id: user.user_id, email: user.email, role: user.role }
     });
   } catch (error) {
-    console.error('Login Error:', error);
+    // Handle errors during login
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-
-
+// Fetch all users
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll();
@@ -91,7 +87,7 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// Get user by ID
+// Fetch a user by ID
 const getUserById = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id, {
@@ -104,10 +100,12 @@ const getUserById = async (req, res) => {
   }
 };
 
-// Create a new user
+// Create a new user (admin functionality)
 const createUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
+
+    // Create a new user with the provided details
     const newUser = await User.create({ username, email, password, role });
     res.status(201).json(newUser);
   } catch (error) {
@@ -115,14 +113,19 @@ const createUser = async (req, res) => {
   }
 };
 
-// Update user by ID
+// Update user details by ID
 const updateUser = async (req, res) => {
   try {
     const { phone, location } = req.body;
+
+    // Find the user by ID
     const user = await User.findByPk(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
-    
+
+    // Update the user's phone and location
     await user.update({ phone, location });
+
+    // Respond with the updated user details
     res.status(200).json({
       id: user.user_id,
       username: user.username,
@@ -135,27 +138,30 @@ const updateUser = async (req, res) => {
   }
 };
 
-// Delete user by ID
+// Delete a user by ID
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
+
+    // Delete the user
     await user.destroy();
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Validate the current session of a logged-in user
 const validateSession = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
       attributes: { exclude: ['password'] }
     });
-    
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
-    }
 
+    if (!user) return res.status(401).json({ error: 'User not found' });
+
+    // Respond with the user's details
     res.json({
       id: user.user_id,
       email: user.email,
@@ -166,56 +172,70 @@ const validateSession = async (req, res) => {
   }
 };
 
-
+// Update the profile photo of a user
 const updateProfilePhoto = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
+    // Find the user by ID
     const user = await User.findByPk(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
+    // Update the profile photo URL
     const imageUrl = `/uploads/${req.file.filename}`;
     await user.update({ profilePhoto: imageUrl });
-    
-    res.json({ 
+
+    // Respond with success message and the new photo URL
+    res.json({
       message: 'Profile photo updated successfully',
       profilePhoto: imageUrl
     });
   } catch (error) {
-    console.error('Profile photo error:', error);
     res.status(500).json({ error: 'Failed to update profile photo' });
   }
 };
-// controllers/userController.js
+
+// Change the password of a user
 const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    
-    // Validation
+
+    // Validate input fields
     if (!currentPassword || !newPassword) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
+    // Find the user by ID
     const user = await User.findByPk(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    // Verify current password
+    // Verify the current password
     const validPassword = await bcrypt.compare(currentPassword, user.password);
     if (!validPassword) {
       return res.status(401).json({ error: 'Current password is incorrect' });
     }
 
-    // Hash new password
+    // Hash the new password and update it
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await user.update({ password: hashedPassword });
 
+    // Respond with success message
     res.json({ message: 'Password updated successfully' });
   } catch (error) {
-    console.error('Password change error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-module.exports = { getAllUsers, getUserById, validateSession , createUser, updateUser, deleteUser, registerUser, loginUser, updateProfilePhoto, changePassword };
+// Export all controller functions
+module.exports = {
+  getAllUsers,
+  getUserById,
+  validateSession,
+  createUser,
+  updateUser,
+  deleteUser,
+  registerUser,
+  loginUser,
+  updateProfilePhoto,
+  changePassword
+};
