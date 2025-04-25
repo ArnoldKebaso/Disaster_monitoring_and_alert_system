@@ -24,11 +24,23 @@ const alertTypes = [
  * Available location options for flood alerts
  * Used in the location dropdown selector
  */
-const locationOptions = [
-  { value: 'Bumadeya', label: 'Bumadeya' },
-  { value: 'Budalangi Central', label: 'Budalangi Central' },
-  // ... other locations
-];
+ const locationOptions = [
+    { value: "Bumadeya", label: "Bumadeya" },
+    { value: "Budalangi Central", label: "Budalangi Central" },
+    { value: "Budubusi", label: "Budubusi" },
+    { value: "Mundere", label: "Mundere" },
+    { value: "Musoma", label: "Musoma" },
+    { value: "Sibuka", label: "Sibuka" },
+    { value: "Sio Port", label: "Sio Port" },
+    { value: "Rukala", label: "Rukala" },
+    { value: "Mukhweya", label: "Mukhweya" },
+    { value: "Sigulu Island", label: "Sigulu Island" },
+    { value: "Siyaya", label: "Siyaya" },
+    { value: "Nambuku", label: "Nambuku" },
+    { value: "West Bunyala", label: "West Bunyala" },
+    { value: "East Bunyala", label: "East Bunyala" },
+    { value: "South Bunyala", label: "South Bunyala" },
+  ];
 
 /**
  * Severity levels for alerts
