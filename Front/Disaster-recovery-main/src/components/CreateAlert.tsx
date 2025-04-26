@@ -40,7 +40,7 @@ const alertTypes = [
     { value: "West Bunyala", label: "West Bunyala" },
     { value: "East Bunyala", label: "East Bunyala" },
     { value: "South Bunyala", label: "South Bunyala" },
-  ];
+  ];  
 
 /**
  * Severity levels for alerts
@@ -60,7 +60,7 @@ const severities = ['Low', 'Medium', 'High'];
  */
 const CreateAlert: React.FC = () => {
   // Form control and validation
-  const { control, handleSubmit, formState: { errors } } = useForm();
+  const { control, handleSubmit, formState: { errors }, reset } = useForm();
   
   // Loading state for form submission
   const [loading, setLoading] = useState(false);
@@ -69,10 +69,11 @@ const CreateAlert: React.FC = () => {
    * Handle form submission
    * @param data - Form data containing all alert information
    */
+
+
   const onSubmit = async (data: any) => {
     setLoading(true);
     try {
-      // Prepare payload by transforming form data
       const payload = {
         alert_type: data.alert_type.value,
         severity: data.severity.value,
@@ -82,7 +83,6 @@ const CreateAlert: React.FC = () => {
           current: data.current_water_level,
           predicted: data.predicted_water_level,
         },
-        // Split textarea inputs by newline and filter out empty lines
         evacuation_routes: data.evacuation_routes.split('\n').filter((route: string) => route.trim()),
         emergency_contacts: data.emergency_contacts.split('\n').filter((contact: string) => contact.trim()),
         precautionary_measures: data.precautionary_measures.split('\n').filter((measure: string) => measure.trim()),
@@ -90,17 +90,15 @@ const CreateAlert: React.FC = () => {
           next_24_hours: data.next_24_hours_forecast,
           next_48_hours: data.next_48_hours_forecast,
         },
-        status: 'active', // Default status for new alerts
+        status: 'active',
       };
 
-      console.log('Payload:', payload); // Debug log
-
-      // Submit to API
       await axios.post('http://localhost:3000/alerts', payload, {
         headers: { 'Content-Type': 'application/json' },
       });
 
       toast.success('Alert created successfully!');
+      reset(); // Reset form fields after successful submission
     } catch (error) {
       console.error('Error creating alert:', error);
       toast.error('Failed to create the alert.');
@@ -108,6 +106,46 @@ const CreateAlert: React.FC = () => {
       setLoading(false);
     }
   };
+
+  // const onSubmit = async (data: any) => {
+  //   setLoading(true);
+  //   try {
+  //     // Prepare payload by transforming form data
+  //     const payload = {
+  //       alert_type: data.alert_type.value,
+  //       severity: data.severity.value,
+  //       location: data.location.value,
+  //       description: data.description,
+  //       water_levels: {
+  //         current: data.current_water_level,
+  //         predicted: data.predicted_water_level,
+  //       },
+  //       // Split textarea inputs by newline and filter out empty lines
+  //       evacuation_routes: data.evacuation_routes.split('\n').filter((route: string) => route.trim()),
+  //       emergency_contacts: data.emergency_contacts.split('\n').filter((contact: string) => contact.trim()),
+  //       precautionary_measures: data.precautionary_measures.split('\n').filter((measure: string) => measure.trim()),
+  //       weather_forecast: {
+  //         next_24_hours: data.next_24_hours_forecast,
+  //         next_48_hours: data.next_48_hours_forecast,
+  //       },
+  //       status: 'active', // Default status for new alerts
+  //     };
+
+  //     console.log('Payload:', payload); // Debug log
+
+  //     // Submit to API
+  //     await axios.post('http://localhost:3000/alerts', payload, {
+  //       headers: { 'Content-Type': 'application/json' },
+  //     });
+
+  //     toast.success('Alert created successfully!');
+  //   } catch (error) {
+  //     console.error('Error creating alert:', error);
+  //     toast.error('Failed to create the alert.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
