@@ -24,11 +24,11 @@ const ITEMS_PER_PAGE = 6;
 
 const UserCommunityReports: React.FC = () => {
   // State hooks
-  const [reports, setReports] = useState<CommunityReport[]>([]); // All fetched reports
-  const [loading, setLoading] = useState(true);                 // Loading indicator
-  const [currentPage, setCurrentPage] = useState(0);            // Current pagination page
-  const [selectedReport, setSelectedReport] = useState<CommunityReport | null>(null); // Report selected for detail view
-  const [searchQuery, setSearchQuery] = useState('');           // Text for filtering reports
+  const [reports, setReports] = useState<CommunityReport[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [selectedReport, setSelectedReport] = useState<CommunityReport | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch reports from backend API
   const fetchReports = async () => {
@@ -53,10 +53,13 @@ const UserCommunityReports: React.FC = () => {
     fetchReports();
   }, []);
 
-  // Filter reports based on search query (location or description)
+  // Filter reports to only include verified entries and match search query
   const filteredReports = reports.filter(report =>
-    report.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    report.description.toLowerCase().includes(searchQuery.toLowerCase())
+    report.status === 'verified' &&
+    (
+      report.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      report.description.toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
   // Calculate pagination
@@ -116,9 +119,7 @@ const UserCommunityReports: React.FC = () => {
                       <AlertCircle className="h-6 w-6 text-blue-500" />
                       <div>
                         <h3 className="text-lg font-semibold">{report.report_type}</h3>
-                        <span className={`${getStatusColor(report.status)} px-2 py-1 rounded-full text-xs`}>
-                          {report.status}
-                        </span>
+                        <span className={`${getStatusColor(report.status)} px-2 py-1 rounded-full text-xs`}>{report.status}</span>
                       </div>
                     </div>
                     {/* Details button opens modal */}
