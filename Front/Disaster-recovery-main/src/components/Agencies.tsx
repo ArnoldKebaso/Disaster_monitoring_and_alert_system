@@ -1,333 +1,236 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem
-} from './ui/select';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
-/**
- * Interface defining the structure of a Community Report
- */
-interface Report {
-  report_id: number;
-  report_type: string;
-  location: string;
-  description: string;
-  status: string;
-  createdAt: string;
-  User: {
-    username: string;
-  } | null;
-}
+const agencyData = [
+  {
+    "id": 1,
+    "name": "Kenya Red Cross",
+    "description": "Providing emergency response and disaster relief services across Kenya.",
+    "services": [
+      { "name": "Emergency Response", "icon": "🚑" },
+      { "name": "First Aid Training", "icon": "🩹" },
+      { "name": "Disaster Preparedness", "icon": "📦" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "National Disaster Management Unit (NDMU)",
+    "description": "Specialized in managing national emergencies and disaster response.",
+    "services": [
+      { "name": "Flood Management", "icon": "🌊" },
+      { "name": "Fire Rescue", "icon": "🔥" },
+      { "name": "Earthquake Relief", "icon": "🏚️" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Kenya Meteorological Department",
+    "description": "Providing weather and climate information to mitigate natural disasters.",
+    "services": [
+      { "name": "Weather Forecasting", "icon": "🌦️" },
+      { "name": "Climate Risk Analysis", "icon": "📊" },
+      { "name": "Early Warnings", "icon": "⚠️" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "St. John Ambulance Kenya",
+    "description": "Delivering lifesaving support and ambulance services nationwide.",
+    "services": [
+      { "name": "Ambulance Services", "icon": "🚑" },
+      { "name": "Emergency Medical Response", "icon": "💉" },
+      { "name": "Health Education", "icon": "📚" }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Kenya Wildlife Service (KWS)",
+    "description": "Specialized in wildlife-related disaster response.",
+    "services": [
+      { "name": "Wildlife Rescue", "icon": "🐘" },
+      { "name": "Conflict Mitigation", "icon": "⚔️" },
+      { "name": "Environmental Conservation", "icon": "🌍" }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Kenya Defense Forces (KDF)",
+    "description": "Assisting in disaster recovery and national security during emergencies.",
+    "services": [
+      { "name": "Search and Rescue", "icon": "🔍" },
+      { "name": "Flood Relief", "icon": "🏞️" },
+      { "name": "Logistical Support", "icon": "🚛" }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "World Health Organization (Kenya)",
+    "description": "Supporting public health efforts during disasters and pandemics.",
+    "services": [
+      { "name": "Disease Control", "icon": "🦠" },
+      { "name": "Emergency Healthcare", "icon": "🏥" },
+      { "name": "Vaccination Drives", "icon": "💉" }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Kenya Forest Service",
+    "description": "Managing forest fires and environmental disasters.",
+    "services": [
+      { "name": "Firefighting", "icon": "🔥" },
+      { "name": "Forest Conservation", "icon": "🌲" },
+      { "name": "Climate Monitoring", "icon": "🌡️" }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "UNHCR Kenya",
+    "description": "Protecting and assisting refugees during crises.",
+    "services": [
+      { "name": "Refugee Protection", "icon": "🛡️" },
+      { "name": "Shelter Provision", "icon": "🏠" },
+      { "name": "Humanitarian Aid", "icon": "🤝" }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Kenya Maritime Authority",
+    "description": "Managing marine disasters and enhancing water safety.",
+    "services": [
+      { "name": "Maritime Rescue", "icon": "🚤" },
+      { "name": "Oil Spill Response", "icon": "🛢️" },
+      { "name": "Water Safety Training", "icon": "💧" }
+    ]
+  }
+]
+;
 
-/**
- * Interface for analytics data showing counts by location or report type
- */
-interface AnalyticsData {
-  location?: string;
-  report_type?: string;
-  count: number;
-}
+const Agencies: React.FC = () => {
+  const [selectedAgency, setSelectedAgency] = useState<any>(null);
 
-/**
- * AdminReportsDashboard Component - Provides analytics and filtering for community reports
- * 
- * Features:
- * - Visual analytics charts for report types and locations
- * - Month and location filtering
- * - PDF report generation
- * - Tabular view of filtered reports
- */
-const AdminReportsDashboard: React.FC = () => {
-  // State management
-  const [selectedMonth, setSelectedMonth] = useState<string>('');
-  const [selectedLocation, setSelectedLocation] = useState<string>('');
-  const [filteredReports, setFilteredReports] = useState<Report[]>([]);
-  const [frequentTypes, setFrequentTypes] = useState<AnalyticsData[]>([]);
-  const [frequentLocations, setFrequentLocations] = useState<AnalyticsData[]>([]);
-  const [locations, setLocations] = useState<string[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const closeModal = () => setSelectedAgency(null);
 
-  // Ref for PDF generation
-  const pdfRef = useRef<HTMLDivElement>(null);
-
-  /**
-   * Generate and download a PDF report of the current dashboard view
-   */
-  const handleDownloadPDF = async () => {
-    const element = pdfRef.current;
-    if (!element) return;
-
-    try {
-      // Convert dashboard to canvas
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-      } as any);
-      
-      // Create PDF
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 190;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      // Add image to PDF and download
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-      pdf.save(`community-report-${new Date().toISOString()}.pdf`);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
-    }
+  // Animation variants
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
   };
 
-  // ===================== DATA FETCHING EFFECTS =====================
-
-  /**
-   * Fetch initial analytics data on component mount
-   */
-  useEffect(() => {
-    const fetchAnalyticsData = async () => {
-      try {
-        // Fetch both report types and locations in parallel
-        const [typesRes, locationsRes] = await Promise.all([
-          axios.get('http://localhost:3000/community-reports/analytics/frequent-types'),
-          axios.get('http://localhost:3000/community-reports/analytics/frequent-locations')
-        ]);
-
-        setFrequentTypes(typesRes.data);
-        setFrequentLocations(locationsRes.data);
-        
-        // Combine backend locations with predefined options
-        const allLocations = Array.from(
-          new Set([
-            ...locationsRes.data.map((loc: AnalyticsData) => loc.location || ''),
-            ...locationOptions.map(opt => opt.value)
-          ])
-        );
-        setLocations(allLocations.filter(l => l));
-      } catch (err) {
-        setError('Failed to load analytics data');
-        console.error('API Error:', err);
-      }
-    };
-
-    fetchAnalyticsData();
-  }, []);
-
-  /**
-   * Fetch reports when month filter changes
-   */
-  useEffect(() => {
-    const fetchMonthlyReports = async () => {
-      if (!selectedMonth) return;
-
-      try {
-        const [year, month] = selectedMonth.split('-');
-        const response = await axios.get(
-          `http://localhost:3000/community-reports/filter/month?year=${year}&month=${month}`
-        );
-        setFilteredReports(response.data);
-      } catch (err) {
-        setError('Failed to load monthly reports');
-        console.error('Monthly filter error:', err);
-      }
-    };
-
-    fetchMonthlyReports();
-  }, [selectedMonth]);
-
-  /**
-   * Fetch reports when location filter changes
-   */
-  useEffect(() => {
-    const fetchLocationReports = async () => {
-      if (!selectedLocation) return;
-
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/community-reports/filter/location?location=${encodeURIComponent(selectedLocation)}`
-        );
-        setFilteredReports(response.data);
-      } catch (err) {
-        setError('Failed to load location reports');
-        console.error('Location filter error:', err);
-      }
-    };
-
-    fetchLocationReports();
-  }, [selectedLocation]);
-
-  // ===================== UTILITY FUNCTIONS =====================
-
-  /**
-   * Clear all active filters
-   */
-  const handleClearFilters = () => {
-    setSelectedMonth('');
-    setSelectedLocation('');
-    setFilteredReports([]);
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1 },
   };
-
-  /**
-   * Format timestamp to readable date string
-   * @param {string} timestamp - The timestamp to format
-   * @returns {string} Formatted date string
-   */
-  const formatDate = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  // Predefined location options
-  const locationOptions = [
-    { value: "Bumadeya", label: "Bumadeya" },
-    { value: "Budalangi Central", label: "Budalangi Central" },
-    // ... other location options
-  ];
-
-  // ===================== RENDER =====================
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Filters Section */}
-      <div className="flex gap-4 flex-wrap">
-        {/* Month Filter */}
-        <div className="w-64">
-          <label className="block text-sm font-medium mb-2">Filter by Month</label>
-          <input
-            type="month"
-            className="w-full p-2 border rounded"
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-          />
-        </div>
-        
-        {/* Location Filter */}
-        <div className="w-64">
-          <label className="block text-sm font-medium mb-2">Filter by Location</label>
-          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-            <SelectTrigger className="your-custom-class">
-              <SelectValue placeholder="Select location" />
-            </SelectTrigger>
-            <SelectContent>
-              {locations.map(location => (
-                <SelectItem key={location} value={location}>
-                  {location}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+            Emergency Response Partners
+          </h1>
+          <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
+            Connect with certified disaster response agencies ready to provide immediate assistance
+          </p>
+        </motion.header>
 
-        {/* Clear Filter Button */}
-        <div className="w-64 flex items-end">
-          <button 
-            onClick={handleClearFilters}
-            className="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Clear Filters
-          </button>
-        </div>
-
-        {/* PDF Download Button */}
-        <div className="w-64 flex items-end">
-          <button 
-            onClick={handleDownloadPDF}
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Download PDF Report
-          </button>
+        {/* Agency Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {agencyData.map((agency, index) => (
+            <motion.div
+              key={agency.id}
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: index * 0.1 }}
+            >
+              <div className="bg-white border border-blue-100 rounded-xl shadow-sm p-6 hover:shadow-lg transition-all group hover:border-blue-200">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-blue-100/50 rounded-lg">
+                    <span className="text-2xl">{agency.services[0].icon}</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground group-hover:text-blue-600 transition-colors">
+                      {agency.name}
+                    </h3>
+                    <p className="text-muted-foreground mt-2 line-clamp-3">
+                      {agency.description}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedAgency(agency)}
+                  className="mt-6 w-full px-4 py-2 bg-blue-600/10 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-colors font-medium"
+                >
+                  View Services
+                </button>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
-      
-      {/* Dashboard Content (PDF target) */}
-      <div ref={pdfRef} className="p-6 space-y-6">
-        {/* Analytics Charts */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Report Types Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Most Frequent Report Types</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BarChart width={500} height={300} data={frequentTypes}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="report_type" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="count" fill="#8884d8" />
-              </BarChart>
-            </CardContent>
-          </Card>
 
-          {/* Locations Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Most Frequent Locations</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BarChart width={500} height={300} data={frequentLocations}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="location" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="count" fill="#82ca9d" />
-              </BarChart>
-            </CardContent>
-          </Card>
+      {/* Modal */}
+      {selectedAgency && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            className="bg-white rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-blue-100"
+          >
+            <div className="p-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-3xl font-bold text-foreground">{selectedAgency.name}</h2>
+                  <p className="text-muted-foreground mt-2">{selectedAgency.description}</p>
+                </div>
+                <button
+                  onClick={closeModal}
+                  className="text-muted-foreground hover:text-foreground p-2 rounded-lg hover:bg-gray-100"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="mt-6">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Key Services</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {selectedAgency.services.map((service: any, index: number) => (
+                    <div
+                      key={index}
+                      className="flex items-center p-4 bg-blue-50/50 rounded-lg border border-blue-100"
+                    >
+                      <span className="text-3xl mr-4">{service.icon}</span>
+                      <div>
+                        <h4 className="font-medium text-foreground">{service.name}</h4>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Available 24/7 emergency response
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-8 flex justify-end gap-3">
+                <button
+                  onClick={closeModal}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </motion.div>
         </div>
-
-        {/* Filtered Reports Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Filtered Reports ({filteredReports.length})</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Reported By</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredReports.map(report => (
-                  <TableRow key={report.report_id}>
-                    <TableCell>{report.report_type}</TableCell>
-                    <TableCell className={selectedLocation === report.location ? "bg-blue-200 text-blue-900" : ""}>
-                      {report.location}
-                    </TableCell>
-                    <TableCell>{formatDate(report.createdAt)}</TableCell>
-                    <TableCell>{report.status}</TableCell>
-                    <TableCell>{report.User?.username || 'Anonymous'}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
+      )}
     </div>
   );
 };
 
-export default AdminReportsDashboard;
+export default Agencies;
