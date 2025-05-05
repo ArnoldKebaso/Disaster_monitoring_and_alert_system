@@ -54,7 +54,7 @@ FMAS is developed as a final year project (COMP 493) at Egerton University, Facu
     
 
 Features
---------
+-------
 
 *   **Community Reporting:**Users can report flood incidents quickly and anonymously through web and mobile interfaces.
     
