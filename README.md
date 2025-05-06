@@ -238,8 +238,6 @@ Usage
     *   Toggle between English and Swahili interfaces for ease of use.
         
 
-Testing
--------
 
 FMAS is rigorously tested to ensure reliability and performance. Testing strategies include:
 
@@ -250,3 +248,4 @@ FMAS is rigorously tested to ensure reliability and performance. Testing strateg
 *   **Performance Testing:**Simulate high user loads using Apache JMeter.
     
 *   **User Acceptance Testing (UAT):**Collaborate with stakeholders (e.g., Kenya Red Cross, NDMU) to ensure the system meets real-world needs.
+
