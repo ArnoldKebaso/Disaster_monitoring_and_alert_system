@@ -24,7 +24,7 @@ const DashboardPage: React.FC = () => {
         console.error('Error fetching alerts:', error);
       }
     };
-
+// fetch data
     fetchData();
   }, []); // Empty array ensures useEffect runs only once
 
