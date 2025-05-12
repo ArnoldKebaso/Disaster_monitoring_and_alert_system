@@ -1,5 +1,5 @@
 const sessions = {};
-
+// to implement ussd
 const handleUSSD = async (req, res) => {
     const { phoneNumber, sessionId, text, networkCode } = req.body;
 
@@ -20,7 +20,7 @@ const handleUSSD = async (req, res) => {
             switch (currentStep) {
                 case 1:
                     if (lastChoice === '1') {
-                        response = `END Your balance: KES 500`;
+                        response = `END Your balance: KES 100`;
                     } else if (lastChoice === '2') {
                         response = `CON Enter subscription duration:
 1. 1 Week
