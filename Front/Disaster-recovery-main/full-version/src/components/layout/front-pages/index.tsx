@@ -2,8 +2,8 @@
 import type { ChildrenType } from '@core/types'
 
 // Component Imports
-import Footer from '@components/layout/front-pages/Footer'
-import Header from '@components/layout/front-pages/Header'
+import DisasterAlertFooter from '@components/layout/front-pages/DisasterAlertFooter'
+import DisasterAlertHeader from '@components/layout/front-pages/DisasterAlertHeader'
 
 // Server Action Imports
 import { getServerMode } from '@core/utils/serverHelpers'
@@ -17,9 +17,9 @@ const FrontLayout = async ({ children }: ChildrenType) => {
 
   return (
     <div className={frontLayoutClasses.root}>
-      <Header mode={mode} />
+      <DisasterAlertHeader mode={mode} />
       {children}
-      <Footer />
+      <DisasterAlertFooter />
     </div>
   )
 }
